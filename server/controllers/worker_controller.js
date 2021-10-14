@@ -1,11 +1,11 @@
 'use strict';
 
-const User = require('../models/user_schema');
+const Worker = require('../models/worker_schema');
 
-const createData = (req, res) => {
-  User.create(req.body)
+const createWorker = (req, res) => {
+    Worker.create(req.body)
     .then((data) => {
-      console.log('New User Created!', data);
+      console.log('New Worker Created!', data);
       res.status(201).json(data);
     })
     .catch((err) => {
@@ -19,8 +19,8 @@ const createData = (req, res) => {
     });
 };
 
-const readData = (req, res) => {
-  User.find()
+const readWorker = (req, res) => {
+    Worker.find()
     .then((data) => {
       res.status(200).json(data);
     })
@@ -30,24 +30,13 @@ const readData = (req, res) => {
     });
 };
 
-const getData = (req, res) => {
-  User.findOne({_id: req.params.id})
-    .then((data) => {
-      res.status(200).json(data);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).json(err);
-    });
-};
-
-const updateData = (req, res) => {
-  User.findByIdAndUpdate(req.params.id, req.body, {
+const updateWorker = (req, res) => {
+    Worker.findByIdAndUpdate(req.params.id, req.body, {
     useFindAndModify: false,
     new: true,
   })
     .then((data) => {
-      console.log('User updated!');
+      console.log('Worker updated!');
       res.status(201).json(data);
     })
     .catch((err) => {
@@ -61,16 +50,16 @@ const updateData = (req, res) => {
     });
 };
 
-const deleteData = (req, res) => {
-  User.findById(req.params.id)
+const deleteWorker = (req, res) => {
+    Worker.findById(req.params.id)
     .then((data) => {
       if (!data) {
-        throw new Error('User not available');
+        throw new Error('Worker not available');
       }
       return data.remove();
     })
     .then((data) => {
-      console.log('User removed!');
+      console.log('Worker removed!');
       res.status(200).json(data);
     })
     .catch((err) => {
@@ -80,9 +69,8 @@ const deleteData = (req, res) => {
 };
 
 module.exports = {
-  createData,
-  readData,
-  getData,
-  updateData,
-  deleteData,
+  createWorker,
+  readWorker,
+  updateWorker,
+  deleteWorker,
 };
