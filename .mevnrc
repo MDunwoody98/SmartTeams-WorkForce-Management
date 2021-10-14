@@ -1,0 +1,15 @@
+{
+  "name": "hcm-system",
+  "template": "Nuxt.js",
+  "modules": [
+    "axios",
+    "oauth",
+    "vuex"
+  ],
+  "renderingMode": "universal",
+  "deployTarget": "server",
+  "isConfigured": {
+    "client": true,
+    "server": true
+  }
+}
