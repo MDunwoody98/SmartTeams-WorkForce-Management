@@ -26,9 +26,7 @@
 </template>
 
 <script>
-export default {
-  layout: 'newDefault'
-}
+export default {}
 </script>
 
 <style>
