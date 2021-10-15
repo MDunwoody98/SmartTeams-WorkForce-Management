@@ -46,6 +46,7 @@ export default {
    */
   buildModules: [
     '@nuxtjs/eslint-module',
+    '@nuxtjs/vuetify',
   ],
   /*
    ** Nuxt.js modules
@@ -80,4 +81,30 @@ export default {
     ** You can extend webpack config here
     */
   },
+  vuetify: {
+    theme: {
+        themes: {
+            light: {
+                'primary': '#091C58',
+                'secondary': '#3B8070',
+            },
+            dark: {
+              'primary': '#091C58',
+              'secondary': '#3B8070',
+          }
+        }
+    },
+    defaultAssets: {
+      font: true,
+      icons: 'md'
+    },
+    icons: {
+      iconfont: 'md',
+    }
+  },
+  eslint: {
+    rules: {
+      'no-console': 'off',
+    },
+  }
 }
