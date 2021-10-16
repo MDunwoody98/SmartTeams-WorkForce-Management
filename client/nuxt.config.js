@@ -54,6 +54,7 @@ export default {
   modules: [
     // Doc: https://nuxtjs.org/api/configuration-modules/
     'nuxt-oauth',
+    '@nuxtjs/auth-next',
     '@nuxtjs/axios',
   ],
   oauth: {
@@ -69,8 +70,40 @@ export default {
       // do something to return the user
     },
   },
+  // auth setup
+  auth: {
+    strategies: {
+      local: {
+        scheme: 'refresh',
+        token: {
+          property: 'access_token', // property - which field of response JSON to use as token
+          maxAge: 1800, // 30 minutes
+          global: true, // Auth token used on all axios requests
+          // type: 'Bearer'
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          data: 'refresh_token',
+          maxAge: 60 * 60 * 24 * 30 // 30 days
+        },
+        user: {
+          property: 'user',
+          // autoFetch: true
+        },
+        endpoints: {
+          login: { url: '/api/auth/login', method: 'post' },
+          logout: { url: '/api/auth/logout', method: 'post' },
+          // this.$auth.refreshTokens() to manually refresh
+          refresh: { url: '/api/auth/refresh', method: 'post' },
+          user: { url: '/api/auth/user', method: 'get' }
+        },
+        // autologout is false
+      }
+    }
+  },
   axios: {
     // proxyHeaders: false
+    baseURL: 'http://127.0.0.1:9000/api'
   },
   /*
    ** Build configuration
@@ -80,6 +113,10 @@ export default {
     /*
     ** You can extend webpack config here
     */
+  },
+  router: {
+    // Always redirect user to /login page if loggedIn is false
+    middleware: ['auth']
   },
   vuetify: {
     theme: {

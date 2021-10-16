@@ -7,23 +7,26 @@
           <v-form @submit.prevent="logIn()">
              <v-card-text>
               <v-card-actions class="form-group">
-                <v-text-field v-model.number="workerId" prepend-icon="person" type="text" class="form-element" placeholder="Worker ID" color="#091C58"></v-text-field>
+                <v-text-field v-model.number="login.workerId" prepend-icon="person" type="text" class="form-element" placeholder="Worker ID" color="#091C58"></v-text-field>
               </v-card-actions>
               <v-card-actions class="form-group">
-                <v-text-field v-model="password" prepend-icon="lock" type="password" class="form-element" placeholder="Password" color="#091C58"></v-text-field>
+                <v-text-field v-model="login.password" prepend-icon="lock" type="password" class="form-element" placeholder="Password" color="#091C58"></v-text-field>
               </v-card-actions>
               <v-card-actions class="form-group">
                 <v-checkbox v-model="remember" label="Remember me" color="#091C58"></v-checkbox>
               </v-card-actions>
               <div class="forgot-password-container">
-                <NuxtLink to="/" class="forgot-password">Forgot your password?</NuxtLink>
+                <div class="forgot-password"  @click="toggleAlert()">Forgot your password?</div>
               </div>
+                
               <v-btn type="submit" class="btnLogin" elevation="4" large block outlined nuxt color="#091C58">Sign In</v-btn><!--to="/dashboard ??-->
              </v-card-text>
           </v-form>
         </v-card>
+        <v-snackbar  v-model="snackbar" :timeout="4000" color="#2D9FA0" rounded="pill">Please contact your administrator to perform a password reset</v-snackbar>
       </div>
     </div>
+    
   </div>
 </template>
 
@@ -32,28 +35,27 @@ export default {
   layout: 'background_splash',
   data() {
     return {
-      workerId: "",
-      password:"",
-      remember: false
+      snackbar: false,
+      remember: false,
+      login: {
+        workerId: "",
+        password:""
+      }
     }
   },
   methods: {
-    logIn() {
-      const data = {
-        workerId: this.workerId,
-        password: this.password,
-        remember: this.remember
+    async logIn() {
+      try {
+        const response = await this.$auth.loginWith('local', { data: this.login })
+        console.log("Log in event" + this.login + response)
+        this.$router.push("/"); // Redirect to dashboard if logged in
+      } catch (err) {
+        console.log(err)
+        console.log(this.login)
       }
-      console.log("Log in event")
-      console.log(data)
     },
-    async handleSubmit() {
-      const response = await this.$axios.post("/login", {
-        workerId: this.workerId,
-        password: this.password,
-        remember: this.remember
-      });
-      console.log(response)
+    toggleAlert() {
+      this.snackbar = !this.snackbar
     }
   }
 }
@@ -104,6 +106,7 @@ export default {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 1rem;
   color: #091C58;
+  cursor: pointer;
 }
 
 .forgot-password-container {

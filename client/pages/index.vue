@@ -11,6 +11,8 @@
 
 <script>
 export default {
+  // Do not redirect home page to login if user is not logged in
+  auth: false,
   layout: 'background_splash',
   transition: {
     name: 'home',
