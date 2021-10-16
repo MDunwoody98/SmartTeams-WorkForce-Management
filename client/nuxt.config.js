@@ -83,7 +83,7 @@ export default {
         },
         refreshToken: {
           property: 'refresh_token',
-          data: 'refresh_token',
+          data: 'refresh_token', // ptoperty name in request
           maxAge: 60 * 60 * 24 * 30 // 30 days
         },
         user: {
