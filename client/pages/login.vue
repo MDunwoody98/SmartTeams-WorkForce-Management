@@ -47,8 +47,8 @@ export default {
     async logIn() {
       try {
         const response = await this.$auth.loginWith('local', { data: this.login })
-        console.log("Log in event" + this.login + response)
-        this.$router.push("/"); // Redirect to dashboard if logged in
+        console.log(response)
+        this.$router.replace ("/"); // Redirect to dashboard if logged in
       } catch (err) {
         console.log(err)
         console.log(this.login)

@@ -36,9 +36,10 @@ const registerNewUser = async (req, res, next) => {
   }
 };
 
-let loadedUser;
 const logIn = async (req, res, next) => {
   const { workerId, password } = req.body;
+  console.log(req.body)
+  console.log('hi')
   try {
     const user = await userModel.findOne({ workerId: workerId });
 
@@ -47,16 +48,19 @@ const logIn = async (req, res, next) => {
       error.statusCode = 401;
       throw error;
     }
-    loadedUser = user;
-
-    const comparePassword = bcrypt.compare(password, user.password);
+    let loadedUser = user;
+    // Need await keyword as promise is pending
+    const comparePassword = await bcrypt.compare(password, user.password);
 
     if (!comparePassword) {
       const error = new Error("Error. Wrong password");
+      console.log(password + 'var')
+      console.log(user.password + 'obj')
       error.statusCode = 401;
       throw error;
     }
-    const token = jwt.sign({ email: loadedUser.email }, process.env.JWT_SECRET, {
+    
+    const token = jwt.sign({ workerId: loadedUser.workerId }, process.env.JWT_SECRET, {
       expiresIn: "30m", // it will expire token after 20 minutes and if the user then refresh the page will log out
     });
     res.status(200).json({ token: token });

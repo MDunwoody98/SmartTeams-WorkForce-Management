@@ -14,7 +14,8 @@ const {
   logOut,
   refresh,
   getUser,
-} = require('..controllers/auth_controller');
+  registerNewUser,
+} = require('../controllers/auth_controller');
 
 const {
   createWorker,
@@ -32,9 +33,10 @@ router
 
 router
   .post('/auth/login', logIn)
-  .post('/auth/logout', logOut)
+  .post('/auth/register', registerNewUser);
+  /* .post('/auth/logout', logOut)
   .post('/auth/refresh', refresh)
-  .get('auth/user', getUser);
+  .get('auth/user', getUser); */
 
 router
   .post('/worker', createWorker)
