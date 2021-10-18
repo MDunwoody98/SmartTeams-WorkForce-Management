@@ -2,32 +2,16 @@
   <div class="container">
     <div>
       <Logo />
-      <h2 class="subtitle">MEVN starter template based on Nuxt-js</h2>
-      <div class="links">
-        <a
-          href="https://mevn.madlabs.xyz"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/madlabsinc/mevn-cli"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+      <p>
+        {{this.$auth.user}}
+        </p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  layout: 'background_splash'
+  layout: 'background_home'
 }
 </script>
 

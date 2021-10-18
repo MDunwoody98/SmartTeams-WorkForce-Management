@@ -29,7 +29,15 @@ export default {
   /*
    ** Global CSS
    */
-  css: [],
+  css: ['~/assets/main.css'],
+  layoutTransition: {
+    name: 'home',
+    mode: 'out-in'
+  },
+  pageTransition: {
+    name: 'home',
+    mode: 'out-in'
+  },
   /*
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins

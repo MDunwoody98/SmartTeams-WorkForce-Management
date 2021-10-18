@@ -14,15 +14,20 @@ export default {
   // Do not redirect home page to login if user is not logged in
   auth: false,
   layout: 'background_splash',
-  transition: {
-    name: 'home',
-    mode: 'out-in'
-  },
   computed: {
     isAuthenticated() {
       return this.$store.getters.isAuthenticated;  // it check if user isAuthenticated 
     },
-  }
+  },
+  beforeMount(){
+    this.redirect() // Execute redirect before loading page
+ },
+  methods: {
+    redirect() {
+     if (this.isAuthenticated)
+      this.$router.replace('dashboard') // Redirect to user dashboard if user has logged in
+    }
+  },
 }
 </script>
 
@@ -42,11 +47,4 @@ export default {
   margin: 0 auto;
 }
 
-
-.home-enter-active, .home-leave-active { 
-  transition: opacity .25s; 
-}
-.home-enter, .home-leave-active { 
-  opacity: 0; 
-}
 </style>
