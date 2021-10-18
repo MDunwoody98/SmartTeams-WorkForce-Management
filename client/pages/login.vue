@@ -16,14 +16,14 @@
                 <v-checkbox v-model="remember" label="Remember me" color="#091C58"></v-checkbox>
               </v-card-actions>
               <div class="forgot-password-container">
-                <div class="forgot-password"  @click="toggleAlert()">Forgot your password?</div>
+                <div class="forgot-password"  @click="forgotPassword()">Forgot your password?</div>
               </div>
                 
               <v-btn type="submit" class="btnLogin" elevation="4" large block outlined nuxt color="#091C58">Sign In</v-btn><!--to="/dashboard ??-->
              </v-card-text>
           </v-form>
         </v-card>
-        <v-snackbar  v-model="snackbar" :timeout="4000" color="#2D9FA0" rounded="pill">Please contact your administrator to perform a password reset</v-snackbar>
+        <v-snackbar  v-model="snackbar" :timeout="4000" color="#2D9FA0" rounded="pill">{{ text }}</v-snackbar>
       </div>
     </div>
     
@@ -35,6 +35,7 @@ export default {
   layout: 'background_splash',
   data() {
     return {
+      text: "",
       snackbar: false,
       remember: false,
       login: {
@@ -46,13 +47,26 @@ export default {
   methods: {
     async logIn() {
       try {
-        const response = await this.$auth.loginWith('local', { data: this.login })
-        console.log(response)
-        this.$router.replace ("/"); // Redirect to dashboard if logged in
+        await this.$auth.loginWith('local', { data: this.login })
+        .then(res => {
+          console.log(res)
+          let user = res.data.worker // getting worker linked to user account
+          this.$auth.$storage.setUniversal('user', user, true) // setting user in Vuex, cookies and localstorage
+          user = this.$auth.$storage.getUniversal('user') // getting user (you can use it anywhere in your app)
+          // this.$auth.setUser(user)
+          this.$auth.setUserToken(res.data.token, res.data.refresh_token)
+          console.log(this.$auth)
+        })
       } catch (err) {
+        this.text = "Error. Please try again or contact your administrator.";
+        this.toggleAlert();
         console.log(err)
         console.log(this.login)
       }
+    },
+    forgotPassword(){
+      this.text = "Please contact your administrator to perform a password reset";
+      this.toggleAlert();
     },
     toggleAlert() {
       this.snackbar = !this.snackbar

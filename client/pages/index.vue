@@ -3,7 +3,7 @@
     <div class="page">
       <Logo/>
       <div class="login">
-        <v-btn class="btnLogin" elevation="4" large block outlined to="/login" nuxt color="#091C58">Log In</v-btn>
+        <v-btn class="btnLogin" elevation="4" large block outlined to="/login" nuxt color="#091C58">Sign In</v-btn>
       </div>
     </div>
   </div>
@@ -17,8 +17,12 @@ export default {
   transition: {
     name: 'home',
     mode: 'out-in'
+  },
+  computed: {
+    isAuthenticated() {
+      return this.$store.getters.isAuthenticated;  // it check if user isAuthenticated 
+    },
   }
-
 }
 </script>
 

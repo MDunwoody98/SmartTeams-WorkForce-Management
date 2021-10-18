@@ -72,6 +72,12 @@ export default {
   },
   // auth setup
   auth: {
+    redirect: {
+      login: '/login', // User will be redirected to this path if login is required
+      logout: '/', // User will be redirected to this path if after logout
+      callback: false, // User will be redirected to this path by the identity provider after login
+      home: '/dashboard', // User will be redirected to this path after login
+    },
     strategies: {
       local: {
         scheme: 'refresh',
@@ -83,23 +89,28 @@ export default {
         },
         refreshToken: {
           property: 'refresh_token',
-          data: 'refresh_token', // ptoperty name in request
+          data: 'refresh_token', // property name in request
           maxAge: 60 * 60 * 24 * 30 // 30 days
         },
         user: {
-          property: 'user',
-          // autoFetch: true
+          property: 'user', // <--- Default "user"
+          autoFetch: true
         },
         endpoints: {
-          login: { url: '/auth/login', method: 'post' },
+          login: { url: '/auth/login', method: 'post', propertyName: 'token' },
           logout: { url: '/auth/logout', method: 'post' },
-          // this.$auth.refreshTokens() to manually refresh
-          refresh: { url: '/auth/refresh', method: 'post' },
-          user: { url: '/auth/user', method: 'get' }
+          refresh: { url: '/auth/refresh', method: 'post' }, // this.$auth.refreshTokens() to manually refresh
+          user: { url: '/auth/user', method: 'get', propertyName: false },
+        },
+        redirect: {
+          login: '/login', // User will be redirected to this path if login is required
+          logout: '/', // User will be redirected to this path if after logout
+          callback: false, // User will be redirected to this path by the identity provider after login
+          home: '/dashboard', // User will be redirected to this path after login
         },
         // autologout is false
-      }
-    }
+      },
+    },
   },
   axios: {
     // proxyHeaders: false
