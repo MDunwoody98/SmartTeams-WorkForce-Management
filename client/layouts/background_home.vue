@@ -1,7 +1,11 @@
 <template>
   <div>
-    <section class="home-header"/>
-        <Nuxt />
+    <section class="home-header">
+      <Navbar/>
+    </section>
+    <div class="main">
+      <Nuxt/>
+    </div>
     <section class="home-footer"/>
   </div>
 </template>
@@ -10,15 +14,26 @@
 .home-header, .home-footer{
     width: 100%;
     position: fixed;        
-    padding: 10px 0;
     color: #ffff;
 }
 .home-header{
     top: 0;
-    background: #091C58;
 }
 .home-footer{
     bottom: 0;
     background: #2D9FA0;
+    position: fixed;
+    padding: 10px 0;
 }   
+@media all and (min-width: 961px) {
+  .main {
+    margin-left: 256px;
+  }
+}
+@media all and (max-width: 960px) {
+  .main {
+    margin-left: 56px;
+  }
+}
+
 </style>

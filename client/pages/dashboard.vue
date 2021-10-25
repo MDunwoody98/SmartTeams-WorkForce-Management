@@ -2,9 +2,10 @@
   <div class="container">
     <div>
       <Logo />
-      <p>
-        {{this.$auth.user}}
+        <p>
+          {{this.$auth.user}}
         </p>
+        
     </div>
   </div>
 </template>
