@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Logo renders properly 1`] = `<img contain="" src="~/assets/SmartTeams Logo.png">`;

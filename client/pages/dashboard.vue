@@ -1,18 +1,59 @@
 <template>
   <div class="container">
-    <div>
-      <Logo />
-        <p>
-          {{this.$auth.user}}
-        </p>
-        
-    </div>
+    <v-container v-if = "!mobile" class="d-flex justify-center">
+      <v-row>
+        <v-col cols="12">
+          <!--In here goes the time entry cards-->
+          <div class="calendar-container">
+            <div v-for="index in cardCount" :key="index">
+              <v-card>
+                <v-card-title>Monday</v-card-title>
+              </v-card>
+            </div>
+          </div>
+        </v-col>
+        <v-col>
+          <!--In here goes the time entry cards-->
+          <div>
+            <Logo />
+            <p>
+              {{this.$auth.user}}
+            </p>
+          </div>
+        </v-col>
+        <v-col>
+        <!--In here goes the vertical split with the graphs-->
+          <div>
+            <Logo />
+            <p>
+              {{this.$auth.user}}
+            </p>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+    
   </div>
 </template>
 
 <script>
 export default {
-  layout: 'background_home'
+  layout: 'background_home',
+  computed: {
+    mobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
+    cardCount() {
+      if (this.$vuetify.breakpoint.xl) {
+        return 7
+      }
+      if (this.$vuetify.breakpoint.mdAndUp) {
+        return 5
+      }
+      else
+       return 0
+    },
+  },
 }
 </script>
 
@@ -46,5 +87,11 @@ export default {
 
 .links {
   padding-top: 15px;
+}
+.calendar-container {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: stretch;
 }
 </style>

@@ -1,25 +1,25 @@
 <template>
   <nav class="navigation">
     <v-app-bar app dark class="toolbar" color="#091C58" clipped-left>      
-      <v-toolbar-title class="text-uppercase">
+      <v-toolbar-title>
         <span>
           SmartTeams
         </span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn text @click="logOut()">
-        <span>Sign out</span>
-        <v-icon right>exit_to_app</v-icon>
+      <v-btn text class="signout-nav" @click="logOut()" >
+        <span v-if = "!mobile" class="signout-nav-text">Sign out</span>
+        <v-icon right large>exit_to_app</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-navigation-drawer light class="sidenav" :mini-variant="mini" permanent clipped app mobile-breakpoint="md">
+    <v-navigation-drawer light class="sidenav" :mini-variant="mobile" permanent clipped app>
       <v-row no-gutters>
         <v-col cols="12" align="center" class="nav-header">
-          <v-avatar size="100">
-              <v-img :src="require('~/assets/SmartTeams Logo.png')"/>
+          <v-avatar v-if = "!mobile" size="100">
+              <v-img :src="require('~/assets/Mugshot_1.jpg')"/>
           </v-avatar>
         </v-col>
-        <v-col cols="12" align="center" class="nav-header-username">
+        <v-col v-if = "!mobile" cols="12" align="center" class="nav-header-username" >
             <p class="subheading user-name-nav">{{this.$auth.user.worker.name.firstName}} {{this.$auth.user.worker.name.lastName}}</p>
         </v-col>
       </v-row>
@@ -51,9 +51,9 @@ export default {
     }    
   },
   computed: {
-    mini() {
+    mobile() {
       return this.$vuetify.breakpoint.smAndDown;
-    }
+    },
   },
   methods: {
     async logOut() {
@@ -86,6 +86,13 @@ export default {
 .nav-header{
   margin-top: 100px;
   margin-bottom: 40px;
+}
+.signout-nav {
+  margin-top: 0px;
+}
+.signout-nav-text{
+  font-size: larger;
+  padding-right: 20px;
 }
 
 
