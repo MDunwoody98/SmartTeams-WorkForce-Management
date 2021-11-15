@@ -7,7 +7,7 @@
           <div class="calendar-container">
             <div v-for="index in cardCount" :key="index">
               <v-card>
-                <v-card-title>Monday</v-card-title>
+                <v-card-title>Monday {{index}}</v-card-title>
               </v-card>
             </div>
           </div>

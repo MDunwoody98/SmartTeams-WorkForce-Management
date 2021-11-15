@@ -84,6 +84,7 @@ export default {
 
 .login-card {
   padding: 25px;
+  z-index: 800;
 }
 
 .form-group {
@@ -113,7 +114,8 @@ export default {
     min-height: 600px;
   }
   .subtitle {
-  font-size: 3rem;
+  font-size: 2.2rem;
+  margin-top: 15px;
   }
   .form-group {
     padding-top: 30px;
