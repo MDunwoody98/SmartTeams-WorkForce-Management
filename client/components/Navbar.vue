@@ -1,6 +1,6 @@
 <template>
   <nav class="navigation">
-    <v-app-bar app dark class="toolbar" color="#091C58" clipped-left>      
+    <v-app-bar app dense dark class="toolbar" color="#091C58" clipped-left>      
       <v-toolbar-title>
         <span>
           SmartTeams

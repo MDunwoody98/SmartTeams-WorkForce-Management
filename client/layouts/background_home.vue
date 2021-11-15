@@ -18,6 +18,7 @@
 }
 .home-header{
     top: 0;
+    z-index: 999;
 }
 .home-footer{
     bottom: 0;

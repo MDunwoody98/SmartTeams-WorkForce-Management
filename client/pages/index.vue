@@ -45,6 +45,8 @@ export default {
   padding-top: 15px;
   max-width: 400px;
   margin: 0 auto;
+  z-index: 9;
+  position: relative;
 }
 
 </style>

@@ -6,8 +6,25 @@
           <!--In here goes the time entry cards-->
           <div class="calendar-container">
             <div v-for="index in cardCount" :key="index">
-              <v-card>
-                <v-card-title>Monday {{index}}</v-card-title>
+              <v-card class="dayview-card">
+                <v-toolbar dense flat>
+                  <v-toolbar-title class="title-dayName">Monday</v-toolbar-title>
+                  <v-spacer></v-spacer>
+                  <v-toolbar-title class="title-dayInMonthNumber">{{index}}</v-toolbar-title>
+                </v-toolbar>
+                <v-divider></v-divider>
+                <v-card-text>
+                  <v-list>
+                    <template v-for="i in 40">
+                      <v-list-tile v-bind:key="i">
+                        <v-list-tile-content>
+                          <div>{{ i }}</div>
+                        </v-list-tile-content>
+                      </v-list-tile>
+                    </template>
+                  </v-list>
+                </v-card-text>
+                <v-footer class="pa-2">Footer</v-footer>
               </v-card>
             </div>
           </div>
@@ -32,7 +49,6 @@
         </v-col>
       </v-row>
     </v-container>
-    
   </div>
 </template>
 
@@ -89,9 +105,31 @@ export default {
   padding-top: 15px;
 }
 .calendar-container {
-  margin-top: 50px;
+  margin-top: 30px;
   display: flex;
   justify-content: space-evenly;
   align-items: stretch;
 }
+
+
+
+
+.dayview-card {
+  width: 200px;
+  height: 40vh;
+}
+.v-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.v-card__text {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.title-dayName {
+  padding: 0%;
+}
+
 </style>
