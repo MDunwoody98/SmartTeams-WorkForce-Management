@@ -15,10 +15,10 @@
     width: 100%;
     position: fixed;        
     color: #ffff;
+    z-index: 80;
 }
 .home-header{
     top: 0;
-    z-index: 999;
 }
 .home-footer{
     bottom: 0;
@@ -28,7 +28,7 @@
 }   
 @media all and (min-width: 961px) {
   .main {
-    margin-left: 256px;
+    margin-left: 210px;
   }
 }
 @media all and (max-width: 960px) {

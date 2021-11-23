@@ -3,7 +3,7 @@ export default {
    ** Nuxt rendering mode
    ** See https://nuxtjs.org/api/configuration-mode
    */
- mode: 'universal',
+  mode: 'universal',
   /*
    ** Nuxt target
    ** See https://nuxtjs.org/api/configuration-target
@@ -14,7 +14,7 @@ export default {
    ** See https://nuxtjs.org/api/configuration-head
    */
   head: {
-    title: process.env.npm_package_name || '',
+    title: 'SmartTeams - Time Management System',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -32,11 +32,11 @@ export default {
   css: ['~/assets/main.css'],
   layoutTransition: {
     name: 'home',
-    mode: 'out-in'
+    mode: 'out-in',
   },
   pageTransition: {
     name: 'home',
-    mode: 'out-in'
+    mode: 'out-in',
   },
   /*
    ** Plugins to load before mounting the App
@@ -52,10 +52,7 @@ export default {
    ** Nuxt.js dev-modules
    ** See https://nuxtjs.org/api/configuration-modules/#buildmodules
    */
-  buildModules: [
-    '@nuxtjs/eslint-module',
-    '@nuxtjs/vuetify',
-  ],
+  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/vuetify'],
   /*
    ** Nuxt.js modules
    */
@@ -98,11 +95,11 @@ export default {
         refreshToken: {
           property: 'refresh_token',
           data: 'refresh_token', // property name in request
-          maxAge: 60 * 60 * 24 * 30 // 30 days
+          maxAge: 60 * 60 * 24 * 30, // 30 days
         },
         user: {
           property: 'user', // <--- Default "user"
-          autoFetch: true
+          autoFetch: true,
         },
         endpoints: {
           login: { url: '/auth/login', method: 'post', propertyName: 'token' },
@@ -122,7 +119,7 @@ export default {
   },
   axios: {
     // proxyHeaders: false
-    baseURL: 'http://127.0.0.1:9000/api'
+    baseURL: 'http://127.0.0.1:9000/api',
   },
   /*
    ** Build configuration
@@ -130,37 +127,37 @@ export default {
    */
   build: {
     /*
-    ** You can extend webpack config here
-    */
+     ** You can extend webpack config here
+     */
   },
   router: {
     // Always redirect user to /login page if loggedIn is false
-    middleware: ['auth']
+    middleware: ['auth'],
   },
   vuetify: {
     theme: {
-        themes: {
-            light: {
-                'primary': '#091C58',
-                'secondary': '#3B8070',
-            },
-            dark: {
-              'primary': '#091C58',
-              'secondary': '#3B8070',
-          }
-        }
+      themes: {
+        light: {
+          primary: '#091C58',
+          secondary: '#3B8070',
+        },
+        dark: {
+          primary: '#091C58',
+          secondary: '#3B8070',
+        },
+      },
     },
     defaultAssets: {
       font: true,
-      icons: 'md'
+      icons: 'md',
     },
     icons: {
       iconfont: 'md',
-    }
+    },
   },
   eslint: {
     rules: {
       'no-console': 'off',
     },
-  }
+  },
 }

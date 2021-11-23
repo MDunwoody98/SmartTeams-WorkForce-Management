@@ -12,7 +12,7 @@
         <v-icon right large>exit_to_app</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-navigation-drawer light class="sidenav" :mini-variant="mobile" permanent clipped app>
+    <v-navigation-drawer light class="sidenav" :mini-variant="mobile" permanent clipped app width="210px">
       <v-row no-gutters>
         <v-col cols="12" align="center" class="nav-header">
           <v-avatar v-if = "!mobile" size="100">
