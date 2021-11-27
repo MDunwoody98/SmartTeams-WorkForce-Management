@@ -1,31 +1,32 @@
 <template>
   <div>
     <section class="home-header">
-      <Navbar/>
+      <Navbar />
     </section>
     <div class="main">
-      <Nuxt/>
+      <Nuxt />
     </div>
-    <section class="home-footer"/>
+    <section class="home-footer" />
   </div>
 </template>
 
 <style>
-.home-header, .home-footer{
-    width: 100%;
-    position: fixed;        
-    color: #ffff;
-    z-index: 80;
+.home-header,
+.home-footer {
+  width: 100%;
+  position: fixed;
+  color: #ffff;
+  z-index: 80;
 }
-.home-header{
-    top: 0;
+.home-header {
+  top: 0;
 }
-.home-footer{
-    bottom: 0;
-    background: #2D9FA0;
-    position: fixed;
-    padding: 10px 0;
-}   
+.home-footer {
+  bottom: 0;
+  background: #2d9fa0;
+  position: fixed;
+  padding: 10px 0;
+}
 @media all and (min-width: 961px) {
   .main {
     margin-left: 210px;
@@ -36,5 +37,4 @@
     margin-left: 56px;
   }
 }
-
 </style>

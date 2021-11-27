@@ -47,7 +47,9 @@ export default {
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
    */
-  components: true,
+  components: {
+    dirs: ['~/components', '~/components/Dashboard-Components'],
+  },
   /*
    ** Nuxt.js dev-modules
    ** See https://nuxtjs.org/api/configuration-modules/#buildmodules
