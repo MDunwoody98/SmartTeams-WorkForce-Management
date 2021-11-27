@@ -1,27 +1,28 @@
 <template>
+  <!--If no worker profile, navigate to a form to complete profile-->
   <div class="container">
-    <v-container v-if = "!mobile" class="d-flex justify-center">
+    <v-container v-if="!mobile" class="d-flex justify-center">
       <v-row>
         <!--Here is where the date/week selector would go-->
         <v-col cols="12">
           <!--View of current week and associated time entries-->
-          <DayViewContainer/>
+          <DayViewContainer />
         </v-col>
         <v-col cols="6">
           <!--In here goes the time entry cards-->
           <div>
             <Logo />
             <p>
-              {{this.$auth.user}}
+              {{ this.$auth.user }}
             </p>
           </div>
         </v-col>
         <v-col cols="6">
-        <!--In here goes the vertical split with the graphs-->
+          <!--In here goes the vertical split with the graphs-->
           <div>
             <Logo />
             <p>
-              {{this.$auth.user}}
+              {{ this.$auth.user }}
             </p>
           </div>
         </v-col>
@@ -35,7 +36,8 @@ export default {
   layout: 'background_home',
   computed: {
     mobile() {
-      return this.$vuetify.breakpoint.smAndDown;
+      this.$auth.refreshTokens()
+      return this.$vuetify.breakpoint.smAndDown
     },
   },
 }
@@ -50,5 +52,4 @@ export default {
   align-items: center;
   text-align: center;
 }
-
 </style>

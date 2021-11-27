@@ -59,7 +59,6 @@ const logIn = async (req, res, next) => {
     const token = jwt.sign({ user: user.workerId }, process.env.JWT_SECRET, {
       expiresIn: "30m", // it will expire token after 30 minutes and if the user then refresh the page will log out
     });
-    // do the database authentication here, with user name and password combination.
     const refreshToken = jwt.sign({user: user.workerId}, process.env.JWT_REFRESH_SECRET, {
       expiresIn: "43200m",
     });
@@ -77,9 +76,9 @@ const logIn = async (req, res, next) => {
 const getUserOnLogin = async (req, res, next) => { // this function will send user data to the front-end as I said above authFetch on the user object in nuxt.config.js will send a request and it will execute
   //return stuff differently if a worker profile exists for the user ???
   try {
-    console.log("Hello")
-    const authHeader = req.get("Authorization");
-    console.log(authHeader)
+    console.log('heya')
+    console.log(req.body)
+    const authHeader = req.get("Authorization");//<bearer token>
     if (!authHeader) {
       const error = new Error("Not authenticated.");
       error.statusCode = 401;
@@ -88,6 +87,7 @@ const getUserOnLogin = async (req, res, next) => { // this function will send us
     const token = authHeader.split(" ")[1];
     let decodedToken;
     try {
+      console.log('issue '+token)
       decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     } catch (err) {
       err.statusCode = 500;
@@ -98,7 +98,6 @@ const getUserOnLogin = async (req, res, next) => { // this function will send us
       error.statusCode = 401;
       throw error;
     }
-    console.log(decodedToken)
     const loggedInUserId = decodedToken.user;
     let linkedWorkerProfile = await workerModel.findOne({ workerId: loggedInUserId });
     res.status(200).json({
@@ -114,9 +113,21 @@ const getUserOnLogin = async (req, res, next) => { // this function will send us
     next(err);
   }
 };
-
+//needs work
 const refreshToken = (req, res) => {
-
+  // const tokenToRefresh = req.body.refresh_token
+  // var decoded = jwt.decode(tokenToRefresh)
+  // const userID = decoded.user
+  // // if refresh token exists and is valid
+  // if((tokenToRefresh) && (jwt.verify(tokenToRefresh, process.env.JWT_REFRESH_SECRET))) {
+  //   const refreshToken = jwt.sign({user: userID}, process.env.JWT_REFRESH_SECRET, {
+  //     expiresIn: "43200m",
+  //   });
+  //   console.log(refreshToken)
+  //   res.status(200).json(refreshToken);        
+  // } else {
+  //   res.status(404).send('Invalid request')
+  // }
 }
 
 module.exports = {

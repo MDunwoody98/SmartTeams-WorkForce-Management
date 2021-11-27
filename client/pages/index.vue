@@ -1,9 +1,19 @@
 <template>
   <div class="container">
     <div class="page">
-      <Logo/>
+      <Logo />
       <div class="login">
-        <v-btn class="btnLogin" elevation="4" large block outlined to="/login" nuxt color="#091C58">Sign In</v-btn>
+        <v-btn
+          class="btnLogin"
+          elevation="4"
+          large
+          block
+          outlined
+          to="/login"
+          nuxt
+          color="#091C58"
+          >Sign In</v-btn
+        >
       </div>
     </div>
   </div>
@@ -16,17 +26,16 @@ export default {
   layout: 'background_splash',
   computed: {
     isAuthenticated() {
-      return this.$store.getters.isAuthenticated;  // it check if user isAuthenticated 
+      return this.$store.getters.isAuthenticated // it check if user isAuthenticated
     },
   },
-  beforeMount(){
+  beforeMount() {
     this.redirect() // Execute redirect before loading page
- },
+  },
   methods: {
     redirect() {
-     if (this.isAuthenticated)
-      this.$router.replace('dashboard') // Redirect to user dashboard if user has logged in
-    }
+      if (this.isAuthenticated) this.$router.replace('dashboard') // Redirect to user dashboard if user has logged in
+    },
   },
 }
 </script>
@@ -48,5 +57,4 @@ export default {
   z-index: 9;
   position: relative;
 }
-
 </style>
