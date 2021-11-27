@@ -10,12 +10,7 @@
         </v-col>
         <v-col cols="6">
           <!--In here goes the time entry cards-->
-          <div>
-            <Logo />
-            <p>
-              {{ this.$auth.user }}
-            </p>
-          </div>
+          <RemainingLeave />
         </v-col>
         <v-col cols="6">
           <!--In here goes the vertical split with the graphs-->
