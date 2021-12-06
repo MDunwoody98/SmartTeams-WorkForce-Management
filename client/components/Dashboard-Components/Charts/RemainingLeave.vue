@@ -4,7 +4,7 @@ import { Pie } from 'vue-chartjs'
 export default {
   extends: Pie,
   props: {
-    chartData: {
+    data: {
       type: Object,
       default: null,
     },
@@ -14,16 +14,7 @@ export default {
     },
   },
   mounted() {
-    this.renderChart({
-      labels: ['Leave used', 'Leave remaining'],
-      datasets: [
-        {
-          label: 'Annual Leave',
-          backgroundColor: ['#091C58', '#2D9FA0'],
-          data: [16.25, 35],
-        },
-      ],
-    })
+    this.renderChart(this.data, this.options)
   },
 }
 </script>

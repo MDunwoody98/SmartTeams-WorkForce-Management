@@ -89,6 +89,7 @@ export default {
 .toolbar {
   position: relative;
   color: '#091C58';
+  height: 80vh;
 }
 .sidenav {
   position: fixed;

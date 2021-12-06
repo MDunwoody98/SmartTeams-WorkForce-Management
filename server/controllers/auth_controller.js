@@ -128,6 +128,7 @@ const refreshToken = (req, res) => {
   // } else {
   //   res.status(404).send('Invalid request')
   // }
+  res.status(200)
 }
 
 module.exports = {

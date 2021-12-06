@@ -92,20 +92,7 @@ export default {
   letter-spacing: 1px;
 }
 
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-
 .calendar-container {
-  margin-top: 30px;
   display: flex;
   align-items: stretch;
   justify-content: space-evenly;
@@ -116,6 +103,9 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: stretch;
+}
+.calendar-container {
+  margin-top: 30px;
 }
 @media all and (min-width: 960px) and (max-width: 1903px) {
   .dayview-card {

@@ -33,7 +33,7 @@ router
 router
   .post('/auth/login', logIn)
   .post('/auth/register', registerNewUser)
-  //.post('/auth/refresh', refreshToken)
+  .post('/auth/refresh', refreshToken)
   .get('/auth/user', getUserOnLogin);
 
 router
