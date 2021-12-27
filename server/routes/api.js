@@ -1,5 +1,39 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require("jsonwebtoken");
+
+// a middleware function with no mount path. This code is executed for EVERY request to the router
+// Token auth for API requests. Should apply to every endpoint except /auth
+// If it fails, client should refresh token and retry
+router.use(function (req, res, next) {
+  if (req.path.substring(1,5) == "auth") return next('route');
+    const authHeader = req.headers.authorization;
+    // also validate that user is who they claim to be
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                return res.sendStatus(403).json(err);
+            }
+            req.decoded = decoded;
+            next('route');
+        });
+    } else {
+      res.sendStatus(401);
+    }
+});
+//MULTI TENANCY MULTIPLE SECRETS
+// var secretCallback = function(req, payload, done){
+//   var issuer = payload.iss;
+
+//   data.getTenantByIdentifier(issuer, function(err, tenant){
+//     if (err) { return done(err); }
+//     if (!tenant) { return done(new Error('missing_secret')); }
+
+//     var secret = utilities.decrypt(tenant.secret);
+//     done(null, secret);
+//   });
+// };
 
 const {
   createUser,

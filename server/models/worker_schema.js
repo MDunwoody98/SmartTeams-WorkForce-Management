@@ -5,6 +5,7 @@ const workerSchema = new Schema(
         workerId: {
             type: String,
             required: [true, 'Worker ID is required'],
+            unique: true,
         },
         name: {
             firstName: {

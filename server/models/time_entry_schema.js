@@ -2,11 +2,6 @@ const {Schema, model} = require("mongoose");
 
 const time_entry_schema = new Schema(
     {
-        time_entry_id: {
-            type: String,
-            required: [true, 'Time Code ID is required'],
-            unique: true,
-        },
         workerId: {
             type: String,
             required: [true,'A worker must be linked to every time entry'],
@@ -35,7 +30,17 @@ const time_entry_schema = new Schema(
         comments: {
             type: String,
             required: false,
+        },
+        approved: {
+            type: Boolean,
+            default: false
         }
     }
 )
+// On creation, all time codes must be in a state of NOT APPROVED
+time_entry_schema.methods.createTimeCodeUnapproved = function() {
+    this.approved = false;
+}
+time_entry_schema.queue('createTimeCodeUnapproved',[]);
+
 module.exports = model('time_entry', time_entry_schema);

@@ -120,7 +120,7 @@ export default {
 @media all and (min-width: 1904px) {
   .report-item-card {
     width: 43vw;
-    height: 48vh;
+    height: 44vh;
   }
   .pie-chart {
     margin: 0 auto;
@@ -131,12 +131,12 @@ export default {
 @media all and (max-width: 1903px) {
   .report-item-card {
     width: 40vw;
-    height: 42vh;
+    height: 35vh;
   }
   .pie-chart {
     margin: 0 auto;
     width: 100%;
-    height: 75%;
+    height: 66%;
   }
 }
 

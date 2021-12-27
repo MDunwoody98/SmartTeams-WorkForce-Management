@@ -4,7 +4,7 @@ const teamSchema = new Schema(
     {
         teamId: {
             type: String,
-            required: [true, 'Team ID is required'],
+            required: false,
             unique: true,
         },
         name: {
@@ -14,10 +14,16 @@ const teamSchema = new Schema(
         managerId: {
             type: [String],
             required: [true, 'At least one worker must be assigned as a team manager'],
+            validate: {
+                validator: (v) => v.length > 0
+            },
         },
         memberId: {
             type: [String],
             required: [true, 'At least one worker must be assigned as a team member'],
+            validate: {
+                validator: (v) => v.length > 0
+            },
         },
         projectId: {
             type: [String],
@@ -25,4 +31,4 @@ const teamSchema = new Schema(
         },
     }
 )
-module.exports = model('tean', teamSchema);
+module.exports = model('team', teamSchema);

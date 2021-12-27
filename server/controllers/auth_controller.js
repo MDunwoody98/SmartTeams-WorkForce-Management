@@ -73,7 +73,8 @@ const logIn = async (req, res, next) => {
   }
 };
 
-const getUserOnLogin = async (req, res, next) => { // this function will send user data to the front-end as I said above authFetch on the user object in nuxt.config.js will send a request and it will execute
+const getUserOnLogin = async (req, res, next) => { 
+  // this function will send user data to the front-end as I said above authFetch on the user object in nuxt.config.js will send a request and it will execute
   //return stuff differently if a worker profile exists for the user ???
   try {
     console.log('heya')

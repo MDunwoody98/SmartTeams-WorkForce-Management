@@ -1,50 +1,64 @@
 <template>
-  <div class="calendar-container">
-    <template>
-      <div v-for="index in cardCount" :key="index">
-        <v-card class="dayview-card">
-          <v-toolbar dense flat>
-            <v-toolbar-title class="title-dayName">{{
-              calendarItems[index - 1].day
-            }}</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-title class="title-dayInMonthNumber">{{
-              calendarItems[index - 1].date
-            }}</v-toolbar-title>
-          </v-toolbar>
-          <v-divider></v-divider>
-          <div class="container-entries">
-            <v-list dense>
-              <template v-for="i in 10">
-                <v-list-item :key="i" class="timeEntry" ripple>
-                  <v-list-item-content @click="editTimeEntry = true">
-                    <v-list-item-title class="timeEntry"
-                      >Project Name Name Name Name Name Name Name Name Name Name
-                      Name Name Name Name Name Name Name Name Name
-                      Name</v-list-item-title
-                    >
-                    <v-list-item-subtitle class="timeEntry"
-                      >1 hour</v-list-item-subtitle
-                    >
-                    <div class="timeEntry">{{ i }}</div>
-                  </v-list-item-content>
-                </v-list-item>
-              </template>
-            </v-list>
-          </div>
-          <div @click="addNewTimeEntry = true">
-            <v-footer class="add-time">
-              <v-icon>more_time</v-icon>
-              <p>Add Time Entry</p>
-            </v-footer>
-          </div>
-        </v-card>
+  <div class="dayview-container">
+    <div class="container-top">
+      <div class="week-selector-container">
+        <v-icon x-large @click="goToPreviousWeek()">chevron_left</v-icon>
+        <v-icon x-large @click="goToSpecifiedWeek()">calendar_month</v-icon>
+        <v-icon x-large @click="goToNextWeek()">chevron_right</v-icon>
       </div>
-      <div data-app>
-        <EditTimeEntry v-model="editTimeEntry" />
-        <AddNewTimeEntry v-model="addNewTimeEntry" />
+      <div class="submit">
+        <v-btn rounded color="#2D9FA0" dark @click="submitTimeEntries()">
+          Submit Time Entries
+        </v-btn>
       </div>
-    </template>
+    </div>
+    <div class="calendar-container">
+      <template>
+        <div v-for="index in cardCount" :key="index">
+          <v-card class="dayview-card">
+            <v-toolbar dense flat>
+              <v-toolbar-title class="title-dayName">{{
+                calendarItems[index - 1].day
+              }}</v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-toolbar-title class="title-dayInMonthNumber">{{
+                calendarItems[index - 1].date
+              }}</v-toolbar-title>
+            </v-toolbar>
+            <v-divider></v-divider>
+            <div class="container-entries">
+              <v-list dense>
+                <template v-for="i in 10">
+                  <v-list-item :key="i" class="timeEntry" ripple>
+                    <v-list-item-content @click="editTimeEntry = true">
+                      <v-list-item-title class="timeEntry"
+                        >Project Name Name Name Name Name Name Name Name Name
+                        Name Name Name Name Name Name Name Name Name Name
+                        Name</v-list-item-title
+                      >
+                      <v-list-item-subtitle class="timeEntry"
+                        >1 hour</v-list-item-subtitle
+                      >
+                      <div class="timeEntry">{{ i }}</div>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+              </v-list>
+            </div>
+            <div @click="addNewTimeEntry = true">
+              <v-footer class="add-time">
+                <v-icon>more_time</v-icon>
+                <p>Add Time Entry</p>
+              </v-footer>
+            </div>
+          </v-card>
+        </div>
+        <div data-app>
+          <EditTimeEntry v-model="editTimeEntry" />
+          <AddNewTimeEntry v-model="addNewTimeEntry" />
+        </div>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -79,17 +93,24 @@ export default {
       } else return 0
     },
   },
+  methods: {
+    goToNextWeek() {},
+    goToPreviousWeek() {},
+    goToSpecifiedWeek() {},
+    submitTimeEntries() {},
+  },
 }
 </script>
 <style scoped>
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
+.dayview-container {
+  display: flexbox;
+  margin-top: 3vh;
+}
+
+.container-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .calendar-container {
@@ -104,9 +125,6 @@ export default {
   flex-direction: column;
   justify-content: stretch;
 }
-.calendar-container {
-  margin-top: 30px;
-}
 @media all and (min-width: 960px) and (max-width: 1903px) {
   .dayview-card {
     max-width: 16vw;
@@ -115,6 +133,9 @@ export default {
 @media all and (min-width: 1904px) {
   .dayview-card {
     max-width: 12vw;
+  }
+  .submit {
+    margin-top: -4vh;
   }
 }
 

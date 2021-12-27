@@ -2,66 +2,63 @@
   <v-dialog v-model="show" max-width="500px">
     <v-card>
       <v-card-title>
-        <span class="headline">Edit time entry</span>
+        <span class="headline">Edit Time Entry</span>
       </v-card-title>
+      <!-- Date picker for particular date of time entry -->
       <v-card-text>
-        <v-container grid-list-md>
-          <v-layout wrap>
-            <v-flex xs12 sm6 md4>
-              <v-text-field label="Legal first name*" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 sm6 md4>
-              <v-text-field
-                label="Legal middle name"
-                hint="example of helper text only on focus"
-              ></v-text-field>
-            </v-flex>
-            <v-flex xs12 sm6 md4>
-              <v-text-field
-                label="Legal last name*"
-                hint="example of persistent helper text"
-                persistent-hint
-                required
-              ></v-text-field>
-            </v-flex>
-            <v-flex xs12>
-              <v-text-field label="Email*" required></v-text-field>
-            </v-flex>
-            <v-flex xs12>
-              <v-text-field
-                label="Password*"
-                type="password"
-                required
-              ></v-text-field>
-            </v-flex>
-            <v-flex xs12 sm6>
-              <v-select
-                :items="['0-17', '18-29', '30-54', '54+']"
-                label="Age*"
-                required
-              ></v-select>
-            </v-flex>
-            <v-flex xs12 sm6>
-              <v-autocomplete
-                :items="[
-                  'Skiing',
-                  'Ice hockey',
-                  'Soccer',
-                  'Basketball',
-                  'Hockey',
-                  'Reading',
-                  'Writing',
-                  'Coding',
-                  'Basejump',
-                ]"
-                label="Interests"
-                multiple
-              ></v-autocomplete>
-            </v-flex>
-          </v-layout>
-        </v-container>
-        <small>*indicates required field</small>
+        <v-menu
+          ref="menu"
+          v-model="menu"
+          :close-on-content-click="false"
+          :return-value.sync="dates"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-combobox
+              v-model="dates"
+              multiple
+              chips
+              deletable-chips
+              clearable
+              label="Date"
+              prepend-icon="calendar"
+              v-bind="attrs"
+              v-on="on"
+            ></v-combobox>
+          </template>
+          <v-date-picker
+            v-model="dates"
+            multiple
+            no-title
+            scrollable
+            event-color="black"
+          >
+            <v-spacer></v-spacer>
+            <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
+            <v-btn text color="primary" @click="$refs.menu.save(dates)">
+              OK
+            </v-btn>
+          </v-date-picker>
+        </v-menu>
+        <!-- Implement multi-select dropdown here so that it looks like a Workday search box. Select from all time codes or filter by proejct -->
+        <v-select
+          :items="['Code 1', 'Code 2', 'Code 3', 'Code 4']"
+          label="Time Code"
+          required
+        ></v-select>
+        <v-text-field
+          label="Hours"
+          hint="Must be an increment of 0.25"
+        ></v-text-field>
       </v-card-text>
+      <v-textarea
+        outlined
+        shaped
+        label="Comments"
+        class="comments-box"
+      ></v-textarea>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="show = false">Close</v-btn>
@@ -75,6 +72,10 @@ export default {
   props: {
     value: Boolean,
   },
+  data: () => ({
+    dates: [],
+    menu: false,
+  }),
   computed: {
     show: {
       get() {
@@ -90,5 +91,9 @@ export default {
 <style scoped>
 template {
   position: absolute;
+}
+.comments-box {
+  width: 91%;
+  margin: 0 auto;
 }
 </style>

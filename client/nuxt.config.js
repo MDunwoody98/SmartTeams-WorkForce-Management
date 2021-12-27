@@ -55,23 +55,9 @@ export default {
    */
   modules: [
     // Doc: https://nuxtjs.org/api/configuration-modules/
-    'nuxt-oauth',
     '@nuxtjs/auth-next',
     '@nuxtjs/axios',
   ],
-  oauth: {
-    sessionName: 'mySession',
-    secretKey: process.env.SECRET_KEY || 'SECRET_KEY',
-    oauthHost: process.env.OAUTH_HOST || 'OAUTH_HOST',
-    oauthClientID: process.env.OAUTH_CLIENT_ID || 'OAUTH_CLIENT_ID',
-    oauthClientSecret: process.env.OAUTH_CLIENT_SECRET || 'OAUTH_CLIENT_SECRET',
-    onLogout: (req, res) => {
-      // do something after logging out
-    },
-    fetchUser: (accessToken, request) => {
-      // do something to return the user
-    },
-  },
   // auth setup
   auth: {
     redirect: {

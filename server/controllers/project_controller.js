@@ -3,6 +3,7 @@
 const Project = require('../models/project_schema');
 
 const createProject = (req, res) => {
+  console.log(req.decoded)
     Project.create(req.body)
     .then((data) => {
       console.log('New Project Created!', data);
