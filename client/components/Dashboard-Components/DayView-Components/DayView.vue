@@ -38,7 +38,7 @@
     </v-card>
     <div data-app>
       <EditTimeEntry v-model="editTimeEntry" />
-      <AddNewTimeEntry v-model="addNewTimeEntry" />
+      <AddNewTimeEntry v-model="addNewTimeEntry" :time-entry-date="data.key" />
     </div>
   </div>
 </template>

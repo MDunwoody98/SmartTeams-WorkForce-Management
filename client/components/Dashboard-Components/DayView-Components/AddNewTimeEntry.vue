@@ -3,6 +3,7 @@
     <v-card>
       <v-card-title>
         <span class="headline">Add Time Entry</span>
+        <span class="headline">{{ new Date(timeEntryDate) }}</span>
       </v-card-title>
       <!-- Date picker for particular date of time entry -->
       <v-card-text>
