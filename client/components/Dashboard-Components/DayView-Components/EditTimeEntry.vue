@@ -2,7 +2,7 @@
   <v-dialog v-model="show" max-width="500px">
     <v-card>
       <v-card-title>
-        <span class="headline">Add Time Entry</span>
+        <span class="headline">Edit Time Entry</span>
       </v-card-title>
       <!-- Date picker for particular date of time entry -->
       <v-card-text>
@@ -71,6 +71,7 @@
 export default {
   props: {
     value: Boolean,
+    timeEntry: { type: Object, default: null },
   },
   data: () => ({
     dates: [],

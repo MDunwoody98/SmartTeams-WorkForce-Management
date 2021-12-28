@@ -43,7 +43,11 @@ export default {
    ** See https://nuxtjs.org/api/configuration-components
    */
   components: {
-    dirs: ['~/components', '~/components/Dashboard-Components'],
+    dirs: [
+      '~/components',
+      '~/components/Dashboard-Components',
+      '~/components/Dashboard-Components/DayView-Components',
+    ],
   },
   /*
    ** Nuxt.js dev-modules

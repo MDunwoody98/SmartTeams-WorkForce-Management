@@ -14,48 +14,8 @@
     </div>
     <div class="calendar-container">
       <template>
-        <div v-for="index in cardCount" :key="index">
-          <v-card class="dayview-card">
-            <v-toolbar dense flat>
-              <v-toolbar-title class="title-dayName">{{
-                calendarItems[index - 1].day
-              }}</v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-toolbar-title class="title-dayInMonthNumber">{{
-                calendarItems[index - 1].date
-              }}</v-toolbar-title>
-            </v-toolbar>
-            <v-divider></v-divider>
-            <div class="container-entries">
-              <v-list dense>
-                <template v-for="i in 10">
-                  <v-list-item :key="i" class="timeEntry" ripple>
-                    <v-list-item-content @click="editTimeEntry = true">
-                      <v-list-item-title class="timeEntry"
-                        >Project Name Name Name Name Name Name Name Name Name
-                        Name Name Name Name Name Name Name Name Name Name
-                        Name</v-list-item-title
-                      >
-                      <v-list-item-subtitle class="timeEntry"
-                        >1 hour</v-list-item-subtitle
-                      >
-                      <div class="timeEntry">{{ i }}</div>
-                    </v-list-item-content>
-                  </v-list-item>
-                </template>
-              </v-list>
-            </div>
-            <div @click="addNewTimeEntry = true">
-              <v-footer class="add-time">
-                <v-icon>more_time</v-icon>
-                <p>Add Time Entry</p>
-              </v-footer>
-            </div>
-          </v-card>
-        </div>
-        <div data-app>
-          <EditTimeEntry v-model="editTimeEntry" />
-          <AddNewTimeEntry v-model="addNewTimeEntry" />
+        <div v-for="index in cardCount" :key="calendarItems[index - 1].key">
+          <DayView :data="calendarItems[index - 1]" />
         </div>
       </template>
     </div>
@@ -66,18 +26,32 @@
 export default {
   data() {
     return {
-      calendarItems: [
-        // Make this live by hooking it up to the DB/back end
-        { day: 'Monday', date: '15', month: 'November' },
-        { day: 'Tuesday', date: '16', month: 'November' },
-        { day: 'Wednesday', date: '17', month: 'November' },
-        { day: 'Thursday', date: '18', month: 'November' },
-        { day: 'Friday', date: '19', month: 'November' },
-        { day: 'Saturday', date: '20', month: 'November' },
-        { day: 'Sunday', date: '21', month: 'November' },
+      calendarItems: [],
+      weekendView: false,
+      selectedDate: new Date(),
+      monthNames: [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
       ],
-      editTimeEntry: false,
-      addNewTimeEntry: false,
+      dayNames: [
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+      ],
     }
   },
   computed: {
@@ -88,14 +62,85 @@ export default {
       if (this.$vuetify.breakpoint.xl) {
         return 7
       }
+      if (this.$vuetify.breakpoint.mdAndUp && this.weekendView) {
+        return 2
+      }
       if (this.$vuetify.breakpoint.mdAndUp) {
         return 5
       } else return 0
     },
+    firstDay() {
+      return this.selectedDate
+    },
+  },
+  created() {
+    this.generateCalendarWeek(this.getMonday(this.selectedDate), this.cardCount) // On creating the component, fill up the correct amount of cards based on screen size for time entries
   },
   methods: {
-    goToNextWeek() {},
-    goToPreviousWeek() {},
+    getMonday(inputDate) {
+      inputDate = new Date(inputDate)
+      const day = inputDate.getDay()
+      const diff = inputDate.getDate() - day + (day === 0 ? -6 : 1) // adjust when day is sunday
+      return new Date(inputDate.setDate(diff))
+    },
+    getSaturday(inputDate) {
+      inputDate = new Date(inputDate)
+      const day = inputDate.getDay()
+      const diff = inputDate.getDate() - day + (day === 0 ? 0 : 6) // adjust when day is sunday
+      return new Date(inputDate.setDate(diff))
+    },
+    generateCalendarWeek(firstDay, noOfCards) {
+      this.selectedDate = new Date(firstDay)
+      const calendarCardArray = []
+      for (let i = 0; i < noOfCards; i++) {
+        const dateToProcess = new Date(firstDay.setDate(firstDay.getDate() + i)) // process each day sequentially from firstDay, for a total of noOfCards days
+        const calendarCardItem = {
+          day: this.dayNames[dateToProcess.getDay()],
+          date: dateToProcess.getDate(),
+          month: this.monthNames[dateToProcess.getMonth()],
+          key: dateToProcess.getTime(),
+        }
+        calendarCardArray.push(calendarCardItem)
+        firstDay.setDate(firstDay.getDate() - i) // reset firstDay to be the original day
+      }
+      this.calendarItems = calendarCardArray
+    },
+    goToNextWeek() {
+      if (this.cardCount === 5 || this.cardCount === 2) {
+        this.weekendView = !this.weekendView
+      }
+      this.selectedDate.setDate(this.selectedDate.getDate() + this.cardCount)
+      console.log(this.selectedDate)
+      if (this.weekendView) {
+        this.generateCalendarWeek(
+          this.getSaturday(this.selectedDate),
+          this.cardCount
+        )
+      } else {
+        this.generateCalendarWeek(
+          this.getMonday(this.selectedDate),
+          this.cardCount
+        )
+      }
+    },
+    goToPreviousWeek() {
+      if (this.cardCount === 5 || this.cardCount === 2) {
+        this.weekendView = !this.weekendView
+      }
+      this.selectedDate.setDate(this.selectedDate.getDate() - this.cardCount)
+      console.log(this.selectedDate)
+      if (this.weekendView) {
+        this.generateCalendarWeek(
+          this.getSaturday(this.selectedDate),
+          this.cardCount
+        )
+      } else {
+        this.generateCalendarWeek(
+          this.getMonday(this.selectedDate),
+          this.cardCount
+        )
+      }
+    },
     goToSpecifiedWeek() {},
     submitTimeEntries() {},
   },
@@ -119,45 +164,9 @@ export default {
   justify-content: space-evenly;
 }
 
-.dayview-card {
-  height: 40vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: stretch;
-}
-@media all and (min-width: 960px) and (max-width: 1903px) {
-  .dayview-card {
-    max-width: 16vw;
-  }
-}
 @media all and (min-width: 1904px) {
-  .dayview-card {
-    max-width: 12vw;
-  }
   .submit {
     margin-top: -4vh;
   }
-}
-
-.title-dayName {
-  padding: 0%;
-}
-
-.container-entries {
-  overflow-x: hidden;
-}
-
-.timeEntry {
-  max-width: 100%;
-  cursor: pointer;
-}
-.timeEntry:hover {
-  background-color: #f3f6fd;
-}
-.add-time {
-  cursor: pointer;
-}
-.add-time:hover {
-  background-color: lightgray;
 }
 </style>
