@@ -12,18 +12,16 @@
       <v-divider></v-divider>
       <div class="container-entries">
         <v-list dense>
-          <template v-for="i in 10">
-            <v-list-item :key="i" class="timeEntry" ripple>
-              <v-list-item-content @click="editTimeEntry = true">
-                <v-list-item-title class="timeEntry"
-                  >Project Name Name Name Name Name Name Name Name Name Name
-                  Name Name Name Name Name Name Name Name Name
-                  Name</v-list-item-title
+          <template v-for="entry in timeEntries">
+            <v-list-item :key="entry._id" class="timeEntry" ripple>
+              <v-list-item-content @click="editSelectedTimeEntry(entry)">
+                <v-list-item-title class="timeEntry">
+                  {{ timeCodeIdNameMap[entry.timeCodeId] }}</v-list-item-title
                 >
                 <v-list-item-subtitle class="timeEntry"
-                  >1 hour</v-list-item-subtitle
+                  >{{ entry.hours }} hours</v-list-item-subtitle
                 >
-                <div class="timeEntry">{{ i }}</div>
+                <div class="timeEntry">{{ entry.comments }}</div>
               </v-list-item-content>
             </v-list-item>
           </template>
@@ -37,8 +35,15 @@
       </div>
     </v-card>
     <div data-app>
-      <EditTimeEntry v-model="editTimeEntry" />
-      <AddNewTimeEntry v-model="addNewTimeEntry" :time-entry-date="data.key" />
+      <EditTimeEntry
+        v-model="editTimeEntry"
+        :time-entry="selectedTimeEntry"
+        :selected-time-code-name="selectedTimeCodeName"
+      />
+      <AddNewTimeEntry
+        v-model="addNewTimeEntry"
+        :time-entry-date="new Date(data.key)"
+      />
     </div>
   </div>
 </template>
@@ -54,7 +59,57 @@ export default {
     return {
       editTimeEntry: false,
       addNewTimeEntry: false,
+      timeEntries: [],
+      selectedTimeEntry: null,
+      timeCodeIds: [],
+      timeCodeIdNameMap: new Map(),
+      timeCodeName: null,
+      selectedTimeCodeName: null,
     }
+  },
+  async created() {
+    await this.retrieveTimeEntryList()
+    await this.mapTimeEntryCodeNames(this.timeCodeIds)
+    this.$forceUpdate()
+  },
+  methods: {
+    async retrieveTimeEntryList() {
+      await this.$axios
+        .post('/time_entry/full_day', {
+          workerId: this.$auth.user.workerId,
+          date: new Date(this.data.key),
+        })
+        .then((response) => {
+          if (response.data.length > 0) {
+            this.timeEntries = response.data
+            response.data.forEach((element) => {
+              if (!this.timeCodeIds.includes(element.timeCodeId)) {
+                this.timeCodeIds.push(element.timeCodeId)
+              }
+            })
+          }
+        })
+    },
+    editSelectedTimeEntry(entry) {
+      this.selectedTimeEntry = entry
+      this.selectedTimeCodeName = this.timeCodeIdNameMap[entry.timeCodeId]
+      this.editTimeEntry = true
+    },
+    async mapTimeEntryCodeNames(timeCodeIds) {
+      for (const timeCodeId of timeCodeIds) {
+        await this.$axios.get(`/time_code/${timeCodeId}`).then((response) => {
+          this.timeCodeIdNameMap[timeCodeId] = response.data.projectId
+        })
+      }
+    },
+    isJSONString(str) {
+      try {
+        JSON.parse(str)
+      } catch (e) {
+        return false
+      }
+      return true
+    },
   },
 }
 </script>
@@ -88,7 +143,6 @@ export default {
 }
 
 .timeEntry {
-  max-width: 100%;
   cursor: pointer;
 }
 .timeEntry:hover {

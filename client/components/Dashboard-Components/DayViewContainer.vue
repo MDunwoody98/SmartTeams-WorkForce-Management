@@ -79,12 +79,14 @@ export default {
   methods: {
     getMonday(inputDate) {
       inputDate = new Date(inputDate)
+      inputDate.setHours(0, 0, 0, 0)
       const day = inputDate.getDay()
       const diff = inputDate.getDate() - day + (day === 0 ? -6 : 1) // adjust when day is sunday
       return new Date(inputDate.setDate(diff))
     },
     getSaturday(inputDate) {
       inputDate = new Date(inputDate)
+      inputDate.setHours(0, 0, 0, 0)
       const day = inputDate.getDay()
       const diff = inputDate.getDate() - day + (day === 0 ? 0 : 6) // adjust when day is sunday
       return new Date(inputDate.setDate(diff))

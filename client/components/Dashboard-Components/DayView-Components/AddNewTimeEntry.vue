@@ -81,11 +81,25 @@ export default {
   computed: {
     show: {
       get() {
+        this.$axios.setToken(this.$auth.token)
+        console.log(this.$axios.token)
         return this.value
       },
       set(value) {
         this.$emit('input', value)
       },
+    },
+  },
+  methoods: {
+    async addTimeEntry() {
+      await this.$axios.post('/time_entry', {
+        workerId: '12342',
+        date: '2021-12-31',
+        timeCodeId: '61c9e921be8274cfc496dc28',
+        hours: 1.75,
+        comments: 'No comments',
+        approved: true,
+      })
     },
   },
 }

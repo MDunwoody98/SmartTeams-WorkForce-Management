@@ -85,6 +85,7 @@ const {
   createTimeEntry,
   readTimeEntry,
   readTimeEntryById,
+  retrieveTimeEntriesForDay,
   updateTimeEntry,
   deleteTimeEntry,
 } = require('../controllers/time_entry_controller');
@@ -131,6 +132,7 @@ router
 
 router
 .post('/time_entry', createTimeEntry)
+.post('/time_entry/full_day', retrieveTimeEntriesForDay)
 .get('/time_entry', readTimeEntry)
 .get('/time_entry/:id', readTimeEntryById)
 .put('/time_entry/:id', updateTimeEntry)

@@ -6,6 +6,10 @@ const time_code_schema = new Schema(
             type: String,
             required: false, //Not all time codes are for a project
         },
+        timeCodeName: {
+            type: String,
+            required: false, //Not all time codes need a name
+        },
         autoApprove: {
             type: Boolean,
             required: [true, 'It must be stated whether this time code requires approval'],
