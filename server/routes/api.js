@@ -77,6 +77,7 @@ const {
   createTimeCode,
   readTimeCode,
   readTimeCodeById,
+  retrieveTimeCodesForWorker,
   updateTimeCode,
   deleteTimeCode,
 } = require('../controllers/time_code_controller');
@@ -127,6 +128,7 @@ router
 .post('/time_code', createTimeCode)
 .get('/time_code', readTimeCode)
 .get('/time_code/:id', readTimeCodeById)
+.get('/time_code/worker/:workerId', retrieveTimeCodesForWorker)
 .put('/time_code/:id', updateTimeCode)
 .delete('/time_code/:id', deleteTimeCode);
 

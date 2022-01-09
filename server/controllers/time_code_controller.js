@@ -1,6 +1,7 @@
 'use strict';
 
 const TimeCode = require('../models/time_code_schema');
+const Team = require('../models/team_schema');
 
 const createTimeCode = (req, res) => {
     TimeCode.create(req.body)
@@ -32,14 +33,41 @@ const readTimeCode = (req, res) => {
 
 const readTimeCodeById = (req, res) => {
     TimeCode.findOne({id: req.params.id})
-      .then((data) => {
-        res.status(200).json(data);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).json(err);
-      });
-  };
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json(err);
+    });
+};
+
+const retrieveTimeCodesForWorker = async (req, res) => {
+  //Get all teams where worker is member
+  //Get all project Ids that are associated with that team
+  //Get all time codes for those projects
+  //Return Map String -> String[] of project ID -> Time Codes
+  let projectsAndAssociatedTimeCodes = new Map()
+  try {
+    const teams = await Team.find({memberId: req.params.workerId})
+    const projects = teams.map(team => team.projectId)[0]
+    //Using counter as forEach is synchronous and executing in parallel
+    var projectsProcessed = 0
+    //To wait for all the function calls to finish before moving on, use a map with a Promise.all and discard the results
+      await projects.forEach(async project => {
+      let linkedTimeCodes = await TimeCode.find({projectId: project})
+      linkedTimeCodes = linkedTimeCodes.map(timeCode => [timeCode._id, timeCode.timeCodeName])
+      projectsAndAssociatedTimeCodes.set(project, linkedTimeCodes)
+      projectsProcessed++
+      if (projectsProcessed == projects.length) {
+        res.status(200).json(Object.fromEntries(projectsAndAssociatedTimeCodes))
+      }
+    })
+  }
+  catch (err) {
+    res.status(500).json(err)
+  }
+}
 
 const updateTimeCode = (req, res) => {
     TimeCode.findByIdAndUpdate(req.params.id, req.body, {
@@ -83,6 +111,7 @@ module.exports = {
   createTimeCode,
   readTimeCode,
   readTimeCodeById,
+  retrieveTimeCodesForWorker,
   updateTimeCode,
   deleteTimeCode,
 };

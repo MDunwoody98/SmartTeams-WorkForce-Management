@@ -3,7 +3,6 @@
     <v-card>
       <v-card-title>
         <span class="headline">Add Time Entry</span>
-        <span class="headline">{{ new Date(timeEntryDate) }}</span>
       </v-card-title>
       <!-- Date picker for particular date of time entry -->
       <v-card-text>
@@ -38,18 +37,19 @@
           >
             <v-spacer></v-spacer>
             <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
-            <v-btn text color="primary" @click="$refs.menu.save(dates)">
-              OK
-            </v-btn>
+            <!-- <v-btn text color="primary" @click="$refs.menu.save(dates)">-->
+            <v-btn text color="primary" @click="menu = false"> OK </v-btn>
           </v-date-picker>
         </v-menu>
-        <!-- Implement multi-select dropdown here so that it looks like a Workday search box. Select from all time codes or filter by proejct -->
         <v-select
-          :items="['Code 1', 'Code 2', 'Code 3', 'Code 4']"
+          v-model="selectedTimeCode"
+          :items="availableTimeCodeIdList"
+          name="selectedTimeCode"
           label="Time Code"
           required
         ></v-select>
         <v-text-field
+          v-model="hours"
           label="Hours"
           hint="Must be an increment of 0.25"
         ></v-text-field>
@@ -73,24 +73,47 @@ export default {
   props: {
     value: Boolean,
     timeEntryDate: Date,
+    availableTimeCodes: { type: Map, default: null },
   },
-  data: () => ({
-    dates: [],
-    menu: false,
-  }),
+  data() {
+    return {
+      dates: [],
+      menu: false,
+      selectedTimeCode: null,
+      hours: null,
+    }
+  },
   computed: {
     show: {
       get() {
-        this.$axios.setToken(this.$auth.token)
-        console.log(this.$axios.token)
         return this.value
       },
       set(value) {
         this.$emit('input', value)
       },
     },
+    availableTimeCodeIdList() {
+      const availableTimeCodes = []
+      this.availableTimeCodes.forEach((timeCodeAndName, projectId) => {
+        availableTimeCodes.push({ header: projectId })
+        timeCodeAndName.forEach((idAndName) => {
+          // availableTimeCodes.set(idAndName[0], idAndName[1])
+          availableTimeCodes.push({ value: idAndName[0], text: idAndName[1] })
+        })
+        availableTimeCodes.push({ divider: true })
+      })
+      return availableTimeCodes
+    },
   },
-  methoods: {
+  watch: {
+    show() {
+      if (this.show) {
+        // Each time you display AddMewTimeEntry, set the selected date and coordinate the model with combobox and datepicker
+        this.setSelectedDate()
+      }
+    },
+  },
+  methods: {
     async addTimeEntry() {
       await this.$axios.post('/time_entry', {
         workerId: '12342',
@@ -100,6 +123,16 @@ export default {
         comments: 'No comments',
         approved: true,
       })
+    },
+    setSelectedDate() {
+      const selectedDate = new Date(this.timeEntryDate)
+      this.dates = [
+        selectedDate.getFullYear() +
+          '-' +
+          ('0' + (selectedDate.getMonth() + 1)).slice(-2) +
+          '-' +
+          ('0' + selectedDate.getDate()).slice(-2),
+      ]
     },
   },
 }

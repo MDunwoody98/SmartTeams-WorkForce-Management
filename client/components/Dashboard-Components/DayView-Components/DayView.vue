@@ -38,11 +38,13 @@
       <EditTimeEntry
         v-model="editTimeEntry"
         :time-entry="selectedTimeEntry"
-        :selected-time-code-name="selectedTimeCodeName"
+        :selected-time-code="selectedTimeCode"
+        :available-time-codes="availableTimeCodes"
       />
       <AddNewTimeEntry
         v-model="addNewTimeEntry"
         :time-entry-date="new Date(data.key)"
+        :available-time-codes="availableTimeCodes"
       />
     </div>
   </div>
@@ -64,12 +66,14 @@ export default {
       timeCodeIds: [],
       timeCodeIdNameMap: new Map(),
       timeCodeName: null,
-      selectedTimeCodeName: null,
+      selectedTimeCode: null,
+      availableTimeCodes: new Map(),
     }
   },
   async created() {
     await this.retrieveTimeEntryList()
     await this.mapTimeEntryCodeNames(this.timeCodeIds)
+    await this.retrieveValidTimeCodes()
     this.$forceUpdate()
   },
   methods: {
@@ -92,13 +96,16 @@ export default {
     },
     editSelectedTimeEntry(entry) {
       this.selectedTimeEntry = entry
-      this.selectedTimeCodeName = this.timeCodeIdNameMap[entry.timeCodeId]
+      this.selectedTimeCode = {
+        value: entry.timeCodeId,
+        text: this.timeCodeIdNameMap[entry.timeCodeId],
+      }
       this.editTimeEntry = true
     },
     async mapTimeEntryCodeNames(timeCodeIds) {
       for (const timeCodeId of timeCodeIds) {
         await this.$axios.get(`/time_code/${timeCodeId}`).then((response) => {
-          this.timeCodeIdNameMap[timeCodeId] = response.data.projectId
+          this.timeCodeIdNameMap[timeCodeId] = response.data.timeCodeName
         })
       }
     },
@@ -109,6 +116,13 @@ export default {
         return false
       }
       return true
+    },
+    async retrieveValidTimeCodes() {
+      await this.$axios
+        .get(`/time_code/worker/${this.$auth.user.workerId}`)
+        .then((response) => {
+          this.availableTimeCodes = new Map(Object.entries(response.data))
+        })
     },
   },
 }

@@ -8,7 +8,7 @@ const time_code_schema = new Schema(
         },
         timeCodeName: {
             type: String,
-            required: false, //Not all time codes need a name
+            required: true, //All time codes need a name
         },
         autoApprove: {
             type: Boolean,

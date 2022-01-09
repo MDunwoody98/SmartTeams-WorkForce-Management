@@ -2,7 +2,7 @@
   <v-dialog v-model="show" max-width="500px">
     <v-card>
       <v-card-title>
-        <span class="headline">Edit Time Entry {{ timeEntry }} </span>
+        <span class="headline">Edit Time Entry </span>
       </v-card-title>
       <!-- Date picker for particular date of time entry -->
       <v-card-text>
@@ -37,23 +37,23 @@
           >
             <v-spacer></v-spacer>
             <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
-            <v-btn text color="primary" @click="$refs.menu.save(dates)">
-              OK
-            </v-btn>
+            <v-btn text color="primary"> OK </v-btn>
           </v-date-picker>
         </v-menu>
-        <!-- Implement multi-select dropdown here so that it looks like a Workday search box. Select from all time codes or filter by proejct -->
         <v-select
-          :items="['Code 1', 'Code 2', 'Code 3', 'Code 4']"
+          v-model="selectedTimeCode"
+          :items="availableTimeCodeIdList"
           label="Time Code"
           required
         ></v-select>
         <v-text-field
+          v-model="hours"
           label="Hours"
           hint="Must be an increment of 0.25"
         ></v-text-field>
       </v-card-text>
       <v-textarea
+        v-model="comments"
         outlined
         shaped
         label="Comments"
@@ -72,12 +72,15 @@ export default {
   props: {
     value: Boolean,
     timeEntry: { type: Object, default: null },
-    selectedTimeCodeName: { type: String, default: '' },
+    selectedTimeCode: { type: Object, default: null },
+    availableTimeCodes: { type: Map, default: null },
   },
-  data: () => ({
-    dates: [],
-    menu: false,
-  }),
+  data() {
+    return {
+      dates: [],
+      menu: false,
+    }
+  },
   computed: {
     show: {
       get() {
@@ -86,6 +89,44 @@ export default {
       set(value) {
         this.$emit('input', value)
       },
+    },
+    availableTimeCodeIdList() {
+      const availableTimeCodes = []
+      this.availableTimeCodes.forEach((timeCodeAndName, projectId) => {
+        availableTimeCodes.push({ header: projectId })
+        timeCodeAndName.forEach((idAndName) => {
+          // availableTimeCodes.set(idAndName[0], idAndName[1])
+          availableTimeCodes.push({ value: idAndName[0], text: idAndName[1] })
+        })
+        availableTimeCodes.push({ divider: true })
+      })
+      return availableTimeCodes
+    },
+    hours() {
+      return this.timeEntry?.hours
+    },
+    comments() {
+      return this.timeEntry?.comments
+    },
+  },
+  watch: {
+    show() {
+      if (this.show) {
+        // Each time you display EditTimeEntry, set the selected date and coordinate the model with combobox and datepicker
+        this.setSelectedDate()
+      }
+    },
+  },
+  methods: {
+    setSelectedDate() {
+      const selectedDate = new Date(this.timeEntry.date)
+      this.dates = [
+        selectedDate.getFullYear() +
+          '-' +
+          ('0' + (selectedDate.getMonth() + 1)).slice(-2) +
+          '-' +
+          ('0' + selectedDate.getDate()).slice(-2),
+      ]
     },
   },
 }
