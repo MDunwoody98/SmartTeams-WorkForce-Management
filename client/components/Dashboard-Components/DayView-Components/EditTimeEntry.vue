@@ -6,42 +6,14 @@
       </v-card-title>
       <!-- Date picker for particular date of time entry -->
       <v-card-text>
-        <v-menu
-          ref="menu"
-          v-model="menu"
-          :close-on-content-click="false"
-          :return-value.sync="dates"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-combobox
-              v-model="dates"
-              multiple
-              chips
-              deletable-chips
-              clearable
-              label="Date"
-              prepend-icon="calendar"
-              v-bind="attrs"
-              v-on="on"
-            ></v-combobox>
-          </template>
-          <v-date-picker
-            v-model="dates"
-            multiple
-            no-title
-            scrollable
-            event-color="black"
-          >
-            <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
-            <v-btn text color="primary"> OK </v-btn>
-          </v-date-picker>
-        </v-menu>
+        <v-combobox
+          v-model="date"
+          disabled
+          label="Date"
+          prepend-icon="calendar_today"
+        ></v-combobox>
         <v-select
-          v-model="selectedTimeCode"
+          v-model="timeCode"
           :items="availableTimeCodeIdList"
           label="Time Code"
           required
@@ -61,8 +33,30 @@
       ></v-textarea>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="show = false">Close</v-btn>
-        <v-btn color="blue darken-1" text @click="show = false">Save</v-btn>
+        <v-dialog v-model="dialog" max-width="300">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="blue darken-1" text v-bind="attrs" v-on="on">
+              Delete
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title> </v-card-title>
+            <v-card-text class="deletion-prompt">
+              Are you sure you wish to delete this time entry?
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green darken-1" text @click="deleteTimeEntry()">
+                Delete
+              </v-btn>
+              <v-btn color="green darken-1" text @click="closeWindows()">
+                Cancel
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-btn color="blue darken-1" text @click="closeWindows()">Close</v-btn>
+        <v-btn color="blue darken-1" text @click="editTimeEntry()">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -77,8 +71,9 @@ export default {
   },
   data() {
     return {
-      dates: [],
+      date: null,
       menu: false,
+      dialog: false,
     }
   },
   computed: {
@@ -95,18 +90,35 @@ export default {
       this.availableTimeCodes.forEach((timeCodeAndName, projectId) => {
         availableTimeCodes.push({ header: projectId })
         timeCodeAndName.forEach((idAndName) => {
-          // availableTimeCodes.set(idAndName[0], idAndName[1])
           availableTimeCodes.push({ value: idAndName[0], text: idAndName[1] })
         })
         availableTimeCodes.push({ divider: true })
       })
       return availableTimeCodes
     },
-    hours() {
-      return this.timeEntry?.hours
+    hours: {
+      get() {
+        return this.timeEntry?.hours
+      },
+      set(value) {
+        this.timeEntry.hours = value
+      },
     },
-    comments() {
-      return this.timeEntry?.comments
+    comments: {
+      get() {
+        return this.timeEntry?.comments
+      },
+      set(value) {
+        this.timeEntry.comments = value
+      },
+    },
+    timeCode: {
+      get() {
+        return this.selectedTimeCode
+      },
+      set(value) {
+        this.selectedTimeCode = value
+      },
     },
   },
   watch: {
@@ -120,13 +132,34 @@ export default {
   methods: {
     setSelectedDate() {
       const selectedDate = new Date(this.timeEntry.date)
-      this.dates = [
+      this.date =
         selectedDate.getFullYear() +
-          '-' +
-          ('0' + (selectedDate.getMonth() + 1)).slice(-2) +
-          '-' +
-          ('0' + selectedDate.getDate()).slice(-2),
-      ]
+        '-' +
+        ('0' + (selectedDate.getMonth() + 1)).slice(-2) +
+        '-' +
+        ('0' + selectedDate.getDate()).slice(-2)
+    },
+    closeWindows() {
+      this.dialog = false
+      this.show = false
+    },
+    async editTimeEntry() {
+      await this.$axios.put(`/time_entry/${this.timeEntry._id}`, {
+        workerId: this.$auth.user.workerId,
+        date: this.date,
+        timeCodeId: this.timeCode.value,
+        hours: this.hours,
+        comments: this.comments,
+        approved: false,
+      })
+      this.$emit('updateParent')
+      this.show = false
+    },
+    async deleteTimeEntry() {
+      await this.$axios.delete(`/time_entry/${this.timeEntry._id}`)
+      this.dialog = false
+      this.show = false
+      this.$emit('updateParent')
     },
   },
 }
@@ -138,5 +171,8 @@ template {
 .comments-box {
   width: 91%;
   margin: 0 auto;
+}
+.deletion-prompt {
+  font-size: 1.2rem;
 }
 </style>

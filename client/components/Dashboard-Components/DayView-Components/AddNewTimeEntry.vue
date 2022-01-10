@@ -23,7 +23,7 @@
               deletable-chips
               clearable
               label="Date"
-              prepend-icon="calendar"
+              prepend-icon="edit_calendar"
               v-bind="attrs"
               v-on="on"
             ></v-combobox>
@@ -55,6 +55,7 @@
         ></v-text-field>
       </v-card-text>
       <v-textarea
+        v-model="comments"
         outlined
         shaped
         label="Comments"
@@ -63,7 +64,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="show = false">Close</v-btn>
-        <v-btn color="blue darken-1" text @click="show = false">Save</v-btn>
+        <v-btn color="blue darken-1" text @click="addTimeEntry()">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -81,6 +82,7 @@ export default {
       menu: false,
       selectedTimeCode: null,
       hours: null,
+      comments: null,
     }
   },
   computed: {
@@ -97,7 +99,6 @@ export default {
       this.availableTimeCodes.forEach((timeCodeAndName, projectId) => {
         availableTimeCodes.push({ header: projectId })
         timeCodeAndName.forEach((idAndName) => {
-          // availableTimeCodes.set(idAndName[0], idAndName[1])
           availableTimeCodes.push({ value: idAndName[0], text: idAndName[1] })
         })
         availableTimeCodes.push({ divider: true })
@@ -115,14 +116,22 @@ export default {
   },
   methods: {
     async addTimeEntry() {
-      await this.$axios.post('/time_entry', {
-        workerId: '12342',
-        date: '2021-12-31',
-        timeCodeId: '61c9e921be8274cfc496dc28',
-        hours: 1.75,
-        comments: 'No comments',
-        approved: true,
+      let entriesPosted = 0
+      await this.dates.forEach((selectedDate) => {
+        this.$axios.post('/time_entry', {
+          workerId: this.$auth.user.workerId,
+          date: selectedDate,
+          timeCodeId: this.selectedTimeCode,
+          hours: this.hours,
+          comments: this.comments,
+          approved: false,
+        })
+        entriesPosted++
+        if (entriesPosted === this.dates.length) {
+          this.$emit('updateParent')
+        }
       })
+      this.show = false
     },
     setSelectedDate() {
       const selectedDate = new Date(this.timeEntryDate)

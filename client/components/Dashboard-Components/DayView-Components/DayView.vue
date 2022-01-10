@@ -2,7 +2,7 @@
   <!--Card component which you can click on and add time entries to-->
   <div class="containerito">
     <v-card class="dayview-card">
-      <v-toolbar dense flat>
+      <v-toolbar dense flat class="card-header">
         <v-toolbar-title class="title-dayName">{{ data.day }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-title class="title-dayInMonthNumber">{{
@@ -15,18 +15,23 @@
           <template v-for="entry in timeEntries">
             <v-list-item :key="entry._id" class="timeEntry" ripple>
               <v-list-item-content @click="editSelectedTimeEntry(entry)">
-                <v-list-item-title class="timeEntry">
-                  {{ timeCodeIdNameMap[entry.timeCodeId] }}</v-list-item-title
+                <v-list-item-title>
+                  <p class="timeCode">
+                    {{ timeCodeIdNameMap.get(entry.timeCodeId) }}
+                  </p></v-list-item-title
                 >
                 <v-list-item-subtitle class="timeEntry"
-                  >{{ entry.hours }} hours</v-list-item-subtitle
+                  ><p class="hours">
+                    {{ entry.hours }} {{ entry.hours != 1 ? 'hours' : 'hour' }}
+                  </p></v-list-item-subtitle
                 >
-                <div class="timeEntry">{{ entry.comments }}</div>
+                <div class="timeEntry-comment">{{ entry.comments }}</div>
               </v-list-item-content>
             </v-list-item>
           </template>
         </v-list>
       </div>
+      <v-spacer> </v-spacer>
       <div @click="addNewTimeEntry = true">
         <v-footer class="add-time">
           <v-icon>more_time</v-icon>
@@ -40,11 +45,13 @@
         :time-entry="selectedTimeEntry"
         :selected-time-code="selectedTimeCode"
         :available-time-codes="availableTimeCodes"
+        @updateParent="updateDayView"
       />
       <AddNewTimeEntry
         v-model="addNewTimeEntry"
         :time-entry-date="new Date(data.key)"
         :available-time-codes="availableTimeCodes"
+        @updateParent="updateDayView"
       />
     </div>
   </div>
@@ -71,10 +78,7 @@ export default {
     }
   },
   async created() {
-    await this.retrieveTimeEntryList()
-    await this.mapTimeEntryCodeNames(this.timeCodeIds)
-    await this.retrieveValidTimeCodes()
-    this.$forceUpdate()
+    await this.renderComponent()
   },
   methods: {
     async retrieveTimeEntryList() {
@@ -103,11 +107,15 @@ export default {
       this.editTimeEntry = true
     },
     async mapTimeEntryCodeNames(timeCodeIds) {
-      for (const timeCodeId of timeCodeIds) {
-        await this.$axios.get(`/time_code/${timeCodeId}`).then((response) => {
-          this.timeCodeIdNameMap[timeCodeId] = response.data.timeCodeName
-        })
-      }
+      console.log(timeCodeIds)
+      await timeCodeIds.forEach(async (timeCodeId) => {
+        const response = await this.$axios.get(`/time_code/${timeCodeId}`)
+        console.log(response.data)
+        this.timeCodeIdNameMap.set(timeCodeId, response.data.timeCodeName)
+        if (this.timeCodeIdNameMap.keys().length === timeCodeIds.length) {
+          console.log('aight')
+        }
+      })
     },
     isJSONString(str) {
       try {
@@ -123,6 +131,15 @@ export default {
         .then((response) => {
           this.availableTimeCodes = new Map(Object.entries(response.data))
         })
+    },
+    async renderComponent() {
+      await this.retrieveTimeEntryList()
+      await this.mapTimeEntryCodeNames(this.timeCodeIds)
+      await this.retrieveValidTimeCodes()
+      this.$forceUpdate()
+    },
+    updateDayView() {
+      this.renderComponent()
     },
   },
 }
@@ -152,6 +169,10 @@ export default {
   padding: 0%;
 }
 
+.card-header {
+  flex-grow: 0;
+}
+
 .container-entries {
   overflow-x: hidden;
 }
@@ -162,10 +183,27 @@ export default {
 .timeEntry:hover {
   background-color: #f3f6fd;
 }
+
+.timeCode {
+  font-size: 1rem;
+}
+.hours {
+  font-size: 0.85rem;
+}
 .add-time {
   cursor: pointer;
 }
 .add-time:hover {
   background-color: lightgray;
+}
+
+.timeEntry-comment {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  white-space: normal;
+  font-size: 0.8rem;
 }
 </style>

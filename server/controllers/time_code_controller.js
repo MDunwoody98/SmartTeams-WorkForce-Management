@@ -32,7 +32,7 @@ const readTimeCode = (req, res) => {
 };
 
 const readTimeCodeById = (req, res) => {
-    TimeCode.findOne({id: req.params.id})
+    TimeCode.findOne({_id: req.params.id})
     .then((data) => {
       res.status(200).json(data);
     })
@@ -53,7 +53,7 @@ const retrieveTimeCodesForWorker = async (req, res) => {
     const projects = teams.map(team => team.projectId)[0]
     //Using counter as forEach is synchronous and executing in parallel
     var projectsProcessed = 0
-    //To wait for all the function calls to finish before moving on, use a map with a Promise.all and discard the results
+    //To wait for all the iterations to finish before moving on, use a foreach to process in parallel
       await projects.forEach(async project => {
       let linkedTimeCodes = await TimeCode.find({projectId: project})
       linkedTimeCodes = linkedTimeCodes.map(timeCode => [timeCode._id, timeCode.timeCodeName])
