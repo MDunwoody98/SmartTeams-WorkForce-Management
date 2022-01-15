@@ -97,6 +97,7 @@ const {
   readTimeEntryById,
   retrieveTimeEntriesForDay,
   updateTimeEntry,
+  submitEntriesForDay,
   deleteTimeEntry,
 } = require('../controllers/time_entry_controller');
 
@@ -155,6 +156,7 @@ router
 .get('/time_entry', readTimeEntry)
 .get('/time_entry/:id', readTimeEntryById)
 .put('/time_entry/:id', updateTimeEntry)
+.put('/time_entry/submit/day', submitEntriesForDay)
 .delete('/time_entry/:id', deleteTimeEntry);
 
 module.exports = router;

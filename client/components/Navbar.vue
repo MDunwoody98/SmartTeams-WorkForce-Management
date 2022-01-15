@@ -114,7 +114,7 @@ export default {
   position: fixed;
 }
 .nav-header-username {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 .user-name-nav {
   color: black;

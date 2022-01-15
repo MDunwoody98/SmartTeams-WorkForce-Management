@@ -153,8 +153,18 @@ export default {
     },
     goToSpecifiedWeek() {},
     async submitTimeEntries() {
-      const response = await this.$auth.refreshTokens()
-      console.log(response)
+      let counter = this.cardCount
+      await this.calendarItems.forEach((calDate) => {
+        this.$axios.put('/time_entry/submit/day', {
+          workerId: this.$auth.user.workerId,
+          date: calDate,
+        })
+        counter++
+      })
+      // Re-render all DayView components on screen upon submission
+      if (counter === this.calendarItems.length) {
+        this.$forceUpdate()
+      }
     },
   },
 }

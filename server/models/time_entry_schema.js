@@ -34,6 +34,10 @@ const time_entry_schema = new Schema(
         approved: {
             type: Boolean,
             default: false
+        },
+        submitted: {
+            type: Boolean,
+            default: false
         }
     }
 )
