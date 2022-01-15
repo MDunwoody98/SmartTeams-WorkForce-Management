@@ -38,7 +38,9 @@
             <v-spacer></v-spacer>
             <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
             <!-- <v-btn text color="primary" @click="$refs.menu.save(dates)">-->
-            <v-btn text color="primary" @click="menu = false"> OK </v-btn>
+            <v-btn text color="primary" @click="$refs.menu.save(dates)">
+              OK
+            </v-btn>
           </v-date-picker>
         </v-menu>
         <v-select
@@ -110,7 +112,7 @@ export default {
     show() {
       if (this.show) {
         // Each time you display AddMewTimeEntry, set the selected date and coordinate the model with combobox and datepicker
-        this.setSelectedDate()
+        this.dates = this.formatSelectedDate(this.timeEntryDate)
       }
     },
   },
@@ -127,21 +129,33 @@ export default {
           approved: false,
         })
         entriesPosted++
-        if (entriesPosted === this.dates.length) {
+        // Re-render DayView component if you add a time entry for the same date that you initially clicked
+        if (
+          this.dates[0] === this.formatSelectedDate(this.timeEntryDate)[0] &&
+          this.dates.length === 1
+        ) {
           this.$emit('updateParent')
+          return
+        }
+        // Re-render all DayView components on screen if you entered multiple time entries, or if your single entry was not for the initial date selected
+        if (entriesPosted === this.dates.length) {
+          this.$emit('updateContainer')
         }
       })
       this.show = false
     },
-    setSelectedDate() {
-      const selectedDate = new Date(this.timeEntryDate)
-      this.dates = [
+    formatSelectedDate(inputDate) {
+      const selectedDate = new Date(inputDate)
+      return [
         selectedDate.getFullYear() +
           '-' +
           ('0' + (selectedDate.getMonth() + 1)).slice(-2) +
           '-' +
           ('0' + selectedDate.getDate()).slice(-2),
       ]
+    },
+    saveDates() {
+      this.menu.save(this.dates)
     },
   },
 }

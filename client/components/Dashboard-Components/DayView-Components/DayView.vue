@@ -52,6 +52,7 @@
         :time-entry-date="new Date(data.key)"
         :available-time-codes="availableTimeCodes"
         @updateParent="updateDayView"
+        @updateContainer="updateDayViewContainer"
       />
     </div>
   </div>
@@ -107,14 +108,9 @@ export default {
       this.editTimeEntry = true
     },
     async mapTimeEntryCodeNames(timeCodeIds) {
-      console.log(timeCodeIds)
       await timeCodeIds.forEach(async (timeCodeId) => {
         const response = await this.$axios.get(`/time_code/${timeCodeId}`)
-        console.log(response.data)
         this.timeCodeIdNameMap.set(timeCodeId, response.data.timeCodeName)
-        if (this.timeCodeIdNameMap.keys().length === timeCodeIds.length) {
-          console.log('aight')
-        }
       })
     },
     isJSONString(str) {
@@ -140,6 +136,9 @@ export default {
     },
     updateDayView() {
       this.renderComponent()
+    },
+    updateDayViewContainer() {
+      this.$emit('renderContainer')
     },
   },
 }

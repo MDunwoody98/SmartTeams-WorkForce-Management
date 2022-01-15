@@ -66,6 +66,8 @@ export default {
         // Admin will have admin option here
         { icon: 'dashboard', text: 'Dashboard', route: '/' },
         { icon: 'person', text: 'Profile', route: '/' },
+        { icon: 'manage_accounts', text: 'Manager Zone', route: '/' },
+        { icon: 'settings', text: 'Admin', route: '/' },
       ],
     }
   },

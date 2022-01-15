@@ -15,7 +15,11 @@
     <div class="calendar-container">
       <template>
         <div v-for="index in cardCount" :key="calendarItems[index - 1].key">
-          <DayView :data="calendarItems[index - 1]" />
+          <DayView
+            :data="calendarItems[index - 1]"
+            @renderContainer="updateAllDayViewComponents"
+            :key="componentKey"
+          />
         </div>
       </template>
     </div>
@@ -52,6 +56,7 @@ export default {
         'Friday',
         'Saturday',
       ],
+      componentKey: 0,
     }
   },
   computed: {
@@ -142,6 +147,9 @@ export default {
           this.cardCount
         )
       }
+    },
+    updateAllDayViewComponents() {
+      this.componentKey++
     },
     goToSpecifiedWeek() {},
     submitTimeEntries() {},
