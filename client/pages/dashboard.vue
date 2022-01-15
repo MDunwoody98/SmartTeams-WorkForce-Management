@@ -101,14 +101,13 @@ export default {
   },
   computed: {
     mobile() {
-      this.$auth.refreshTokens()
       return this.$vuetify.breakpoint.smAndDown
     },
   },
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   margin: 0 auto;
   max-height: 100vh;

@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const userModel = require('../models/user_schema');
 const workerModel = require('../models/worker_schema');
+const teamModel = require('../models/team_schema');
 const jwt = require("jsonwebtoken");
 
 const registerNewUser = async (req, res, next) => {
@@ -56,10 +57,20 @@ const logIn = async (req, res, next) => {
     //Does a Worker profile exist for this user?
     let linkedWorkerProfile = await workerModel.findOne({ workerId: workerId });
     console.log("Logged in")
-    const token = jwt.sign({ user: user.workerId }, process.env.JWT_SECRET, {
-      expiresIn: "30m", // it will expire token after 30 minutes and if the user then refresh the page will log out
+    //Is the worker a manager?
+    let workerIsManager = false
+    if (await teamModel.find({managerId: workerId})) {
+      workerIsManager = true
+    }
+    //Is the worker an admin?
+    let workerIsAdmin = false
+    if (user.isAdmin) {
+      workerIsAdmin = true
+    }
+    const token = jwt.sign({ user: user.workerId, isManager: workerIsManager, isAdmin: workerIsAdmin }, process.env.JWT_SECRET, {
+      expiresIn: "30m", // it will expire token after 30 minutes
     });
-    const refreshToken = jwt.sign({user: user.workerId}, process.env.JWT_REFRESH_SECRET, {
+    const refreshToken = jwt.sign({ user: user.workerId, isManager: workerIsManager, isAdmin: workerIsAdmin }, process.env.JWT_REFRESH_SECRET, {
       expiresIn: "43200m",
     });
     //maybe don't return the worker profile in the response here ?
@@ -113,20 +124,30 @@ const getUserOnLogin = async (req, res, next) => {
 };
 //needs work
 const refreshToken = (req, res) => {
-  // const tokenToRefresh = req.body.refresh_token
-  // var decoded = jwt.decode(tokenToRefresh)
-  // const userID = decoded.user
-  // // if refresh token exists and is valid
-  // if((tokenToRefresh) && (jwt.verify(tokenToRefresh, process.env.JWT_REFRESH_SECRET))) {
-  //   const refreshToken = jwt.sign({user: userID}, process.env.JWT_REFRESH_SECRET, {
-  //     expiresIn: "43200m",
-  //   });
-  //   console.log(refreshToken)
-  //   res.status(200).json(refreshToken);        
-  // } else {
-  //   res.status(404).send('Invalid request')
-  // }
-  res.status(200)
+  const tokenToRefresh = req.body.refresh_token
+  console.log(tokenToRefresh)
+  var decoded = jwt.decode(tokenToRefresh)
+  const userID = decoded.user
+  const exp = decoded.exp
+  const admin = decoded.isAdmin
+  const manager = decoded.isManager
+  if (!decoded || !userID || !exp) {
+    res.status(403).send('Input data not valid')
+  }
+  if (Date.now() >= exp * 1000) {
+    res.status(403).send('Refresh Token expired')
+  }
+  // if refresh token exists and is valid
+  if((tokenToRefresh) && (jwt.verify(tokenToRefresh, process.env.JWT_REFRESH_SECRET))) {
+    //Check if user is manager and/or admin
+     const accessToken = jwt.sign({user: userID, isManager: manager, isAdmin: admin}, process.env.JWT_SECRET, {
+       expiresIn: "30m",
+     });
+     console.log(accessToken)
+     res.status(200).json({refresh_token: tokenToRefresh, access_token: accessToken, user: '12342'})  
+   } else {
+     res.status(403).send('Invalid request')
+   }
 }
 
 module.exports = {

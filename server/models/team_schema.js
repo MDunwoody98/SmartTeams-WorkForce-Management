@@ -29,6 +29,10 @@ const teamSchema = new Schema(
             type: [String],
             required: false,
         },
+        timeOffCodeId: {
+            type: [String],
+            required: false //Not all teams need linked time off codes.
+        },
     }
 )
 module.exports = model('team', teamSchema);

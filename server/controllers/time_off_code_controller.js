@@ -1,0 +1,116 @@
+'use strict';
+
+const TimeOffCode = require('../models/time_off_code_schema');
+const Team = require('../models/team_schema');
+
+const createTimeOffCode = (req, res) => {
+    TimeOffCode.create(req.body)
+    .then((data) => {
+      console.log('New Time Off Code Created!', data);
+      res.status(201).json(data);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        console.error('Error Validating!', err);
+        res.status(422).json(err);
+      } else {
+        console.error(err);
+        res.status(500).json(err);
+      }
+    });
+};
+
+const readTimeOffCode = (req, res) => {
+    TimeOffCode.find()
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json(err);
+    });
+};
+
+const readTimeOffCodeById = (req, res) => {
+    TimeOffCode.findOne({_id: req.params.id})
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json(err);
+    });
+};
+
+const retrieveTimeOffCodesForWorker = async (req, res) => {
+  //Get all teams where worker is member
+  //Get all Time Off Code Ids that are associated with those teams
+  //Return array of all time off code objects for those IDs
+  try {
+    const teams = await Team.find({memberId: req.params.workerId})
+    const timeOffCodeIds = teams.map(team => team.timeOffCodeId)[0]
+    const timeOffCodes = []
+    //Using counter as forEach is synchronous and executing in parallel
+    var timeOffCodesProcessed = 0
+    //To wait for all the iterations to finish before moving on, use a foreach to process in parallel
+      await timeOffCodeIds.forEach(async timeOffCodeID => {
+      let timeOffCodeObj = await TimeOffCode.find({_id: timeOffCodeID})
+      timeOffCodeObj = timeOffCodeObj.map(timeOffCodeObj => {timeOffCodeObj._id, timeOffCodeObj.timeOffCodeName})
+      timeOffCodes.push(timeOffCodeObj)
+      timeOffCodesProcessed++
+      if (timeOffCodesProcessed == timeOffCodeIds.length) {
+        res.status(200).json(timeOffCodes)
+      }
+    })
+  }
+  catch (err) {
+    res.status(500).json(err)
+  }
+}
+
+const updateTimeOffCode = (req, res) => {
+    TimeOffCode.findByIdAndUpdate(req.params.id, req.body, {
+    useFindAndModify: false,
+    new: true,
+  })
+    .then((data) => {
+      console.log('Time Code updated!');
+      res.status(201).json(data);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        console.error('Error Validating!', err);
+        res.status(422).json(err);
+      } else {
+        console.error(err);
+        res.status(500).json(err);
+      }
+    });
+};
+
+const deleteTimeOffCode = (req, res) => {
+    TimeOffCode.findById(req.params.id)
+    .then((data) => {
+      if (!data) {
+        throw new Error('Time Code not available');
+      }
+      return data.remove();
+    })
+    .then((data) => {
+      console.log('Time Code removed!');
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json(err);
+    });
+};
+
+module.exports = {
+  createTimeOffCode,
+  readTimeOffCode,
+  readTimeOffCodeById,
+  retrieveTimeOffCodesForWorker,
+  updateTimeOffCode,
+  deleteTimeOffCode,
+};

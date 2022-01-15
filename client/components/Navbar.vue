@@ -46,7 +46,7 @@
           nuxt
         >
           <v-list-item-action>
-            <v-icon class="">{{ navItem.icon }}</v-icon>
+            <v-icon>{{ navItem.icon }}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>{{ navItem.text }}</v-list-item-title>
@@ -64,10 +64,8 @@ export default {
     return {
       navItems: [
         // Admin will have admin option here
-        { icon: 'dashboard', text: 'Dashboard', route: '/' },
-        { icon: 'person', text: 'Profile', route: '/' },
-        { icon: 'manage_accounts', text: 'Manager Zone', route: '/' },
-        { icon: 'settings', text: 'Admin', route: '/' },
+        { icon: 'dashboard', text: 'Dashboard', route: '/dashboard' },
+        { icon: 'person', text: 'Profile', route: '/profile' },
       ],
     }
   },
@@ -76,15 +74,34 @@ export default {
       return this.$vuetify.breakpoint.smAndDown
     },
   },
+  created() {
+    this.generateNavItems()
+  },
   methods: {
     async logOut() {
       await this.$auth.logout()
+    },
+    generateNavItems() {
+      if (this.$auth.$storage.getUniversal('isManager')) {
+        this.navItems.push({
+          icon: 'manage_accounts',
+          text: 'Manager Zone',
+          route: '/manager',
+        })
+      }
+      if (this.$auth.$storage.getUniversal('isAdmin')) {
+        this.navItems.push({
+          icon: 'settings',
+          text: 'Admin',
+          route: '/admin',
+        })
+      }
     },
   },
 }
 </script>
 
-<style>
+<style scoped>
 .navigation {
   position: relative;
 }

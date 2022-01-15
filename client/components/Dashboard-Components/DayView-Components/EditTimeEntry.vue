@@ -4,6 +4,10 @@
       <v-card-title>
         <span class="headline">Edit Time Entry </span>
       </v-card-title>
+      <v-tabs v-model="tab" fixed-tabs>
+        <v-tabs-slider color="yellow"></v-tabs-slider>
+        <v-tab v-for="item in items" :key="item"> {{ item }}</v-tab>
+      </v-tabs>
       <!-- Date picker for particular date of time entry -->
       <v-card-text>
         <v-combobox
@@ -12,12 +16,26 @@
           label="Date"
           prepend-icon="calendar_today"
         ></v-combobox>
-        <v-select
-          v-model="timeCode"
-          :items="availableTimeCodeIdList"
-          label="Time Code"
-          required
-        ></v-select>
+        <v-tabs-items v-model="tab">
+          <v-tab-item>
+            <v-select
+              v-model="selectedTimeCode"
+              :items="availableTimeCodeIdList"
+              name="selectedTimeCode"
+              label="Time Code"
+              required
+            ></v-select>
+          </v-tab-item>
+          <v-tab-item>
+            <v-select
+              v-model="selectedTimeOffCode"
+              :items="availableTimeOffCodeIdList"
+              name="selectedTimeOffCode"
+              label="Time Off Code"
+              required
+            ></v-select>
+          </v-tab-item>
+        </v-tabs-items>
         <v-text-field
           v-model="hours"
           label="Hours"
@@ -67,13 +85,17 @@ export default {
     value: Boolean,
     timeEntry: { type: Object, default: null },
     selectedTimeCode: { type: Object, default: null },
+    selectedTimeOffCode: { type: Object, default: null },
     availableTimeCodes: { type: Map, default: null },
+    availableTimeOffCodes: { type: Array, default: null },
   },
   data() {
     return {
       date: null,
       menu: false,
       dialog: false,
+      tab: null,
+      items: ['Enter Time', 'Enter Time Off'],
     }
   },
   computed: {
@@ -95,6 +117,13 @@ export default {
         availableTimeCodes.push({ divider: true })
       })
       return availableTimeCodes
+    },
+    availableTimeOffCodeIdList() {
+      const timeOffCodes = []
+      this.availableTimeOffCodes?.forEach((timeOffCode) => {
+        timeOffCodes.push({ value: timeOffCode._id, text: timeOffCode.name })
+      })
+      return timeOffCodes
     },
     hours: {
       get() {

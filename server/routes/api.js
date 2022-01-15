@@ -83,6 +83,15 @@ const {
 } = require('../controllers/time_code_controller');
 
 const {
+  createTimeOffCode,
+  readTimeOffCode,
+  readTimeOffCodeById,
+  retrieveTimeOffCodesForWorker,
+  updateTimeOffCode,
+  deleteTimeOffCode,
+} = require('../controllers/time_off_code_controller');
+
+const {
   createTimeEntry,
   readTimeEntry,
   readTimeEntryById,
@@ -131,6 +140,14 @@ router
 .get('/time_code/worker/:workerId', retrieveTimeCodesForWorker)
 .put('/time_code/:id', updateTimeCode)
 .delete('/time_code/:id', deleteTimeCode);
+
+router
+.post('/time_off_code', createTimeOffCode)
+.get('/time_off_code', readTimeOffCode)
+.get('/time_off_code/:id', readTimeOffCodeById)
+.get('/time_off_code/worker/:workerId', retrieveTimeOffCodesForWorker)
+.put('/time_off_code/:id', updateTimeOffCode)
+.delete('/time_off_code/:id', deleteTimeOffCode);
 
 router
 .post('/time_entry', createTimeEntry)

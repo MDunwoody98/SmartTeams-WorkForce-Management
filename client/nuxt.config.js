@@ -83,6 +83,7 @@ export default {
           property: 'refresh_token',
           data: 'refresh_token', // property name in request
           maxAge: 60 * 60 * 24 * 30, // 30 days
+          tokenRequired: true,
         },
         user: {
           property: 'user', // <--- Default "user"

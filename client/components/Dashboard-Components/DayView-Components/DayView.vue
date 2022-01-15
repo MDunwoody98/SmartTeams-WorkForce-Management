@@ -45,12 +45,14 @@
         :time-entry="selectedTimeEntry"
         :selected-time-code="selectedTimeCode"
         :available-time-codes="availableTimeCodes"
+        :available-time-off-codes="availableTimeOffCodes"
         @updateParent="updateDayView"
       />
       <AddNewTimeEntry
         v-model="addNewTimeEntry"
         :time-entry-date="new Date(data.key)"
         :available-time-codes="availableTimeCodes"
+        :available-time-off-codes="availableTimeOffCodes"
         @updateParent="updateDayView"
         @updateContainer="updateDayViewContainer"
       />
@@ -76,6 +78,7 @@ export default {
       timeCodeName: null,
       selectedTimeCode: null,
       availableTimeCodes: new Map(),
+      availableTimeOffCodes: null,
     }
   },
   async created() {
@@ -128,10 +131,22 @@ export default {
           this.availableTimeCodes = new Map(Object.entries(response.data))
         })
     },
+    async retrieveValidTimeOffCodes() {
+      await this.$axios
+        .get(`/time_off_code/worker/${this.$auth.user.workerId}`)
+        .then((response) => {
+          if (response.data.length > 0) {
+            response.data.forEach((timeOffCode) => {
+              this.availableTimeOffCodes.push(timeOffCode)
+            })
+          }
+        })
+    },
     async renderComponent() {
       await this.retrieveTimeEntryList()
       await this.mapTimeEntryCodeNames(this.timeCodeIds)
       await this.retrieveValidTimeCodes()
+      await this.retrieveValidTimeOffCodes()
       this.$forceUpdate()
     },
     updateDayView() {

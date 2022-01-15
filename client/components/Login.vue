@@ -86,13 +86,18 @@ export default {
           user = this.$auth.$storage.getUniversal('user') // getting user (you can use it anywhere in your app)
           // this.$auth.setUser(user) */
             this.$auth.setUserToken(res.data.token, res.data.refresh_token)
-            console.log(this.$auth)
+            this.$auth.$storage.setUniversal(
+              'isManager',
+              this.parseJWT(res.data.token).isManager
+            )
+            this.$auth.$storage.setUniversal(
+              'isAdmin',
+              this.parseJWT(res.data.token).isAdmin
+            )
           })
       } catch (err) {
         this.text = 'Error. Please try again or contact your administrator.'
         this.toggleAlert()
-        console.log(err)
-        console.log(this.login)
       }
     },
     forgotPassword() {
@@ -102,6 +107,19 @@ export default {
     },
     toggleAlert() {
       this.snackbar = !this.snackbar
+    },
+    parseJWT(token) {
+      const base64Url = token.split('.')[1]
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+          })
+          .join('')
+      )
+      return JSON.parse(jsonPayload)
     },
   },
 }

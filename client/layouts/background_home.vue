@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .home-header,
 .home-footer {
   width: 100%;
