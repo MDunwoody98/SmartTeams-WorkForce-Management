@@ -49,6 +49,10 @@ const retrieveTimeOffCodesForWorker = async (req, res) => {
   try {
     const teams = await Team.find({memberId: req.params.workerId})
     const timeOffCodeIds = teams.map(team => team.timeOffCodeId)[0]
+    if (timeOffCodeIds.length == 0) {
+      res.status(200).json('[]')
+      return
+    }
     const timeOffCodes = []
     //Using counter as forEach is synchronous and executing in parallel
     var timeOffCodesProcessed = 0

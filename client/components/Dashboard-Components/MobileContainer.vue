@@ -1,11 +1,6 @@
 <template>
   <div class="dayview-container">
     <div class="container-top">
-      <div class="week-selector-container">
-        <v-icon x-large @click="goToPreviousWeek()">chevron_left</v-icon>
-        <v-icon x-large @click="goToSpecifiedWeek()">calendar_month</v-icon>
-        <v-icon x-large @click="goToNextWeek()">chevron_right</v-icon>
-      </div>
       <div class="submit">
         <v-btn rounded color="#2D9FA0" dark @click="submitTimeEntries()">
           Submit Time Entries
@@ -14,7 +9,11 @@
     </div>
     <div class="calendar-container">
       <template>
-        <div v-for="index in cardCount" :key="calendarItems[index - 1].key">
+        <div
+          v-for="index in cardCount"
+          :key="calendarItems[index - 1].key"
+          class="mobileDay"
+        >
           <DayView
             :key="componentKey"
             :data="calendarItems[index - 1]"
@@ -23,6 +22,25 @@
         </div>
       </template>
     </div>
+    <v-bottom-navigation v-model="value" fixed grow>
+      <v-btn value="previous week" @click="goToPreviousWeek()">
+        <span>Previous week</span>
+
+        <v-icon>mdi-history</v-icon>
+      </v-btn>
+
+      <v-btn value="Select Date" @click="goToSpecifiedWeek()">
+        <span>Select Date</span>
+
+        <v-icon>mdi-heart</v-icon>
+      </v-btn>
+
+      <v-btn value="Next Week" @click="goToNextWeek()">
+        <span>Next Week</span>
+
+        <v-icon>mdi-map-marker</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
   </div>
 </template>
 
@@ -57,6 +75,7 @@ export default {
         'Saturday',
       ],
       componentKey: 0,
+      value: 'previous week',
     }
   },
   computed: {
@@ -64,6 +83,9 @@ export default {
       return this.$vuetify.breakpoint.smAndDown
     },
     cardCount() {
+      if (this.mobile) {
+        return 7
+      }
       if (this.$vuetify.breakpoint.xl) {
         return 7
       }
@@ -188,25 +210,39 @@ export default {
 </script>
 <style scoped>
 .dayview-container {
-  display: flexbox;
   margin-top: 3vh;
+  display: flexbox;
+  justify-content: center;
+  align-items: center;
 }
 
 .container-top {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
 .calendar-container {
-  display: flex;
-  align-items: space-evenly;
-  justify-content: space-evenly;
+  display: flexbox;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 60px;
 }
 
-@media all and (min-width: 1904px) {
-  .submit {
-    margin-top: -4vh;
-  }
+.mobileDay {
+  margin: auto;
+}
+
+.v-bottom-navigation {
+  margin-left: 56px;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+.v-bottom-navigation * {
+  align-self: center;
+}
+span.v-btn__content {
+  margin-bottom: 20px;
 }
 </style>

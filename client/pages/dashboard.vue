@@ -3,10 +3,11 @@
   <div class="container">
     <v-container v-if="!mobile">
       <v-row>
-        <!--Here is where the date/week selector would go-->
         <v-col cols="12">
+          <!-- date/week selector -->
           <!--View of current week and associated time entries-->
-          <DayViewContainer />
+          <!-- When navigating back to dashboard, re-render component -->
+          <DayViewContainer :key="$route.fullPath" />
         </v-col>
         <v-col cols="6">
           <!--In here goes the time entry cards-->
@@ -41,24 +42,9 @@
       </v-row>
     </v-container>
     <v-container v-if="mobile">
-      <v-row class="text-center">
-        <v-col col="12">
-          <v-bottom-navigation absolute shift grow>
-            <v-btn value="recent">
-              <span>Recent</span>
-              <v-icon>history</v-icon>
-            </v-btn>
-
-            <v-btn value="favorites" absolute>
-              <span>Favorites</span>
-              <v-icon>heart</v-icon>
-            </v-btn>
-
-            <v-btn value="nearby">
-              <span>Nearby</span>
-              <v-icon>map-marker</v-icon>
-            </v-btn>
-          </v-bottom-navigation>
+      <v-row>
+        <v-col cols="12">
+          <MobileContainer :key="$route.fullPath" />
         </v-col>
       </v-row>
     </v-container>
@@ -113,9 +99,15 @@ export default {
   max-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
   text-align: center;
 }
+
+@media all and (min-width: 968px) {
+  .report-item-card {
+    align-items: center;
+  }
+}
+
 @media all and (min-width: 1904px) {
   .report-item-card {
     width: 43vw;

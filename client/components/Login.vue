@@ -80,20 +80,7 @@ export default {
         await this.$auth
           .loginWith('local', { data: this.login })
           .then((res) => {
-            console.log(res)
-            /* let user = res.data.worker // getting worker linked to user account
-          this.$auth.$storage.setUniversal('user', user, true) // setting user in Vuex, cookies and localstorage
-          user = this.$auth.$storage.getUniversal('user') // getting user (you can use it anywhere in your app)
-          // this.$auth.setUser(user) */
             this.$auth.setUserToken(res.data.token, res.data.refresh_token)
-            this.$auth.$storage.setUniversal(
-              'isManager',
-              this.parseJWT(res.data.token).isManager
-            )
-            this.$auth.$storage.setUniversal(
-              'isAdmin',
-              this.parseJWT(res.data.token).isAdmin
-            )
           })
       } catch (err) {
         this.text = 'Error. Please try again or contact your administrator.'

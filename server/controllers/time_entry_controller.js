@@ -45,15 +45,14 @@ const retrieveTimeEntriesForDay = (req, res) => {
   //Router has already validated JWT at this point
   //We must validate that the worker sending this HTTP request is the same worker in the request body
   const token = req.get("Authorization").split(' ')[1]
-  console.log(token)
   const payload = parseJWT(token)
-  console.log(payload)
   if (req.body.workerId != payload.user) {
     res.status(401).json(`You are requesting time entries for worker ${req.body.workerId} but are logged in as worker ${payload.user}`)
   } else {
     TimeEntry.find({date: req.body.date, workerId: req.body.workerId})
     .then((data) => {
-      res.status(200).json(data);
+      console.log('full day sent')
+      res.status(200).json(JSON.stringify(data));
     })
     .catch((err) => {
       console.error(err);

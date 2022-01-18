@@ -39,19 +39,22 @@
       </v-row>
 
       <v-list>
-        <v-list-item
-          v-for="navItem in navItems"
-          :key="navItem.text"
-          :to="navItem.route"
-          nuxt
-        >
-          <v-list-item-action>
-            <v-icon>{{ navItem.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>{{ navItem.text }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <!-- Nav items depend on cookie stored at client side (admin, manager). Causes hydration error if rendered server side -->
+        <client-only>
+          <v-list-item
+            v-for="navItem in navItems"
+            :key="navItem.text"
+            :to="navItem.route"
+            nuxt
+          >
+            <v-list-item-action>
+              <v-icon>{{ navItem.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>{{ navItem.text }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </client-only>
       </v-list>
       <p>text</p>
     </v-navigation-drawer>
@@ -59,11 +62,11 @@
 </template>
 
 <script>
+import jwtDecode from 'jwt-decode'
 export default {
   data() {
     return {
       navItems: [
-        // Admin will have admin option here
         { icon: 'dashboard', text: 'Dashboard', route: '/dashboard' },
         { icon: 'person', text: 'Profile', route: '/profile' },
       ],
@@ -82,14 +85,15 @@ export default {
       await this.$auth.logout()
     },
     generateNavItems() {
-      if (this.$auth.$storage.getUniversal('isManager')) {
+      const token = jwtDecode(this.$auth.strategy.token.get())
+      if (token.isManager) {
         this.navItems.push({
           icon: 'manage_accounts',
           text: 'Manager Zone',
           route: '/manager',
         })
       }
-      if (this.$auth.$storage.getUniversal('isAdmin')) {
+      if (token.isAdmin) {
         this.navItems.push({
           icon: 'settings',
           text: 'Admin',

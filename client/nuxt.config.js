@@ -61,6 +61,7 @@ export default {
     // Doc: https://nuxtjs.org/api/configuration-modules/
     '@nuxtjs/auth-next',
     '@nuxtjs/axios',
+    'cookie-universal-nuxt',
   ],
   // auth setup
   auth: {

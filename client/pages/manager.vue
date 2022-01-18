@@ -3,6 +3,7 @@
 </template>
 <script>
 export default {
+  middleware: 'validate-manager',
   layout: 'background_home',
   data() {
     return {}

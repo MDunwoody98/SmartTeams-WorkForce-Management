@@ -51,6 +51,10 @@ const retrieveTimeCodesForWorker = async (req, res) => {
   try {
     const teams = await Team.find({memberId: req.params.workerId})
     const projects = teams.map(team => team.projectId)[0]
+    if (!projects) {
+      res.status(200).json('{}')
+      return
+    }
     //Using counter as forEach is synchronous and executing in parallel
     var projectsProcessed = 0
     //To wait for all the iterations to finish before moving on, use a foreach to process in parallel

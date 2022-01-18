@@ -1,6 +1,6 @@
 <template>
   <!--Card component which you can click on and add time entries to-->
-  <div class="containerito">
+  <div class="container">
     <v-card class="dayview-card">
       <v-toolbar dense flat class="card-header">
         <v-toolbar-title class="title-dayName">{{ data.day }}</v-toolbar-title>
@@ -92,13 +92,15 @@ export default {
           date: new Date(this.data.key),
         })
         .then((response) => {
-          if (response.data.length > 0) {
-            this.timeEntries = response.data
-            response.data.forEach((element) => {
-              if (!this.timeCodeIds.includes(element.timeCodeId)) {
-                this.timeCodeIds.push(element.timeCodeId)
-              }
-            })
+          if (response.data) {
+            if (response.data !== '[]') {
+              this.timeEntries = JSON.parse(response.data)
+              this.timeEntries.forEach((element) => {
+                if (!this.timeCodeIds.includes(element.timeCodeId)) {
+                  this.timeCodeIds.push(element.timeCodeId)
+                }
+              })
+            }
           }
         })
     },
@@ -128,14 +130,17 @@ export default {
       await this.$axios
         .get(`/time_code/worker/${this.$auth.user.workerId}`)
         .then((response) => {
-          this.availableTimeCodes = new Map(Object.entries(response.data))
+          this.availableTimeCodes =
+            response.data !== '[]'
+              ? new Map(Object.entries(response.data))
+              : null
         })
     },
     async retrieveValidTimeOffCodes() {
       await this.$axios
         .get(`/time_off_code/worker/${this.$auth.user.workerId}`)
         .then((response) => {
-          if (response.data.length > 0) {
+          if (response.data !== '[]') {
             response.data.forEach((timeOffCode) => {
               this.availableTimeOffCodes.push(timeOffCode)
             })
@@ -165,14 +170,15 @@ export default {
   flex-direction: column;
   justify-content: stretch;
 }
+
 @media all and (min-width: 960px) and (max-width: 1903px) {
   .dayview-card {
-    max-width: 16vw;
+    width: 16vw;
   }
 }
 @media all and (min-width: 1904px) {
   .dayview-card {
-    max-width: 12vw;
+    width: 12vw;
   }
 }
 .title-dayName {
