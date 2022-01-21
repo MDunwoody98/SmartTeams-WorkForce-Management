@@ -155,7 +155,7 @@ export default {
       this.$forceUpdate()
     },
     updateDayView() {
-      this.renderComponent()
+      setTimeout(() => this.renderComponent(), 100) // Small delay of 100ms to ensure render captures data changes
     },
     updateDayViewContainer() {
       this.$emit('renderContainer')

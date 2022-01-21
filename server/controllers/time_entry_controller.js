@@ -93,22 +93,23 @@ const updateTimeEntry = (req, res) => {
 const submitEntriesForDay = async (req, res) => {
   try {
     const date = new Date(req.body.date.key)
-    const entries = TimeEntry.find({workerId: req.body.workerId, date: date }).then(console.log)
-    console.log(req.body.workerId)
-    const entryIDs = entries.map(entry => entry._id)
-    //console.log(entryIDs)
+    const entries = await TimeEntry.find({workerId: req.body.workerId, date: date })
+    if (entries.length == 0) {
+      res.status(200).json('No entries for date')
+      return
+    }
+    const entryIDs = entries.map(entry => entry._id.toString())
     //Using counter as forEach is synchronous and executing in parallel
     var entriesProcessed = 0
     //To wait for all the iterations to finish before moving on, use a foreach to process in parallel
     await entryIDs.forEach(async entryID => {
-      TimeEntry.findByIdAndUpdate(entryID, {submitted: true}, {
-      useFindAndModify: false,
-      new: true,
-    });
-    entriesProcessed++
-    if (entriesProcessed == entryIDs.length) {
-      res.status(200).json("Successfully submitted time entries")
-    }
+      await TimeEntry.findByIdAndUpdate(entryID, {submitted: true}, {
+        new: true,
+      })
+      entriesProcessed++
+      if (entriesProcessed == entryIDs.length) {
+        res.status(200).json("Successfully submitted time entries")
+      }
   });
   } catch (err) {
     res.status(500).json(err)

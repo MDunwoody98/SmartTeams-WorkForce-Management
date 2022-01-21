@@ -82,7 +82,7 @@
       ></v-textarea>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="show = false">Close</v-btn>
+        <v-btn color="blue darken-1" text @click="closeWindow()">Close</v-btn>
         <v-btn color="blue darken-1" text @click="addTimeEntry()">Save</v-btn>
       </v-card-actions>
     </v-card>
@@ -170,7 +170,7 @@ export default {
           this.$emit('updateContainer')
         }
       })
-      this.show = false
+      this.closeWindow()
     },
     formatSelectedDate(inputDate) {
       const selectedDate = new Date(inputDate)
@@ -184,6 +184,10 @@ export default {
     },
     saveDates() {
       this.menu.save(this.dates)
+    },
+    closeWindow() {
+      this.show = false
+      Object.assign(this.$data, this.$options.data())
     },
   },
 }

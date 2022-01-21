@@ -19,7 +19,7 @@
         <v-tabs-items v-model="tab">
           <v-tab-item>
             <v-select
-              v-model="selectedTimeCode"
+              v-model="timeCode"
               :items="availableTimeCodeIdList"
               name="selectedTimeCode"
               label="Time Code"
@@ -28,7 +28,7 @@
           </v-tab-item>
           <v-tab-item>
             <v-select
-              v-model="selectedTimeOffCode"
+              v-model="timeCode"
               :items="availableTimeOffCodeIdList"
               name="selectedTimeOffCode"
               label="Time Off Code"
@@ -143,10 +143,10 @@ export default {
     },
     timeCode: {
       get() {
-        return this.selectedTimeCode
+        return this.timeEntry?.timeCodeId
       },
       set(value) {
-        this.selectedTimeCode = value
+        this.timeEntry.timeCodeId = value
       },
     },
   },
@@ -176,13 +176,13 @@ export default {
       await this.$axios.put(`/time_entry/${this.timeEntry._id}`, {
         workerId: this.$auth.user.workerId,
         date: this.date,
-        timeCodeId: this.timeCode.value,
+        timeCodeId: this.timeCode,
         hours: this.hours,
         comments: this.comments,
         approved: false,
       })
-      this.$emit('updateParent')
       this.show = false
+      this.$emit('updateParent')
     },
     async deleteTimeEntry() {
       await this.$axios.delete(`/time_entry/${this.timeEntry._id}`)
