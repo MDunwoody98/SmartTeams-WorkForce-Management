@@ -3,11 +3,11 @@
   <div class="container">
     <v-card class="dayview-card">
       <v-toolbar dense flat class="card-header">
-        <v-toolbar-title class="title-dayName">{{ data.day }}</v-toolbar-title>
+        <v-toolbar-title class="title-dayName"
+          >{{ data.day.substr(0, 3) }} {{ data.date }}
+        </v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-toolbar-title class="title-dayInMonthNumber">{{
-          data.date
-        }}</v-toolbar-title>
+        <v-toolbar-title>{{ totalHours }}h</v-toolbar-title>
       </v-toolbar>
       <v-divider></v-divider>
       <div class="container-entries">
@@ -22,7 +22,7 @@
                     {{ entry.timeCodeName }}
                   </p></v-list-item-title
                 >
-                <v-list-item-subtitle class="timeEntry"
+                <v-list-item-subtitle
                   ><p class="hours">
                     {{ entry.hours }} {{ entry.hours != 1 ? 'hours' : 'hour' }}
                   </p></v-list-item-subtitle
@@ -55,7 +55,7 @@
         :time-entry-date="new Date(data.key)"
         :available-time-codes="availableTimeCodes"
         :available-time-off-codes="availableTimeOffCodes"
-        @updateParent.passive="updateDayView"
+        @updateParent="updateDayView"
         @updateContainer.passive="updateDayViewContainer"
       />
     </div>
@@ -81,6 +81,7 @@ export default {
       selectedTimeCode: null,
       availableTimeCodes: new Map(),
       availableTimeOffCodes: null,
+      totalHours: 0,
     }
   },
   async created() {
@@ -98,6 +99,7 @@ export default {
             if (response.data !== '[]') {
               this.timeEntries = JSON.parse(response.data)
               this.timeEntries.forEach((element) => {
+                this.totalHours += element.hours
                 if (!this.timeCodeIds.includes(element.timeCodeId)) {
                   this.timeCodeIds.push(element.timeCodeId)
                 }
@@ -163,12 +165,12 @@ export default {
       return classes
     },
     renderComponent() {
+      this.totalHours = 0
       Promise.all([
         this.retrieveValidTimeCodes(),
         this.retrieveValidTimeOffCodes(),
         this.retrieveTimeEntryList(),
       ])
-      this.$forceUpdate()
     },
     updateDayView() {
       setTimeout(() => this.renderComponent(), 100) // Small delay of 100ms to ensure render captures data changes
@@ -216,8 +218,29 @@ export default {
 .timeEntry {
   cursor: pointer;
 }
+
+.submitted {
+  background-color: #dcdcdc;
+}
+.approved {
+  background-color: #acffab;
+}
+.rejected {
+  background-color: #ffcccb;
+}
+
 .timeEntry:hover {
   background-color: #f3f6fd;
+}
+
+.submitted:hover {
+  background-color: #b5b5b5;
+}
+.approved:hover {
+  background-color: lightgreen;
+}
+.rejected:hover {
+  background-color: #ff817e;
 }
 
 .timeCode {

@@ -14,7 +14,6 @@
           ref="menu"
           v-model="menu"
           :close-on-content-click="false"
-          :return-value.sync="dates"
           transition="scale-transition"
           offset-y
           min-width="auto"
@@ -141,7 +140,7 @@ export default {
       if (this.show) {
         // Each time you display AddMewTimeEntry, set the selected date and coordinate the model with combobox and datepicker
         this.dates = this.formatSelectedDate(this.timeEntryDate)
-      }
+      } else this.menu = false // ensure datepicker is not active if parent componenet not displayed
     },
   },
   methods: {

@@ -9,7 +9,6 @@
           v-model="menu"
           :close-on-content-click="false"
           :return-value.sync="pickedDate"
-          transition="scale-transition"
           offset-y
           min-width="auto"
         >
@@ -265,7 +264,7 @@ export default {
       })
       // Re-render all DayView components on screen upon submission
       if (counter === this.calendarItems.length) {
-        this.$forceUpdate()
+        this.componentKey++
       }
     },
   },

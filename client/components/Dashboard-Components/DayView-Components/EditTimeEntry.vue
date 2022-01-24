@@ -1,8 +1,9 @@
 <template>
   <v-dialog v-model="show" max-width="500px">
     <v-card>
+      <!-- If the time entry is approved or submitted, do not permit it to be edited by the worker-->
       <v-card-title>
-        <span class="headline">Edit Time Entry </span>
+        <span class="headline">{{ title }} </span>
       </v-card-title>
       <v-tabs v-model="tab" fixed-tabs>
         <v-tabs-slider color="yellow"></v-tabs-slider>
@@ -24,6 +25,7 @@
               name="selectedTimeCode"
               label="Time Code"
               required
+              :disabled="disableEditing"
             ></v-select>
           </v-tab-item>
           <v-tab-item>
@@ -33,6 +35,7 @@
               name="selectedTimeOffCode"
               label="Time Off Code"
               required
+              :disabled="disableEditing"
             ></v-select>
           </v-tab-item>
         </v-tabs-items>
@@ -40,6 +43,7 @@
           v-model="hours"
           label="Hours"
           hint="Must be an increment of 0.25"
+          :disabled="disableEditing"
         ></v-text-field>
       </v-card-text>
       <v-textarea
@@ -48,12 +52,19 @@
         shaped
         label="Comments"
         class="comments-box"
+        :disabled="disableEditing"
       ></v-textarea>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="300">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="blue darken-1" text v-bind="attrs" v-on="on">
+            <v-btn
+              color="blue darken-1"
+              text
+              v-bind="attrs"
+              :disabled="disableEditing"
+              v-on="on"
+            >
               Delete
             </v-btn>
           </template>
@@ -64,7 +75,11 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="deleteTimeEntry()">
+              <v-btn
+                color="green darken-1"
+                text
+                disable-editing-click="deleteTimeEntry() :disabled="
+              >
                 Delete
               </v-btn>
               <v-btn color="green darken-1" text @click="closeWindows()">
@@ -74,7 +89,13 @@
           </v-card>
         </v-dialog>
         <v-btn color="blue darken-1" text @click="closeWindows()">Close</v-btn>
-        <v-btn color="blue darken-1" text @click="editTimeEntry()">Save</v-btn>
+        <v-btn
+          color="blue darken-1"
+          text
+          :disabled="disableEditing"
+          @click="editTimeEntry()"
+          >Save</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -124,6 +145,15 @@ export default {
         timeOffCodes.push({ value: timeOffCode._id, text: timeOffCode.name })
       })
       return timeOffCodes
+    },
+    title() {
+      if (this.timeEntry?.submitted) return 'View Submitted Time Entry'
+      if (this.timeEntry?.approved) return 'View Approved Time Entry'
+      return 'Edit Time Entry'
+    },
+    disableEditing() {
+      if (this.timeEntry?.submitted || this.timeEntry?.approved) return true
+      return false
     },
     hours: {
       get() {

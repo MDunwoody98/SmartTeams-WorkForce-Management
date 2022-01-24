@@ -1,10 +1,68 @@
 <template>
   <div class="container">
     <v-container>
+      <span>Teams I manage</span>
+      <!-- 
+            For each team I manage, display a horizontal container containing a team card that I can click to expand, and individual worker cards for each team member
+          -->
+      <v-row cols="12" no-gutters>
+        <div class="teamContainer">
+          <v-card
+            class="teamCard"
+            nuxt
+            min-width="10vw"
+            min-height="10vh"
+            elevation="14"
+          >
+            <v-card-title primary-title class="teamTitle">
+              Team Name
+            </v-card-title>
+          </v-card>
+
+          <v-card class="workerCard" min-width="10vw" min-height="20vh">
+            <v-card-title class="workerName"> Worker Name </v-card-title>
+          </v-card>
+          <v-card class="workerCard" min-width="10vw" min-height="20vh">
+            <v-card-title class="workerName"> Worker Name </v-card-title>
+          </v-card>
+          <v-card class="workerCard" min-width="10vw" min-height="20vh">
+            <v-card-title class="workerName"> Worker Name </v-card-title>
+          </v-card>
+          <v-card class="workerCard" min-width="10vw" min-height="20vh">
+            <v-card-title class="workerName"> Worker Name </v-card-title>
+          </v-card>
+          <v-card class="workerCard" min-width="10vw" min-height="20vh">
+            <v-card-title class="workerName"> Worker Name </v-card-title>
+          </v-card>
+          <v-card class="workerCard" min-width="10vw" min-height="20vh">
+            <v-card-title class="workerName"> Worker Name </v-card-title>
+          </v-card>
+          <v-card class="workerCard" min-width="10vw" min-height="20vh">
+            <v-card-title class="workerName"> Worker Name </v-card-title>
+          </v-card>
+          <v-card class="workerCard" min-width="10vw" min-height="20vh">
+            <v-card-title class="workerName"> Worker Name </v-card-title>
+          </v-card>
+          <v-card class="workerCard" min-width="10vw" min-height="20vh">
+            <v-card-title class="workerName"> Worker Name </v-card-title>
+          </v-card>
+          <v-card class="workerCard" min-width="10vw" min-height="20vh">
+            <v-card-title class="workerName"> Worker Name </v-card-title>
+          </v-card>
+          <v-card class="workerCard" min-width="10vw" min-height="20vh">
+            <v-card-title class="workerName"> Worker Name </v-card-title>
+          </v-card>
+          <v-card class="workerCard" min-width="10vw" min-height="20vh">
+            <v-card-title class="workerName"> Worker Name </v-card-title>
+          </v-card>
+          <v-card class="workerCard" min-width="10vw" min-height="20vh">
+            <v-card-title class="workerName"> Worker Name </v-card-title>
+          </v-card>
+        </div>
+        <v-spacer></v-spacer>
+      </v-row>
       <v-row cols="12">
-        <ManagedTeams />
         <!-- For each team I manage, return a list of workers that I can then click into -->
-        <ManagedTeams />
         <ManagedTeams />
       </v-row>
     </v-container>
@@ -26,10 +84,23 @@ export default {
 </script>
 <style scoped>
 .container {
-  margin: 0 auto;
-  display: flex;
+  display: flexbox;
   justify-content: center;
   align-items: center;
+  margin-top: 30px;
+}
+.teamContainer {
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   text-align: center;
+  overflow-x: auto;
+}
+.teamCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 </style>
