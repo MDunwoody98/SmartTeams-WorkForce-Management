@@ -1,6 +1,7 @@
 'use strict';
 
 const TimeEntry = require('../models/time_entry_schema');
+const TimeCode = require('../models/time_code_schema');
 
 const createTimeEntry = (req, res) => {
     TimeEntry.create(req.body)
@@ -41,7 +42,7 @@ const readTimeEntryById = (req, res) => {
     });
 };
 
-const retrieveTimeEntriesForDay = (req, res) => {
+const retrieveTimeEntriesForDay = async (req, res) => {
   //Router has already validated JWT at this point
   //We must validate that the worker sending this HTTP request is the same worker in the request body
   const token = req.get("Authorization").split(' ')[1]
@@ -49,10 +50,22 @@ const retrieveTimeEntriesForDay = (req, res) => {
   if (req.body.workerId != payload.user) {
     res.status(401).json(`You are requesting time entries for worker ${req.body.workerId} but are logged in as worker ${payload.user}`)
   } else {
-    TimeEntry.find({date: req.body.date, workerId: req.body.workerId})
-    .then((data) => {
-      console.log('full day sent')
-      res.status(200).json(JSON.stringify(data));
+    await TimeEntry.find({date: req.body.date, workerId: req.body.workerId})
+    .then( async (data) => {
+      const timeCodes = data.map(timeEntry => timeEntry.timeCodeId)
+      const timeCodeIdNameMap = {}
+      //Also want the time code name for each entry when returning data
+      for await (const timeCode of timeCodes) {
+        const linkedTimeCode = await TimeCode.findById(timeCode);
+        timeCodeIdNameMap[timeCode] = linkedTimeCode.timeCodeName;
+      }
+      const entriesToReturn = []
+      for await (let timeEntry of data) {
+        let jsonEntry = JSON.parse(JSON.stringify(timeEntry))
+        jsonEntry ={...jsonEntry , timeCodeName: timeCodeIdNameMap[timeEntry.timeCodeId]} 
+        entriesToReturn.push(jsonEntry)
+      }
+      return res.status(200).json(JSON.stringify(entriesToReturn));
     })
     .catch((err) => {
       console.error(err);
@@ -95,24 +108,23 @@ const submitEntriesForDay = async (req, res) => {
     const date = new Date(req.body.date.key)
     const entries = await TimeEntry.find({workerId: req.body.workerId, date: date })
     if (entries.length == 0) {
-      res.status(200).json('No entries for date')
-      return
+      return res.status(200).json('No entries for date')
     }
     const entryIDs = entries.map(entry => entry._id.toString())
     //Using counter as forEach is synchronous and executing in parallel
     var entriesProcessed = 0
     //To wait for all the iterations to finish before moving on, use a foreach to process in parallel
-    await entryIDs.forEach(async entryID => {
-      await TimeEntry.findByIdAndUpdate(entryID, {submitted: true}, {
+    entryIDs.forEach(async (entryID) => {
+      await TimeEntry.findByIdAndUpdate(entryID, { submitted: true }, {
         new: true,
-      })
-      entriesProcessed++
+      });
+      entriesProcessed++;
       if (entriesProcessed == entryIDs.length) {
-        res.status(200).json("Successfully submitted time entries")
+        return res.status(200).json("Successfully submitted time entries");
       }
-  });
+    });
   } catch (err) {
-    res.status(500).json(err)
+    return res.status(500).json(err)
   }
 };
 

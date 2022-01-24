@@ -99,7 +99,7 @@ export default {
   data() {
     return {
       dates: [],
-      menu: false,
+      menu: true,
       selectedTimeCode: null,
       selectedTimeOffCode: null,
       hours: null,
@@ -181,9 +181,6 @@ export default {
           '-' +
           ('0' + selectedDate.getDate()).slice(-2),
       ]
-    },
-    saveDates() {
-      this.menu.save(this.dates)
     },
     closeWindow() {
       this.show = false

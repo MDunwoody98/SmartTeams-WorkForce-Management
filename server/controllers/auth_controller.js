@@ -132,10 +132,12 @@ const refreshToken = (req, res) => {
   const admin = decoded.isAdmin
   const manager = decoded.isManager
   if (!decoded || !userID || !exp) {
-    res.status(403).send('Input data not valid')
+    res.status(403).json('Input data not valid')
+    return
   }
   if (Date.now() >= exp * 1000) {
-    res.status(403).send('Refresh Token expired')
+    res.status(403).json('Refresh Token expired')
+    return
   }
   // if refresh token exists and is valid
   if((tokenToRefresh) && (jwt.verify(tokenToRefresh, process.env.JWT_REFRESH_SECRET))) {
@@ -146,7 +148,7 @@ const refreshToken = (req, res) => {
      console.log(accessToken)
      res.status(200).json({refresh_token: tokenToRefresh, access_token: accessToken, user: '12342'})  
    } else {
-     res.status(403).send('Invalid request')
+     res.status(403).json('Invalid request')
    }
 }
 

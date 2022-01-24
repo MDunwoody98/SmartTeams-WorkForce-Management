@@ -38,6 +38,14 @@ const time_entry_schema = new Schema(
         submitted: {
             type: Boolean,
             default: false
+        },
+        rejected: {
+            type: Boolean,
+            default: false
+        },
+        isTimeOff: {
+            type: Boolean,
+            default: false
         }
     }
 )

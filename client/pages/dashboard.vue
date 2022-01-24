@@ -1,7 +1,7 @@
 <template>
   <!--If no worker profile, navigate to a form to complete profile-->
   <div class="container">
-    <v-container v-if="!mobile">
+    <v-container>
       <v-row>
         <v-col cols="12">
           <!-- date/week selector -->
@@ -9,7 +9,7 @@
           <!-- When navigating back to dashboard, re-render component -->
           <DayViewContainer :key="$route.fullPath" />
         </v-col>
-        <v-col cols="6">
+        <v-col v-if="!mobile" cols="6">
           <!--In here goes the time entry cards-->
           <div class="report-container">
             <v-card elevation="24" class="report-item-card">
@@ -24,7 +24,7 @@
             </v-card>
           </div>
         </v-col>
-        <v-col cols="6">
+        <v-col v-if="!mobile" cols="6">
           <!--In here goes the vertical split with the graphs-->
           <div class="report-container">
             <v-card elevation="24" class="report-item-card">
@@ -39,13 +39,7 @@
             </v-card>
           </div>
         </v-col>
-      </v-row>
-    </v-container>
-    <v-container v-if="mobile">
-      <v-row>
-        <v-col cols="12">
-          <MobileContainer :key="$route.fullPath" />
-        </v-col>
+        <v-col cols="12"></v-col>
       </v-row>
     </v-container>
   </div>

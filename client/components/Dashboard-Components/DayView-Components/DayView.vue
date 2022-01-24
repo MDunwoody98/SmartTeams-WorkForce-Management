@@ -13,11 +13,13 @@
       <div class="container-entries">
         <v-list dense>
           <template v-for="entry in timeEntries">
-            <v-list-item :key="entry._id" class="timeEntry" ripple>
-              <v-list-item-content @click="editSelectedTimeEntry(entry)">
+            <v-list-item :key="entry._id" ripple :class="cardClass(entry)">
+              <v-list-item-content
+                @click.passive="editSelectedTimeEntry(entry)"
+              >
                 <v-list-item-title>
                   <p class="timeCode">
-                    {{ timeCodeIdNameMap.get(entry.timeCodeId) }}
+                    {{ entry.timeCodeName }}
                   </p></v-list-item-title
                 >
                 <v-list-item-subtitle class="timeEntry"
@@ -32,7 +34,7 @@
         </v-list>
       </div>
       <v-spacer> </v-spacer>
-      <div @click="addNewTimeEntry = true">
+      <div @click.passive="addNewTimeEntry = true">
         <v-footer class="add-time">
           <v-icon>more_time</v-icon>
           <p>Add Time Entry</p>
@@ -46,15 +48,15 @@
         :selected-time-code="selectedTimeCode"
         :available-time-codes="availableTimeCodes"
         :available-time-off-codes="availableTimeOffCodes"
-        @updateParent="updateDayView"
+        @updateParent.passive="updateDayView"
       />
       <AddNewTimeEntry
         v-model="addNewTimeEntry"
         :time-entry-date="new Date(data.key)"
         :available-time-codes="availableTimeCodes"
         :available-time-off-codes="availableTimeOffCodes"
-        @updateParent="updateDayView"
-        @updateContainer="updateDayViewContainer"
+        @updateParent.passive="updateDayView"
+        @updateContainer.passive="updateDayViewContainer"
       />
     </div>
   </div>
@@ -112,12 +114,6 @@ export default {
       }
       this.editTimeEntry = true
     },
-    async mapTimeEntryCodeNames(timeCodeIds) {
-      await timeCodeIds.forEach(async (timeCodeId) => {
-        const response = await this.$axios.get(`/time_code/${timeCodeId}`)
-        this.timeCodeIdNameMap.set(timeCodeId, response.data.timeCodeName)
-      })
-    },
     isJSONString(str) {
       try {
         JSON.parse(str)
@@ -135,6 +131,7 @@ export default {
               ? new Map(Object.entries(response.data))
               : null
         })
+        .catch((err) => console.log(err))
     },
     async retrieveValidTimeOffCodes() {
       await this.$axios
@@ -147,11 +144,30 @@ export default {
           }
         })
     },
-    async renderComponent() {
-      await this.retrieveTimeEntryList()
-      await this.mapTimeEntryCodeNames(this.timeCodeIds)
-      await this.retrieveValidTimeCodes()
-      await this.retrieveValidTimeOffCodes()
+    cardClass(entry) {
+      let classes = 'timeEntry'
+      if (entry.rejected) {
+        classes += ' rejected'
+        return
+      }
+      if (entry.isTimeOff) {
+        classes += ' timeOff'
+      }
+      if (entry.approved) {
+        classes += ' approved'
+        return
+      }
+      if (entry.submitted) {
+        classes += ' submitted'
+      }
+      return classes
+    },
+    renderComponent() {
+      Promise.all([
+        this.retrieveValidTimeCodes(),
+        this.retrieveValidTimeOffCodes(),
+        this.retrieveTimeEntryList(),
+      ])
       this.$forceUpdate()
     },
     updateDayView() {
@@ -173,12 +189,12 @@ export default {
 
 @media all and (min-width: 960px) and (max-width: 1903px) {
   .dayview-card {
-    width: 16vw;
+    width: 14.5vw;
   }
 }
 @media all and (min-width: 1904px) {
   .dayview-card {
-    width: 12vw;
+    width: 11vw;
   }
 }
 .title-dayName {

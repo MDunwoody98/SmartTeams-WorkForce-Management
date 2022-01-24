@@ -35,6 +35,7 @@ const readTimeCodeById = (req, res) => {
     TimeCode.findOne({_id: req.params.id})
     .then((data) => {
       res.status(200).json(data);
+      return
     })
     .catch((err) => {
       console.error(err);
@@ -65,6 +66,7 @@ const retrieveTimeCodesForWorker = async (req, res) => {
       projectsProcessed++
       if (projectsProcessed == projects.length) {
         res.status(200).json(Object.fromEntries(projectsAndAssociatedTimeCodes))
+        return
       }
     })
   }

@@ -5,6 +5,6 @@ export default async function ({ app, redirect }) {
   const base64Data = await app.$cookies.get('auth._token.local').split(' ')[1]
   const decodedData = jwtDecode(base64Data)
   if (!decodedData.isManager) {
-    redirect('/dashboard')
+    return redirect('/dashboard')
   }
 }

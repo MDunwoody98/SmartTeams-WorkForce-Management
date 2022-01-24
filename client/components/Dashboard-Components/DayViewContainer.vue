@@ -1,11 +1,48 @@
 <template>
   <div class="dayview-container">
-    <div class="container-top">
+    <div v-if="!mobile" class="container-top">
       <div class="week-selector-container">
         <v-icon x-large @click="goToPreviousWeek()">chevron_left</v-icon>
-        <v-icon x-large @click="goToSpecifiedWeek()">calendar_month</v-icon>
+        <v-menu
+          ref="menu"
+          :key="menuKey"
+          v-model="menu"
+          :close-on-content-click="false"
+          :return-value.sync="pickedDate"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon v-model="pickedDate" x-large v-bind="attrs" v-on="on"
+              >calendar_month</v-icon
+            >
+          </template>
+          <v-date-picker
+            v-model="pickedDate"
+            no-title
+            scrollable
+            reactive
+            event-color="black"
+          >
+            <v-spacer></v-spacer>
+            <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
+            <!-- <v-btn text color="primary" @click="$refs.menu.save(dapickedDatetes)">-->
+            <v-btn text color="primary" @click="goToSpecifiedWeek(pickedDate)">
+              OK
+            </v-btn>
+          </v-date-picker>
+        </v-menu>
         <v-icon x-large @click="goToNextWeek()">chevron_right</v-icon>
+        <span class="dateInfo">W/C {{ dateText }}</span>
       </div>
+      <div class="submit">
+        <v-btn rounded color="#2D9FA0" dark @click="submitTimeEntries()">
+          Submit Time Entries
+        </v-btn>
+      </div>
+    </div>
+    <div v-if="mobile" class="container-top">
       <div class="submit">
         <v-btn rounded color="#2D9FA0" dark @click="submitTimeEntries()">
           Submit Time Entries
@@ -14,7 +51,11 @@
     </div>
     <div class="calendar-container">
       <template>
-        <div v-for="index in cardCount" :key="calendarItems[index - 1].key">
+        <div
+          v-for="index in cardCount"
+          :key="calendarItems[index - 1].key"
+          class="dayview-item"
+        >
           <DayView
             :key="componentKey"
             :data="calendarItems[index - 1]"
@@ -23,6 +64,25 @@
         </div>
       </template>
     </div>
+    <v-bottom-navigation v-if="mobile" v-model="mobileNavValue" fixed grow>
+      <v-btn value="previous week" @click="goToPreviousWeek()">
+        <span>Previous week</span>
+
+        <v-icon>mdi-history</v-icon>
+      </v-btn>
+
+      <v-btn value="Select Date" @click="goToSpecifiedWeek()">
+        <span>Select Date</span>
+
+        <v-icon>mdi-heart</v-icon>
+      </v-btn>
+
+      <v-btn value="Next Week" @click="goToNextWeek()">
+        <span>Next Week</span>
+
+        <v-icon>mdi-map-marker</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
   </div>
 </template>
 
@@ -57,6 +117,10 @@ export default {
         'Saturday',
       ],
       componentKey: 0,
+      menu: false,
+      mobileNavValue: 'previous week',
+      pickedDate: null,
+      menuKey: 0,
     }
   },
   computed: {
@@ -64,6 +128,9 @@ export default {
       return this.$vuetify.breakpoint.smAndDown
     },
     cardCount() {
+      if (this.mobile) {
+        return 7
+      }
       if (this.$vuetify.breakpoint.xl) {
         return 7
       }
@@ -74,8 +141,10 @@ export default {
         return 5
       } else return 0
     },
-    firstDay() {
-      return this.selectedDate
+    dateText() {
+      const month = this.monthNames[this.selectedDate.getMonth()]
+      const day = this.dayNames[this.selectedDate.getDay()]
+      return `${day} ${this.selectedDate.getDate()} ${month} ${this.selectedDate.getFullYear()}`
     },
   },
   watch: {
@@ -115,6 +184,7 @@ export default {
     },
     generateCalendarWeek(firstDay, noOfCards) {
       this.selectedDate = new Date(firstDay)
+      this.pickedDate = this.selectedDate.toISOString().substr(0, 10)
       const calendarCardArray = []
       for (let i = 0; i < noOfCards; i++) {
         const dateToProcess = new Date(firstDay.setDate(firstDay.getDate() + i)) // process each day sequentially from firstDay, for a total of noOfCards days
@@ -128,13 +198,13 @@ export default {
         firstDay.setDate(firstDay.getDate() - i) // reset firstDay to be the original day
       }
       this.calendarItems = calendarCardArray
+      this.menuKey++ // Re-render v-dialog menu as the template is bound to the existing card components
     },
     goToNextWeek() {
       if (this.cardCount === 5 || this.cardCount === 2) {
         this.weekendView = !this.weekendView
       }
       this.selectedDate.setDate(this.selectedDate.getDate() + this.cardCount)
-      console.log(this.selectedDate)
       if (this.weekendView) {
         this.generateCalendarWeek(
           this.getSaturday(this.selectedDate),
@@ -152,7 +222,6 @@ export default {
         this.weekendView = !this.weekendView
       }
       this.selectedDate.setDate(this.selectedDate.getDate() - this.cardCount)
-      console.log(this.selectedDate)
       if (this.weekendView) {
         this.generateCalendarWeek(
           this.getSaturday(this.selectedDate),
@@ -168,23 +237,34 @@ export default {
     updateAllDayViewComponents() {
       this.componentKey++
     },
-    goToSpecifiedWeek() {},
+    goToSpecifiedWeek(providedDateString) {
+      // if cardCount is not 7 and selected date is Sat or Sun, weekend view is true and getSaturday
+      const providedDate = new Date(providedDateString)
+      providedDate.setHours(0, 0, 0, 0)
+      const day = providedDate.getDay()
+      this.menu = false
+      if (this.cardCount !== 7 && (day === 6 || day === 0)) {
+        this.weekendView = true
+        this.generateCalendarWeek(
+          this.getSaturday(providedDate),
+          this.cardCount
+        )
+      } else {
+        this.weekendView = false
+        this.generateCalendarWeek(this.getMonday(providedDate), this.cardCount)
+      }
+    },
     async submitTimeEntries() {
       let counter = 0
-      console.log(this.calendarItems)
       await this.calendarItems.forEach((calDate) => {
-        this.$axios
-          .put('/time_entry/submit/day', {
-            workerId: this.$auth.user.workerId,
-            date: calDate,
-          })
-          .then(() => console.log('ooyo'))
+        this.$axios.put('/time_entry/submit/day', {
+          workerId: this.$auth.user.workerId,
+          date: calDate,
+        })
         counter++
       })
-
       // Re-render all DayView components on screen upon submission
       if (counter === this.calendarItems.length) {
-        console.log('updatin')
         this.$forceUpdate()
       }
     },
@@ -194,7 +274,6 @@ export default {
 <style scoped>
 .dayview-container {
   display: flexbox;
-  margin-top: 3vh;
 }
 
 .container-top {
@@ -209,9 +288,58 @@ export default {
   justify-content: space-evenly;
 }
 
+.dateInfo {
+  font-size: 1.5rem;
+  align-items: flex-end;
+}
+.dayview-item {
+  margin: auto;
+}
+
+@media all and (max-width: 1903px) {
+  .dayview-container {
+    margin-top: 7vh;
+  }
+}
+
 @media all and (min-width: 1904px) {
+  .dayview-container {
+    margin-top: 5vh;
+  }
   .submit {
     margin-top: -4vh;
+  }
+}
+
+@media all and (max-width: 959px) {
+  .dayview-container {
+    margin-top: 3vh;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container-top {
+    justify-content: center;
+  }
+
+  .calendar-container {
+    display: flexbox;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 60px;
+  }
+
+  .v-bottom-navigation {
+    margin-left: 56px;
+    margin-bottom: 20px;
+    flex-grow: 1;
+  }
+  .v-bottom-navigation * {
+    align-self: center;
+  }
+  span.v-btn__content {
+    margin-bottom: 20px;
   }
 }
 </style>
