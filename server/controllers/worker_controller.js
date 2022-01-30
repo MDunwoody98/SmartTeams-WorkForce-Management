@@ -1,6 +1,7 @@
 'use strict';
 
 const Worker = require('../models/worker_schema');
+const Team = require('../models/team_schema');
 
 const createWorker = (req, res) => {
     Worker.create(req.body)
@@ -68,7 +69,27 @@ const deleteWorker = (req, res) => {
     });
 };
 
+const checkUserManagesTargetWorker = async (currentUser, targetWorker) => {
+  //find all teams for which currentUser is a manager
+  //get worker IDs of all members of those teams
+  const managedTeams = await Team.find({managerId: currentUser})
+  if (managedTeams.length == 0) return false
+  const membersInManagedTeams = managedTeams.map(team => team.memberId[0])
+  return membersInManagedTeams.includes(targetWorker)
+}
+
+function parseJWT (token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(Buffer.from(base64, 'base64').toString().split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+  return JSON.parse(jsonPayload);
+};
+
 module.exports = {
+  parseJWT,
+  checkUserManagesTargetWorker,
   createWorker,
   readWorker,
   updateWorker,

@@ -9,20 +9,21 @@
           <!-- When navigating back to dashboard, re-render component -->
           <DayViewContainer
             :key="$route.fullPath"
-            :worker-id="$auth.user.workerId"
-            :manager-view="false"
+            :worker-id="ManagedWorker"
+            :manager-view="true"
           />
         </v-col>
         <v-col v-if="!mobile" cols="6">
           <!--In here goes the time entry cards-->
           <div class="report-container">
             <v-card elevation="24" class="report-item-card">
-              <v-card-title class="report-item-title"
-                >My Annual Leave</v-card-title
-              >
+              <v-card-title class="report-item-title">{{
+                ManagedWorker
+              }}</v-card-title>
               <Charts-RemainingLeave
-                :worker-id="$auth.user.workerId"
+                :data="annualLeaveChartData"
                 :options="chartOptions"
+                :worker-id="ManagedWorker"
                 class="pie-chart"
               />
             </v-card>
@@ -32,12 +33,13 @@
           <!--In here goes the vertical split with the graphs-->
           <div class="report-container">
             <v-card elevation="24" class="report-item-card">
-              <v-card-title class="report-item-title"
-                >My Utilization</v-card-title
-              >
+              <v-card-title class="report-item-title">{{
+                ManagedWorker
+              }}</v-card-title>
               <Charts-CurrentWorkerUtilization
-                :worker-id="$auth.user.workerId"
+                :data="utilizationChartData"
                 :options="chartOptions"
+                :worker-id="ManagedWorker"
                 class="pie-chart"
               />
             </v-card>
@@ -52,8 +54,41 @@
 <script>
 export default {
   layout: 'background_home',
+  asyncData({ params }) {
+    const ManagedWorker = params.ManagedWorker // When calling /abc the ManagedWorker will be "abc"
+    return { ManagedWorker }
+  },
+  // Is the current user an admin or a manager of this team?
+  async validate({ params, store }) {
+    // await request with manager & worker
+    // if return all teams for which manager is manager
+    // if worker is in ANY of them, return true
+    // Or if current user is admin, return true
+    // throw await new Error('Unauthorized!')
+    return await true
+  },
   data() {
     return {
+      utilizationChartData: {
+        labels: ['Absence', 'Non-utilized', 'Utilized'],
+        datasets: [
+          {
+            label: 'Annual Leave',
+            backgroundColor: ['grey', '#091C58', '#2D9FA0'],
+            data: [4, 20, 76],
+          },
+        ],
+      },
+      annualLeaveChartData: {
+        labels: ['Leave used', 'Leave remaining'],
+        datasets: [
+          {
+            label: 'Annual Leave',
+            backgroundColor: ['#091C58', '#2D9FA0'],
+            data: [16.25, 35],
+          },
+        ],
+      },
       chartOptions: {
         legend: {
           position: 'right',

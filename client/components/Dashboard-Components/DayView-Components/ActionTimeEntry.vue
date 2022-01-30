@@ -5,7 +5,7 @@
       <v-card-title>
         <span class="headline">{{ title }} </span>
       </v-card-title>
-      <v-tabs v-model="tab" fixed-tabs>
+      <v-tabs v-if="!disableEditing && !managerView" v-model="tab" fixed-tabs>
         <v-tabs-slider color="yellow"></v-tabs-slider>
         <v-tab v-for="item in items" :key="item"> {{ item }}</v-tab>
       </v-tabs>
@@ -25,7 +25,7 @@
               name="selectedTimeCode"
               label="Time Code"
               required
-              :disabled="disableEditing"
+              :disabled="disableEditing || managerView"
             ></v-select>
           </v-tab-item>
           <v-tab-item>
@@ -35,7 +35,7 @@
               name="selectedTimeOffCode"
               label="Time Off Code"
               required
-              :disabled="disableEditing"
+              :disabled="disableEditing || managerView"
             ></v-select>
           </v-tab-item>
         </v-tabs-items>
@@ -43,7 +43,7 @@
           v-model="hours"
           label="Hours"
           hint="Must be an increment of 0.25"
-          :disabled="disableEditing"
+          :disabled="disableEditing || managerView"
         ></v-text-field>
       </v-card-text>
       <v-textarea
@@ -52,19 +52,16 @@
         shaped
         label="Comments"
         class="comments-box"
-        :disabled="disableEditing"
+        :disabled="disableEditing || managerView"
       ></v-textarea>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="300">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="blue darken-1"
-              text
-              v-bind="attrs"
-              :disabled="disableEditing"
-              v-on="on"
-            >
+          <template
+            v-if="!disableEditing && !managerView"
+            v-slot:activator="{ on, attrs }"
+          >
+            <v-btn color="blue darken-1" text v-bind="attrs" v-on="on">
               Delete
             </v-btn>
           </template>
@@ -75,11 +72,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn
-                color="green darken-1"
-                text
-                disable-editing-click="deleteTimeEntry() :disabled="
-              >
+              <v-btn color="green darken-1" text @click="deleteTimeEntry()">
                 Delete
               </v-btn>
               <v-btn color="green darken-1" text @click="closeWindows()">
@@ -90,11 +83,26 @@
         </v-dialog>
         <v-btn color="blue darken-1" text @click="closeWindows()">Close</v-btn>
         <v-btn
+          v-if="!disableEditing && !managerView"
           color="blue darken-1"
           text
-          :disabled="disableEditing"
+          :disabled="disableEditing || managerView"
           @click="editTimeEntry()"
           >Save</v-btn
+        >
+        <v-btn
+          v-if="managerCanActionEntry"
+          color="blue darken-1"
+          text
+          @click="approveTimeEntry()"
+          >Approve</v-btn
+        >
+        <v-btn
+          v-if="managerCanActionEntry"
+          color="blue darken-1"
+          text
+          @click="rejectTimeEntry()"
+          >Reject</v-btn
         >
       </v-card-actions>
     </v-card>
@@ -109,6 +117,7 @@ export default {
     selectedTimeOffCode: { type: Object, default: null },
     availableTimeCodes: { type: Map, default: null },
     availableTimeOffCodes: { type: Array, default: null },
+    managerView: { type: Boolean, deafult: false },
   },
   data() {
     return {
@@ -130,13 +139,15 @@ export default {
     },
     availableTimeCodeIdList() {
       const availableTimeCodes = []
-      this.availableTimeCodes?.forEach((timeCodeAndName, projectId) => {
-        availableTimeCodes.push({ header: projectId })
-        timeCodeAndName.forEach((idAndName) => {
-          availableTimeCodes.push({ value: idAndName[0], text: idAndName[1] })
+      if (JSON.stringify(this.availableTimeCodes) !== '{}') {
+        this.availableTimeCodes?.forEach((timeCodeAndName, projectId) => {
+          availableTimeCodes.push({ header: projectId })
+          timeCodeAndName?.forEach((idAndName) => {
+            availableTimeCodes.push({ value: idAndName[0], text: idAndName[1] })
+          })
+          availableTimeCodes.push({ divider: true })
         })
-        availableTimeCodes.push({ divider: true })
-      })
+      }
       return availableTimeCodes
     },
     availableTimeOffCodeIdList() {
@@ -149,10 +160,21 @@ export default {
     title() {
       if (this.timeEntry?.submitted) return 'View Submitted Time Entry'
       if (this.timeEntry?.approved) return 'View Approved Time Entry'
+      if (this.managerView) return 'View Time Entry in Draft'
       return 'Edit Time Entry'
     },
     disableEditing() {
       if (this.timeEntry?.submitted || this.timeEntry?.approved) return true
+      return false
+    },
+    managerCanActionEntry() {
+      if (
+        this.timeEntry?.submitted &&
+        !this.timeEntry?.approved &&
+        !this.timeEntry?.rejected &&
+        this.managerView
+      )
+        return true
       return false
     },
     hours: {
@@ -215,6 +237,19 @@ export default {
       this.$emit('updateParent')
     },
     async deleteTimeEntry() {
+      await this.$axios.delete(`/time_entry/${this.timeEntry._id}`)
+      this.dialog = false
+      this.show = false
+      this.$emit('updateParent')
+    },
+    // TODO - Manager functions when actioning a single time entry
+    async rejectTimeEntry() {
+      await this.$axios.delete(`/time_entry/${this.timeEntry._id}`)
+      this.dialog = false
+      this.show = false
+      this.$emit('updateParent')
+    },
+    async spproveTimeEntry() {
       await this.$axios.delete(`/time_entry/${this.timeEntry._id}`)
       this.dialog = false
       this.show = false

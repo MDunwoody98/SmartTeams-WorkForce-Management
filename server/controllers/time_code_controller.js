@@ -2,6 +2,7 @@
 
 const TimeCode = require('../models/time_code_schema');
 const Team = require('../models/team_schema');
+const WorkerController = require('./worker_controller');
 
 const createTimeCode = (req, res) => {
     TimeCode.create(req.body)
@@ -44,13 +45,24 @@ const readTimeCodeById = (req, res) => {
 };
 
 const retrieveTimeCodesForWorker = async (req, res) => {
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = WorkerController.parseJWT(token)
+  const currentUser = payload.user
+  const requestedWorker = req.params.workerId
+  const currentUserIsAdmin = payload.isAdmin
+  const currentUserManagesRequestedWorker = WorkerController.checkUserManagesTargetWorker(currentUser, requestedWorker)
+
+  if (req.body.workerId != payload.user && !currentUserIsAdmin && !currentUserManagesRequestedWorker) {
+    res.status(401).json(`You are requesting time codes accesible to worker ${requestedWorker} but are logged in as worker ${currentUser}`)
+    return
+  } 
   //Get all teams where worker is member
   //Get all project Ids that are associated with that team
   //Get all time codes for those projects
   //Return Map String -> String[] of project ID -> Time Codes
   let projectsAndAssociatedTimeCodes = new Map()
   try {
-    const teams = await Team.find({memberId: req.params.workerId})
+    const teams = await Team.find({memberId: requestedWorker})
     const projects = teams.map(team => team.projectId)[0]
     if (!projects) {
       res.status(200).json('{}')

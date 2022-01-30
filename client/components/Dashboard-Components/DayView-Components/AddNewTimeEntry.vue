@@ -118,13 +118,15 @@ export default {
     },
     availableTimeCodeIdList() {
       const availableTimeCodes = []
-      this.availableTimeCodes?.forEach((timeCodeAndName, projectId) => {
-        availableTimeCodes.push({ header: projectId })
-        timeCodeAndName?.forEach((idAndName) => {
-          availableTimeCodes.push({ value: idAndName[0], text: idAndName[1] })
+      if (JSON.stringify(this.availableTimeCodes) !== '{}') {
+        this.availableTimeCodes?.forEach((timeCodeAndName, projectId) => {
+          availableTimeCodes.push({ header: projectId })
+          timeCodeAndName?.forEach((idAndName) => {
+            availableTimeCodes.push({ value: idAndName[0], text: idAndName[1] })
+          })
+          availableTimeCodes.push({ divider: true })
         })
-        availableTimeCodes.push({ divider: true })
-      })
+      }
       return availableTimeCodes
     },
     availableTimeOffCodeIdList() {

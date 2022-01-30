@@ -2,6 +2,7 @@
 
 const TimeOffCode = require('../models/time_off_code_schema');
 const Team = require('../models/team_schema');
+const WorkerController = require('./worker_controller');
 
 const createTimeOffCode = (req, res) => {
     TimeOffCode.create(req.body)
@@ -43,12 +44,27 @@ const readTimeOffCodeById = (req, res) => {
 };
 
 const retrieveTimeOffCodesForWorker = async (req, res) => {
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = WorkerController.parseJWT(token)
+  const currentUser = payload.user
+  const requestedWorker = req.params.workerId
+  const currentUserIsAdmin = payload.isAdmin
+  const currentUserManagesRequestedWorker = WorkerController.checkUserManagesTargetWorker(currentUser, requestedWorker)
+
+  if (req.body.workerId != payload.user && !currentUserIsAdmin && !currentUserManagesRequestedWorker) {
+    res.status(401).json(`You are requesting time codes accesible to worker ${requestedWorker} but are logged in as worker ${currentUser}`)
+    return
+  } 
   //Get all teams where worker is member
   //Get all Time Off Code Ids that are associated with those teams
   //Return array of all time off code objects for those IDs
   try {
     const teams = await Team.find({memberId: req.params.workerId})
     const timeOffCodeIds = teams.map(team => team.timeOffCodeId)[0]
+    if (!timeOffCodeIds) {
+      res.status(200).json('[]')
+      return
+    }
     if (timeOffCodeIds.length == 0) {
       res.status(200).json('[]')
       return
@@ -68,6 +84,7 @@ const retrieveTimeOffCodesForWorker = async (req, res) => {
     })
   }
   catch (err) {
+    console.log('time off error '+err)
     res.status(500).json(err)
   }
 }

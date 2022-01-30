@@ -4,8 +4,8 @@ import { Pie } from 'vue-chartjs'
 export default {
   extends: Pie,
   props: {
-    data: {
-      type: Object,
+    workerId: {
+      type: String,
       default: null,
     },
     options: {
@@ -13,8 +13,24 @@ export default {
       default: null,
     },
   },
-  mounted() {
-    this.renderChart(this.data, this.options)
+  async mounted() {
+    // Start and End date params should be available somewhere to generate utilization charts
+    const utilizationChartData = {
+      labels: ['Absence', 'Non-utilized', 'Utilized'],
+      datasets: [
+        {
+          label: 'Annual Leave',
+          backgroundColor: ['grey', '#091C58', '#2D9FA0'],
+          data: [4, 20, 76],
+        },
+      ],
+    }
+    await this.renderChart(utilizationChartData, this.options)
+  },
+  methods: {
+    retrieveUtilization(startDate, endDate) {
+      return [4, 20, 76]
+    },
   },
 }
 </script>

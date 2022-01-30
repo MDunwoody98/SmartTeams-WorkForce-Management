@@ -36,8 +36,13 @@
         <span class="dateInfo">W/C {{ dateText }}</span>
       </div>
       <div class="submit">
-        <v-btn rounded color="#2D9FA0" dark @click="submitTimeEntries()">
-          Submit Time Entries
+        <v-btn
+          rounded
+          color="#2D9FA0"
+          dark
+          @click="!managerView ? submitTimeEntries() : approveTimeEntries()"
+        >
+          {{ actionButtonText }}
         </v-btn>
       </div>
     </div>
@@ -58,6 +63,8 @@
           <DayView
             :key="componentKey"
             :data="calendarItems[index - 1]"
+            :worker-id="workerId"
+            :manager-view="managerView"
             @renderContainer="updateAllDayViewComponents"
           />
         </div>
@@ -87,6 +94,10 @@
 
 <script>
 export default {
+  props: {
+    workerId: { type: String, default: null },
+    managerView: { type: Boolean, default: false },
+  },
   data() {
     return {
       calendarItems: [],
@@ -144,6 +155,10 @@ export default {
       const month = this.monthNames[this.selectedDate.getMonth()]
       const day = this.dayNames[this.selectedDate.getDay()]
       return `${day} ${this.selectedDate.getDate()} ${month} ${this.selectedDate.getFullYear()}`
+    },
+    actionButtonText() {
+      if (!this.managerView) return 'Submit Time Entries'
+      return 'Approve Time Entries'
     },
   },
   watch: {
@@ -259,6 +274,54 @@ export default {
         this.$axios.put('/time_entry/submit/day', {
           workerId: this.$auth.user.workerId,
           date: calDate,
+        })
+        counter++
+      })
+      // Re-render all DayView components on screen upon submission
+      if (counter === this.calendarItems.length) {
+        this.componentKey++
+      }
+    },
+    // Approve all time entries in the visible containers that are submitted
+    async approveTimeEntries() {
+      let counter = 0
+      await this.calendarItems.forEach((calDate) => {
+        this.$axios.put('/time_entry/approve/day', {
+          workerId: this.workerId,
+          date: calDate,
+          approverId: this.$auth.user.workerId,
+        })
+        counter++
+      })
+      // Re-render all DayView components on screen upon submission
+      if (counter === this.calendarItems.length) {
+        this.componentKey++
+      }
+    },
+    // Reject all time entries in the visible containers that are submitted
+    async rejectTimeEntries() {
+      let counter = 0
+      await this.calendarItems.forEach((calDate) => {
+        this.$axios.put('/time_entry/approve/day', {
+          workerId: this.workerId,
+          date: calDate,
+          approverId: this.$auth.user.workerId,
+        })
+        counter++
+      })
+      // Re-render all DayView components on screen upon submission
+      if (counter === this.calendarItems.length) {
+        this.componentKey++
+      }
+    },
+    // Reject single time entry
+    async rejectTimeEntry() {
+      let counter = 0
+      await this.calendarItems.forEach((calDate) => {
+        this.$axios.put('/time_entry/approve/day', {
+          workerId: this.workerId,
+          date: calDate,
+          approverId: this.$auth.user.workerId,
         })
         counter++
       })

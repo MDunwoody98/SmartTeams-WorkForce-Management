@@ -34,7 +34,7 @@
         </v-list>
       </div>
       <v-spacer> </v-spacer>
-      <div @click.passive="addNewTimeEntry = true">
+      <div v-if="!managerView" @click.passive="addNewTimeEntry = true">
         <v-footer class="add-time">
           <v-icon>more_time</v-icon>
           <p>Add Time Entry</p>
@@ -42,12 +42,13 @@
       </div>
     </v-card>
     <div data-app>
-      <EditTimeEntry
+      <ActionTimeEntry
         v-model="editTimeEntry"
         :time-entry="selectedTimeEntry"
         :selected-time-code="selectedTimeCode"
         :available-time-codes="availableTimeCodes"
         :available-time-off-codes="availableTimeOffCodes"
+        :manager-view="managerView"
         @updateParent.passive="updateDayView"
       />
       <AddNewTimeEntry
@@ -67,6 +68,14 @@ export default {
     data: {
       type: Object,
       default: null,
+    },
+    workerId: {
+      type: String,
+      default: null,
+    },
+    managerView: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -91,7 +100,7 @@ export default {
     async retrieveTimeEntryList() {
       await this.$axios
         .post('/time_entry/full_day', {
-          workerId: this.$auth.user.workerId,
+          workerId: this.workerId,
           date: new Date(this.data.key),
         })
         .then((response) => {
@@ -126,7 +135,7 @@ export default {
     },
     async retrieveValidTimeCodes() {
       await this.$axios
-        .get(`/time_code/worker/${this.$auth.user.workerId}`)
+        .get(`/time_code/worker/${this.workerId}`)
         .then((response) => {
           this.availableTimeCodes =
             response.data !== '[]'
@@ -137,7 +146,7 @@ export default {
     },
     async retrieveValidTimeOffCodes() {
       await this.$axios
-        .get(`/time_off_code/worker/${this.$auth.user.workerId}`)
+        .get(`/time_off_code/worker/${this.workerId}`)
         .then((response) => {
           if (response.data !== '[]') {
             response.data.forEach((timeOffCode) => {

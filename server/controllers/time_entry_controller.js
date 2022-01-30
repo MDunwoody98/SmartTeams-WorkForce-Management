@@ -2,6 +2,7 @@
 
 const TimeEntry = require('../models/time_entry_schema');
 const TimeCode = require('../models/time_code_schema');
+const WorkerController = require('./worker_controller');
 
 const createTimeEntry = (req, res) => {
     TimeEntry.create(req.body)
@@ -46,42 +47,38 @@ const retrieveTimeEntriesForDay = async (req, res) => {
   //Router has already validated JWT at this point
   //We must validate that the worker sending this HTTP request is the same worker in the request body
   const token = req.get("Authorization").split(' ')[1]
-  const payload = parseJWT(token)
-  if (req.body.workerId != payload.user) {
-    res.status(401).json(`You are requesting time entries for worker ${req.body.workerId} but are logged in as worker ${payload.user}`)
-  } else {
-    await TimeEntry.find({date: req.body.date, workerId: req.body.workerId})
-    .then( async (data) => {
-      const timeCodes = data.map(timeEntry => timeEntry.timeCodeId)
-      const timeCodeIdNameMap = {}
-      //Also want the time code name for each entry when returning data
-      for await (const timeCode of timeCodes) {
-        const linkedTimeCode = await TimeCode.findById(timeCode);
-        timeCodeIdNameMap[timeCode] = linkedTimeCode.timeCodeName;
-      }
-      const entriesToReturn = []
-      for await (let timeEntry of data) {
-        let jsonEntry = JSON.parse(JSON.stringify(timeEntry))
-        jsonEntry ={...jsonEntry , timeCodeName: timeCodeIdNameMap[timeEntry.timeCodeId]} 
-        entriesToReturn.push(jsonEntry)
-      }
-      return res.status(200).json(JSON.stringify(entriesToReturn));
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).json(err);
-    });
-  }
-}
+  const payload = WorkerController.parseJWT(token)
+  const currentUser = payload.user
+  const requestedWorker = req.body.workerId
+  const currentUserIsAdmin = payload.isAdmin
+  const currentUserManagesRequestedWorker = WorkerController.checkUserManagesTargetWorker(currentUser, requestedWorker)
 
-function parseJWT (token) {
-  var base64Url = token.split('.')[1];
-  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  var jsonPayload = decodeURIComponent(Buffer.from(base64, 'base64').toString().split('').map(function(c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  }).join(''));
-  return JSON.parse(jsonPayload);
-};
+  if (req.body.workerId != payload.user && !currentUserIsAdmin && !currentUserManagesRequestedWorker) {
+    res.status(401).json(`You are requesting time entries for worker ${requestedWorker} but are logged in as worker ${currentUser}`)
+    return
+  } 
+  await TimeEntry.find({date: req.body.date, workerId: requestedWorker})
+  .then( async (data) => {
+    const timeCodes = data.map(timeEntry => timeEntry.timeCodeId)
+    const timeCodeIdNameMap = {}
+    //Also want the time code name for each entry when returning data
+    for await (const timeCode of timeCodes) {
+      const linkedTimeCode = await TimeCode.findById(timeCode);
+      timeCodeIdNameMap[timeCode] = linkedTimeCode.timeCodeName;
+    }
+    const entriesToReturn = []
+    for await (let timeEntry of data) {
+      let jsonEntry = JSON.parse(JSON.stringify(timeEntry))
+      jsonEntry ={...jsonEntry , timeCodeName: timeCodeIdNameMap[timeEntry.timeCodeId]} 
+      entriesToReturn.push(jsonEntry)
+    }
+    return res.status(200).json(JSON.stringify(entriesToReturn));
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).json(err);
+  });
+}
 
 const updateTimeEntry = (req, res) => {
     TimeEntry.findByIdAndUpdate(req.params.id, req.body, {

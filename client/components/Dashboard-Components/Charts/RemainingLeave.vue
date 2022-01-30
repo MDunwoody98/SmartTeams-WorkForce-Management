@@ -4,8 +4,8 @@ import { Pie } from 'vue-chartjs'
 export default {
   extends: Pie,
   props: {
-    data: {
-      type: Object,
+    workerId: {
+      type: String,
       default: null,
     },
     options: {
@@ -14,7 +14,18 @@ export default {
     },
   },
   mounted() {
-    this.renderChart(this.data, this.options)
+    // Ideally we would have some options here for providing a date range to calculate AL used
+    const annualLeaveChartData = {
+      labels: ['Leave used', 'Leave remaining'],
+      datasets: [
+        {
+          label: 'Annual Leave',
+          backgroundColor: ['#091C58', '#2D9FA0'],
+          data: [16.25, 35],
+        },
+      ],
+    }
+    this.renderChart(annualLeaveChartData, this.options)
   },
 }
 </script>
