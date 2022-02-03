@@ -31,15 +31,26 @@ const readTeam = (req, res) => {
 };
 
 const readTeamById = (req, res) => {
-    Team.findOne({id: req.params.id})
-      .then((data) => {
-        res.status(200).json(data);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).json(err);
-      });
-  };
+  Team.findOne({id: req.params.id})
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json(err);
+    });
+};
+
+const readTeamsByManager = (req, res) => {
+  Team.find({managerId: req.params.id})
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json(err);
+    });
+};
 
 const updateTeam = (req, res) => {
     Team.findByIdAndUpdate(req.params.id, req.body, {
@@ -83,6 +94,7 @@ module.exports = {
   createTeam,
   readTeam,
   readTeamById,
+  readTeamsByManager,
   updateTeam,
   deleteTeam,
 };

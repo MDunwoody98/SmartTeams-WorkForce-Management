@@ -53,6 +53,7 @@ const {
 const {
   createWorker,
   readWorker,
+  readWorkerById,
   updateWorker,
   deleteWorker,
 } = require('../controllers/worker_controller');
@@ -69,6 +70,7 @@ const {
   createTeam,
   readTeam,
   readTeamById,
+  readTeamsByManager,
   updateTeam,
   deleteTeam,
 } = require('../controllers/team_controller');
@@ -96,6 +98,9 @@ const {
   readTimeEntry,
   readTimeEntryById,
   retrieveTimeEntriesForDay,
+  approveTimeEntry,
+  approveTimeEntries,
+  rejectTimeEntry,
   updateTimeEntry,
   submitEntriesForDay,
   deleteTimeEntry,
@@ -117,6 +122,7 @@ router
 router
   .post('/worker', createWorker)
   .get('/worker', readWorker)
+  .get('/worker/:id', readWorkerById)
   .put('/worker/:id', updateWorker)
   .delete('/worker/:id', deleteWorker);
 
@@ -131,6 +137,7 @@ router
   .post('/team', createTeam)
   .get('/team', readTeam)
   .get('/team/:id', readTeamById)
+  .get('/team/manager/:id', readTeamsByManager)
   .put('/team/:id', updateTeam)
   .delete('/team/:id', deleteTeam);
 
@@ -155,6 +162,9 @@ router
 .post('/time_entry/full_day', retrieveTimeEntriesForDay)
 .get('/time_entry', readTimeEntry)
 .get('/time_entry/:id', readTimeEntryById)
+.put('/time_entry/approve/:id', approveTimeEntry)
+.put('/time_entry/approveAll', approveTimeEntries)
+.put('/time_entry/reject/:id', rejectTimeEntry)
 .put('/time_entry/:id', updateTimeEntry)
 .put('/time_entry/submit/day', submitEntriesForDay)
 .delete('/time_entry/:id', deleteTimeEntry);

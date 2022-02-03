@@ -1,0 +1,58 @@
+[
+  {
+    "name": "admin",
+    "path": "/admin",
+    "component": "C:\\\\Users\\\\mic_a\\\\Desktop\\\\SmartTeams-WorkForce-Management\\\\client\\\\pages\\\\admin.vue",
+    "chunkName": "pages/admin",
+    "_name": "_cd6ed354"
+  },
+  {
+    "name": "dashboard",
+    "path": "/dashboard",
+    "component": "C:\\\\Users\\\\mic_a\\\\Desktop\\\\SmartTeams-WorkForce-Management\\\\client\\\\pages\\\\dashboard.vue",
+    "chunkName": "pages/dashboard",
+    "_name": "_4a4ec39b"
+  },
+  {
+    "name": "login",
+    "path": "/login",
+    "component": "C:\\\\Users\\\\mic_a\\\\Desktop\\\\SmartTeams-WorkForce-Management\\\\client\\\\pages\\\\login.vue",
+    "chunkName": "pages/login",
+    "_name": "_3180e570"
+  },
+  {
+    "name": "manager",
+    "path": "/manager",
+    "component": "C:\\\\Users\\\\mic_a\\\\Desktop\\\\SmartTeams-WorkForce-Management\\\\client\\\\pages\\\\manager.vue",
+    "chunkName": "pages/manager",
+    "_name": "_706bf818"
+  },
+  {
+    "name": "profile",
+    "path": "/profile",
+    "component": "C:\\\\Users\\\\mic_a\\\\Desktop\\\\SmartTeams-WorkForce-Management\\\\client\\\\pages\\\\profile.vue",
+    "chunkName": "pages/profile",
+    "_name": "_5febc020"
+  },
+  {
+    "name": "team-ManagedTeam",
+    "path": "/team/:ManagedTeam?",
+    "component": "C:\\\\Users\\\\mic_a\\\\Desktop\\\\SmartTeams-WorkForce-Management\\\\client\\\\pages\\\\team\\\\_ManagedTeam.vue",
+    "chunkName": "pages/team/_ManagedTeam",
+    "_name": "_0509bde3"
+  },
+  {
+    "name": "worker-ManagedWorker",
+    "path": "/worker/:ManagedWorker?",
+    "component": "C:\\\\Users\\\\mic_a\\\\Desktop\\\\SmartTeams-WorkForce-Management\\\\client\\\\pages\\\\worker\\\\_ManagedWorker.vue",
+    "chunkName": "pages/worker/_ManagedWorker",
+    "_name": "_5305bd36"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "C:\\\\Users\\\\mic_a\\\\Desktop\\\\SmartTeams-WorkForce-Management\\\\client\\\\pages\\\\index.vue",
+    "chunkName": "pages/index",
+    "_name": "_67d94259"
+  }
+]

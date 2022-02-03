@@ -31,6 +31,31 @@ const readWorker = (req, res) => {
     });
 };
 
+const readWorkerById = (req, res) => {
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = WorkerController.parseJWT(token)
+  const currentUser = payload.user
+  const requestedWorker = req.params.workerId
+  const currentUserIsAdmin = payload.isAdmin
+  const currentUserManagesRequestedWorker = WorkerController.checkUserManagesTargetWorker(currentUser, requestedWorker)
+
+  if (req.body.workerId != payload.user && !currentUserIsAdmin && !currentUserManagesRequestedWorker) {
+    res.status(401).json(`You are data for worker ${requestedWorker} but are logged in as worker ${currentUser}`)
+    return
+  } 
+
+  Worker.findById(req.params.id)
+  .then((data) => {
+    res.status(200).json(data);
+    return
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).json(err);
+    return
+  });
+};
+
 const updateWorker = (req, res) => {
     Worker.findByIdAndUpdate(req.params.id, req.body, {
     useFindAndModify: false,
@@ -92,6 +117,7 @@ module.exports = {
   checkUserManagesTargetWorker,
   createWorker,
   readWorker,
+  readWorkerById,
   updateWorker,
   deleteWorker,
 };

@@ -1,0 +1,41 @@
+{
+  "ActionTimeEntry": {
+    "description": "Auto imported from components/Dashboard-Components/DayView-Components/ActionTimeEntry.vue"
+  },
+  "AddNewTimeEntry": {
+    "description": "Auto imported from components/Dashboard-Components/DayView-Components/AddNewTimeEntry.vue"
+  },
+  "DayView": {
+    "description": "Auto imported from components/Dashboard-Components/DayView-Components/DayView.vue"
+  },
+  "DayViewContainer": {
+    "description": "Auto imported from components/Dashboard-Components/DayViewContainer.vue"
+  },
+  "MobileContainer": {
+    "description": "Auto imported from components/Dashboard-Components/MobileContainer.vue"
+  },
+  "ChartsCurrentWorkerUtilization": {
+    "description": "Auto imported from components/Dashboard-Components/Charts/CurrentWorkerUtilization.vue"
+  },
+  "ChartsRemainingLeave": {
+    "description": "Auto imported from components/Dashboard-Components/Charts/RemainingLeave.vue"
+  },
+  "ManagerTeamViewContainer": {
+    "description": "Auto imported from components/Manager-Components/ManagerTeamViewContainer.vue"
+  },
+  "WorkerCard": {
+    "description": "Auto imported from components/Manager-Components/WorkerCard.vue"
+  },
+  "Login": {
+    "description": "Auto imported from components/Login.vue"
+  },
+  "Logo": {
+    "description": "Auto imported from components/Logo.vue"
+  },
+  "ManagedTeams": {
+    "description": "Auto imported from components/ManagedTeams.vue"
+  },
+  "Navbar": {
+    "description": "Auto imported from components/Navbar.vue"
+  }
+}

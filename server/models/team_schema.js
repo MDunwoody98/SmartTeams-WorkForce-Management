@@ -31,7 +31,7 @@ const teamSchema = new Schema(
         },
         timeOffCodeId: {
             type: [String],
-            required: false //Not all teams need linked time off codes.
+            required: false //Not all teams need linked time off codes. Worker may be part of global organization-wide team that manages time-offs
         },
     }
 )

@@ -39,6 +39,14 @@
             ></v-select>
           </v-tab-item>
         </v-tabs-items>
+        <!-- Manager view - display the time code or time off code for the entry -->
+        <v-select
+          v-if="disableEditing || managerView"
+          v-model="timeCode"
+          :items="availableTimeCodeIdList"
+          label="Time Code"
+          disabled
+        ></v-select>
         <v-text-field
           v-model="hours"
           label="Hours"
@@ -139,15 +147,20 @@ export default {
     },
     availableTimeCodeIdList() {
       const availableTimeCodes = []
-      if (JSON.stringify(this.availableTimeCodes) !== '{}') {
-        this.availableTimeCodes?.forEach((timeCodeAndName, projectId) => {
-          availableTimeCodes.push({ header: projectId })
-          timeCodeAndName?.forEach((idAndName) => {
-            availableTimeCodes.push({ value: idAndName[0], text: idAndName[1] })
-          })
-          availableTimeCodes.push({ divider: true })
+      if (
+        this.availableTimeCodes.size === 0 ||
+        Object.fromEntries(this.availableTimeCodes)[0] === '{'
+      )
+        return availableTimeCodes
+
+      this.availableTimeCodes?.forEach((timeCodeAndName, projectId) => {
+        availableTimeCodes.push({ header: projectId })
+        timeCodeAndName?.forEach((idAndName) => {
+          availableTimeCodes.push({ value: idAndName[0], text: idAndName[1] })
         })
-      }
+        availableTimeCodes.push({ divider: true })
+      })
+
       return availableTimeCodes
     },
     availableTimeOffCodeIdList() {
@@ -164,10 +177,12 @@ export default {
       return 'Edit Time Entry'
     },
     disableEditing() {
+      // Workers cannot edit their time entries if they are submitted or approved
       if (this.timeEntry?.submitted || this.timeEntry?.approved) return true
       return false
     },
     managerCanActionEntry() {
+      // Managers can only action submitted entries that have not been approved or rejected
       if (
         this.timeEntry?.submitted &&
         !this.timeEntry?.approved &&
@@ -232,6 +247,8 @@ export default {
         hours: this.hours,
         comments: this.comments,
         approved: false,
+        rejected: false,
+        rejectionMessage: null,
       })
       this.show = false
       this.$emit('updateParent')
@@ -244,13 +261,18 @@ export default {
     },
     // TODO - Manager functions when actioning a single time entry
     async rejectTimeEntry() {
-      await this.$axios.delete(`/time_entry/${this.timeEntry._id}`)
+      await this.$axios.put(`/time_entry/reject/${this.timeEntry._id}`, {
+        workerId: this.workerId,
+        rejectionMessage: null,
+      })
       this.dialog = false
       this.show = false
       this.$emit('updateParent')
     },
-    async spproveTimeEntry() {
-      await this.$axios.delete(`/time_entry/${this.timeEntry._id}`)
+    async approveTimeEntry() {
+      await this.$axios.put(`/time_entry/approve/${this.timeEntry._id}`, {
+        workerId: this.workerId,
+      })
       this.dialog = false
       this.show = false
       this.$emit('updateParent')

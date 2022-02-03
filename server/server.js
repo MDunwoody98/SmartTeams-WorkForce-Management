@@ -17,6 +17,8 @@ const app = express();
 // Configure middlewares
 // Cross Origin Resource Sharing - CORS adds headers stating that your API accepts requests coming from other origins
 app.use(cors());
+app.options('*', cors()) // include before other routes
+
 // Accept JSON format
 app.use(express.json());
 //Helmet to enhance API security

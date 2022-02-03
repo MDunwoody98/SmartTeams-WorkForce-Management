@@ -47,6 +47,7 @@ export default {
       '~/components',
       '~/components/Dashboard-Components',
       '~/components/Dashboard-Components/DayView-Components',
+      '~/components/Manager-Components',
     ],
   },
   /*
@@ -108,7 +109,9 @@ export default {
   },
   axios: {
     // proxyHeaders: false
-    baseURL: 'http://127.0.0.1:9000/api',
+    // baseURL: 'http://127.0.0.1:9000/api',
+    baseUrl: 'https://smart-teams-api.herokuapp.com/api',
+    https: true,
   },
   /*
    ** Build configuration

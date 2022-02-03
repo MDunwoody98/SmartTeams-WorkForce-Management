@@ -27,32 +27,47 @@ const time_entry_schema = new Schema(
             max: 24,
 
         },
+        isTimeOff: {
+            type: Boolean,
+            default: false
+        },
         comments: {
             type: String,
             required: false,
-        },
-        approved: {
-            type: Boolean,
-            default: false
         },
         submitted: {
             type: Boolean,
             default: false
         },
+        approved: {
+            type: Boolean,
+            default: false
+        },
+        approvalDate: {
+            type: Date,
+            required: false,
+        },
+        approverId: {
+            type: String,
+            required: false,
+        },
         rejected: {
             type: Boolean,
             default: false
         },
-        isTimeOff: {
+        rejectionMessage: {
             type: Boolean,
-            default: false
-        }
-    }
+            required: false,
+        },
+    },
+    { timestamps: true }
 )
-// On creation, all time codes must be in a state of NOT APPROVED
-time_entry_schema.methods.createTimeCodeUnapproved = function() {
+// On creation, all time entries must be in draft - a state of NOT APPROVED, NOT SUBMITTED, and NOT REJECTED
+time_entry_schema.methods.createTimeEntryBlank = function() {
     this.approved = false;
+    this.submitted = false;
+    this.rejected = false;
 }
-time_entry_schema.queue('createTimeCodeUnapproved',[]);
+time_entry_schema.queue('createTimeEntryBlank',[]);
 
 module.exports = model('time_entry', time_entry_schema);

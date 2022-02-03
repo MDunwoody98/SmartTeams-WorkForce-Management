@@ -159,14 +159,12 @@ export default {
       let classes = 'timeEntry'
       if (entry.rejected) {
         classes += ' rejected'
-        return
       }
       if (entry.isTimeOff) {
         classes += ' timeOff'
       }
       if (entry.approved) {
         classes += ' approved'
-        return
       }
       if (entry.submitted) {
         classes += ' submitted'
