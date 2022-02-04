@@ -1,7 +1,7 @@
 <template>
   <div class="manager-team-view-container">
     <template>
-      <span>Teams I manage</span>
+      <span id="teams-i-manage">Teams I manage</span>
       <!-- Declare one row for each team that the user manages -->
       <v-row
         v-for="index in managedTeamCount"
@@ -69,6 +69,10 @@ export default {
 }
 </script>
 <style scoped>
+#teams-i-manage {
+  text-align: left;
+  align-items: flex-start;
+}
 .manager-team-view-container {
   display: flexbox;
   justify-content: center;

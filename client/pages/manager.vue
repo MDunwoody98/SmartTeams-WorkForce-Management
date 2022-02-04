@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="manager-container">
     <v-container>
       <!-- 
         For each team I manage, display a horizontal container containing a team card that I can click to expand, and individual worker cards for each team member
@@ -29,6 +29,11 @@ export default {
 </script>
 <style scoped>
 .container {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.manager-container {
   display: flexbox;
   justify-content: center;
   align-items: center;

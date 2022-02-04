@@ -75,6 +75,7 @@ export default {
 .container {
   margin: 0 auto;
   max-height: 100vh;
+  min-height: 0;
   display: flex;
   justify-content: center;
   text-align: center;

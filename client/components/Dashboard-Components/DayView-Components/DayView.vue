@@ -189,6 +189,9 @@ export default {
 }
 </script>
 <style scoped>
+.container {
+  min-height: initial;
+}
 .dayview-card {
   height: 40vh;
   display: flex;

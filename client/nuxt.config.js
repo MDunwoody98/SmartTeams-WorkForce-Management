@@ -110,8 +110,8 @@ export default {
   axios: {
     // proxyHeaders: false
     // baseURL: 'http://127.0.0.1:9000/api',
-    baseUrl: 'https://smart-teams-api.herokuapp.com/api',
-    https: true,
+    baseUrl: process.env.API_URL,
+    https: process.env.HTTPS,
   },
   /*
    ** Build configuration

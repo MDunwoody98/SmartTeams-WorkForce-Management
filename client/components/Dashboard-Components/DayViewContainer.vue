@@ -336,6 +336,7 @@ export default {
 <style scoped>
 .dayview-container {
   display: flexbox;
+  flex-shrink: 1;
 }
 
 .container-top {
@@ -358,7 +359,7 @@ export default {
   margin: auto;
 }
 
-@media all and (max-width: 1903px) {
+@media all and (min-width: 960px) and (max-width: 1903px) {
   .dayview-container {
     margin-top: 7vh;
   }
