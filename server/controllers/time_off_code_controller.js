@@ -49,7 +49,7 @@ const retrieveTimeOffCodesForWorker = async (req, res) => {
   const currentUser = payload.user
   const requestedWorker = req.params.workerId
   const currentUserIsAdmin = payload.isAdmin
-  const currentUserManagesRequestedWorker = WorkerController.checkUserManagesTargetWorker(currentUser, requestedWorker)
+  const currentUserManagesRequestedWorker = WorkerController.validateManageMent(currentUser, requestedWorker)
 
   if (req.body.workerId != payload.user && !currentUserIsAdmin && !currentUserManagesRequestedWorker) {
     res.status(401).json(`You are requesting time codes accesible to worker ${requestedWorker} but are logged in as worker ${currentUser}`)

@@ -30,7 +30,7 @@
           </v-tab-item>
           <v-tab-item>
             <v-select
-              v-model="timeCode"
+              v-model="timeOffCode"
               :items="availableTimeOffCodeIdList"
               name="selectedTimeOffCode"
               label="Time Off Code"
@@ -114,6 +114,13 @@
         >
       </v-card-actions>
     </v-card>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="4000"
+      color="#2D9FA0"
+      rounded="pill"
+      >{{ errorMessage }}</v-snackbar
+    >
   </v-dialog>
 </template>
 <script>
@@ -134,6 +141,8 @@ export default {
       dialog: false,
       tab: null,
       items: ['Enter Time', 'Enter Time Off'],
+      snackbar: false,
+      errorMessage: null,
     }
   },
   computed: {
@@ -216,6 +225,14 @@ export default {
         this.timeEntry.timeCodeId = value
       },
     },
+    timeOffCode: {
+      get() {
+        return this.timeEntry?.timeOffCodeId
+      },
+      set(value) {
+        this.timeEntry.timeOffCodeId = value
+      },
+    },
   },
   watch: {
     show() {
@@ -240,18 +257,51 @@ export default {
       this.show = false
     },
     async editTimeEntry() {
-      await this.$axios.put(`/time_entry/${this.timeEntry._id}`, {
-        workerId: this.$auth.user.workerId,
-        date: this.date,
-        timeCodeId: this.timeCode,
-        hours: this.hours,
-        comments: this.comments,
-        approved: false,
-        rejected: false,
-        rejectionMessage: null,
-      })
-      this.show = false
-      this.$emit('updateParent')
+      if (this.validateNewEntry()) {
+        let timeEntry = {
+          workerId: this.$auth.user.workerId,
+          date: this.date,
+          hours: this.hours,
+          comments: this.comments,
+          approved: false,
+          rejected: false,
+          rejectionMessage: null,
+        }
+        if (this.tabs === 0)
+          timeEntry = { ...timeEntry, timeCodeId: this.timeCode }
+        else timeEntry = { ...timeEntry, timeOffCodeId: this.timeOffCode }
+
+        await this.$axios.put(`/time_entry/${this.timeEntry._id}`, timeEntry)
+        this.show = false
+        this.$emit('updateParent')
+      }
+    },
+    validateNewEntry() {
+      let errorMessage = ''
+      if (this.hours % 0.25 !== 0)
+        errorMessage = 'Please enter hours in increments of 0.25'
+      if (this.hours < 0 || this.hours > 24)
+        errorMessage =
+          'Please enter a valid number of hours for this time entry'
+      if (!this.hours) {
+        errorMessage = 'Please enter the number of hours for this time entry'
+        this.$emit('updateParent') // If invalid hours are input, we want to re-render the container and reset the value on screen to the valid number
+      }
+      if (!this.date)
+        errorMessage = 'An error has occurred editing this time entry'
+      if (!this.selectedTimeOffCode && this.tab === 1)
+        errorMessage = 'Please enter a valid time off code for this time entry'
+      if (!this.selectedTimeCode && !this.tab === 0)
+        errorMessage = 'Please enter a valid time code for this time entry'
+      if (errorMessage !== '') {
+        this.errorMessage = errorMessage
+        this.toggleAlert()
+        return false
+      }
+      return true
+    },
+    toggleAlert() {
+      this.snackbar = !this.snackbar
     },
     async deleteTimeEntry() {
       await this.$axios.delete(`/time_entry/${this.timeEntry._id}`)

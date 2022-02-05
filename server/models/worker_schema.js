@@ -56,28 +56,6 @@ const workerSchema = new Schema(
                     required: false,
                 },
             },
-            worker_address: {
-                address_line_1: {
-                    type: String,
-                    required: [true,'Address Line 1 is required'],
-                },
-                address_line_2: {
-                    type: String,
-                    required: false,
-                },
-                post_code: {
-                    type: String,
-                    required:  [true,'Post Code is required'],
-                },
-                city: {
-                    type: String,
-                    required: false,
-                },
-                country: {
-                    type: String,
-                    required: [true, 'country is required'],
-                },
-            },
         },
         position: {
             job_title: {

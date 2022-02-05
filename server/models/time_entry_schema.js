@@ -10,9 +10,18 @@ const time_entry_schema = new Schema(
             type: Date,
             required: [true, 'A valid date must be associated with every time entry'],
         },
+        // Time entry must have either a time code or time off code ID
         timeCodeId: {
             type: String,
-            required: [true, 'Time entries must be linked to a valid time code'],
+            required: function(){
+                return this.timeOffCodeId == null
+            },
+        },
+        timeOffCodeId: {
+            type: String,
+            required: function(){
+                return this.timeCodeId == null
+            },
         },
         hours: {
             type: Number,
@@ -26,10 +35,6 @@ const time_entry_schema = new Schema(
             min: 0.25,
             max: 24,
 
-        },
-        isTimeOff: {
-            type: Boolean,
-            default: false
         },
         comments: {
             type: String,

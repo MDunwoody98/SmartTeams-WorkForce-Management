@@ -10,6 +10,7 @@
         no-gutters
       >
         <div class="teamContainer">
+          <!-- One card to route to team management view -->
           <v-card
             :key="managedTeams[index - 1]._id"
             class="teamCard"
@@ -24,19 +25,18 @@
               {{ managedTeams[index - 1].name }}
             </v-card-title>
           </v-card>
-
-          <v-card
+          <!-- One card for each worker in the team -->
+          <WorkerCard
             v-for="worker in managedTeams[index - 1].memberId"
             :key="worker"
+            :worker-id="worker"
             class="workerCard"
             min-width="10vw"
             min-height="20vh"
-            link
             nuxt
+            link
             :to="`worker/${worker}`"
-          >
-            <v-card-title class="workerName"> Worker Name </v-card-title>
-          </v-card>
+          />
         </div>
       </v-row>
     </template>
@@ -82,8 +82,8 @@ export default {
 .teamContainer {
   margin: 0 auto;
   display: flex;
-  justify-content: flex-start;
   align-items: center;
+  flex-grow: 1;
   text-align: center;
   overflow-x: auto;
 }

@@ -178,8 +178,19 @@ export default {
     },
   },
   created() {
-    // On creating the component, fill up the correct amount of cards based on screen size for time entries
-    this.generateCalendarWeek(this.getMonday(this.selectedDate), this.cardCount)
+    // On creating the component, fill up the correct amount of cards based on date and screen size
+    const dayOfWeek = new Date(this.selectedDate).getDay()
+    if ((dayOfWeek === 0 || dayOfWeek === 6) && this.cardCount !== 7) {
+      this.weekendView = true
+      this.generateCalendarWeek(
+        this.getSaturday(this.selectedDate),
+        this.cardCount
+      )
+    } else
+      this.generateCalendarWeek(
+        this.getMonday(this.selectedDate),
+        this.cardCount
+      )
   },
   methods: {
     getMonday(inputDate) {

@@ -51,7 +51,7 @@ const retrieveTimeEntriesForDay = async (req, res) => {
   const currentUser = payload.user
   const requestedWorker = req.body.workerId
   const currentUserIsAdmin = payload.isAdmin
-  const currentUserManagesRequestedWorker = WorkerController.checkUserManagesTargetWorker(currentUser, requestedWorker)
+  const currentUserManagesRequestedWorker = WorkerController.validateManageMent(currentUser, requestedWorker)
 
   if (req.body.workerId != payload.user && !currentUserIsAdmin && !currentUserManagesRequestedWorker) {
     res.status(401).json(`You are requesting time entries for worker ${requestedWorker} but are logged in as worker ${currentUser}`)
@@ -107,7 +107,7 @@ const approveTimeEntry = async (req, res) => {
   const currentUser = payload.user
   const requestedWorker = req.body.workerId
   const currentUserIsAdmin = payload.isAdmin
-  const currentUserManagesRequestedWorker = WorkerController.checkUserManagesTargetWorker(currentUser, requestedWorker)
+  const currentUserManagesRequestedWorker = WorkerController.validateManageMent(currentUser, requestedWorker)
   const timeEntryId = req.params.id
   let allowRequest = true
   let errorMessage = ""
@@ -135,7 +135,7 @@ const approveTimeEntry = async (req, res) => {
   //If allowRequest is false, check if currentUser is project manager of the project associated with the time code of the time entry
   //And the time code is project-manager-approved and not team-lead-approved
   //Only perform this check if the entry is a time entry and not a time off entry
-  if (!allowRequest && !timeEntry.isTimeOff) {
+  if (!allowRequest && !timeEntry.timeOffCodeId) {
     const linkedTimeCode = await TimeCode.findById(timeEntry.timeCodeId)
     if (linkedTimeCode.approvalByProjectManager) {
       console.log(linkedProject.managerId)
@@ -175,7 +175,7 @@ const rejectTimeEntry = async (req, res) => {
   const currentUser = payload.user
   const requestedWorker = req.body.workerId
   const currentUserIsAdmin = payload.isAdmin
-  const currentUserManagesRequestedWorker = WorkerController.checkUserManagesTargetWorker(currentUser, requestedWorker)
+  const currentUserManagesRequestedWorker = WorkerController.validateManageMent(currentUser, requestedWorker)
   const timeEntryId = req.params.id
   const rejectionMessage = req.body.rejectionMessage
   let allowRequest = true
@@ -201,7 +201,7 @@ const rejectTimeEntry = async (req, res) => {
     //If allowRequest is false, check if currentUser is project manager of the project associated with the time code of the time entry
     //And the time code is project-manager-approved and not team-lead-approved
     //Only perform this check if the entry is a time entry and not a time off entry
-    if (!allowRequest && !timeEntry.isTimeOff) {
+    if (!allowRequest && !timeEntry.timeOffCodeId) {
       const linkedTimeCode = await TimeCode.findById(timeEntry.timeCodeId)
       if (linkedTimeCode.approvalByProjectManager) {
         const linkedProject = await Project.findById(linkedTimeCode.projectId)

@@ -93,7 +93,7 @@ export default {
         },
         endpoints: {
           login: { url: '/auth/login', method: 'post', propertyName: 'token' },
-          logout: { url: '/auth/logout', method: 'post' },
+          logout: false, // No API for logging out - just remove token from browser
           refresh: { url: '/auth/refresh', method: 'post' }, // this.$auth.refreshTokens() to manually refresh
           user: { url: '/auth/user', method: 'get', propertyName: false },
         },
@@ -109,7 +109,6 @@ export default {
   },
   axios: {
     // proxyHeaders: false
-    // baseURL: 'http://127.0.0.1:9000/api',
     baseUrl: process.env.API_URL,
     https: process.env.HTTPS,
   },

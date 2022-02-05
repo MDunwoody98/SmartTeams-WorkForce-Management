@@ -31,20 +31,20 @@ const readWorker = (req, res) => {
     });
 };
 
-const readWorkerById = (req, res) => {
+const readWorkerByWorkerId = (req, res) => {
   const token = req.get("Authorization").split(' ')[1]
-  const payload = WorkerController.parseJWT(token)
+  const payload = parseJWT(token)
   const currentUser = payload.user
   const requestedWorker = req.params.workerId
   const currentUserIsAdmin = payload.isAdmin
-  const currentUserManagesRequestedWorker = WorkerController.checkUserManagesTargetWorker(currentUser, requestedWorker)
+  const currentUserManagesRequestedWorker = validateManageMent(currentUser, requestedWorker)
 
   if (req.body.workerId != payload.user && !currentUserIsAdmin && !currentUserManagesRequestedWorker) {
     res.status(401).json(`You are data for worker ${requestedWorker} but are logged in as worker ${currentUser}`)
     return
   } 
 
-  Worker.findById(req.params.id)
+  Worker.findOne({workerId: req.params.id})
   .then((data) => {
     res.status(200).json(data);
     return
@@ -94,13 +94,23 @@ const deleteWorker = (req, res) => {
     });
 };
 
-const checkUserManagesTargetWorker = async (currentUser, targetWorker) => {
+const validateManageMent = async (currentUser, targetWorker) => {
   //find all teams for which currentUser is a manager
   //get worker IDs of all members of those teams
   const managedTeams = await Team.find({managerId: currentUser})
   if (managedTeams.length == 0) return false
   const membersInManagedTeams = managedTeams.map(team => team.memberId[0])
   return membersInManagedTeams.includes(targetWorker)
+}
+
+const checkUserManagesTargetWorker = async (req, res) => {
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = parseJWT(token)
+  const currentUser = payload.user
+  const requestedWorker = req.params.id
+  const currentUserIsAdmin = payload.isAdmin
+  const currentUserManagesRequestedWorker = await validateManageMent(currentUser, requestedWorker)
+  return res.status(200).json(currentUserManagesRequestedWorker);
 }
 
 function parseJWT (token) {
@@ -114,10 +124,11 @@ function parseJWT (token) {
 
 module.exports = {
   parseJWT,
-  checkUserManagesTargetWorker,
   createWorker,
   readWorker,
-  readWorkerById,
+  readWorkerByWorkerId,
+  validateManageMent,
+  checkUserManagesTargetWorker,
   updateWorker,
   deleteWorker,
 };

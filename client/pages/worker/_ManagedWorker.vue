@@ -58,14 +58,14 @@ export default {
     const ManagedWorker = params.ManagedWorker // When calling /abc the ManagedWorker will be "abc"
     return { ManagedWorker }
   },
-  // Is the current user an admin or a manager of this team?
+  // Is the current user an admin or a manager of this worker?
   async validate({ params, store }) {
-    // await request with manager & worker
-    // if return all teams for which manager is manager
-    // if worker is in ANY of them, return true
-    // Or if current user is admin, return true
-    // throw await new Error('Unauthorized!')
-    return await true
+    const response = await store.$axios.get(
+      `/worker/checkManager/${params.ManagedWorker}`
+    )
+    if (!response.data && !store.$auth.user.isAdmin) {
+      throw new Error('401 Unauthorized')
+    } else return true
   },
   data() {
     return {

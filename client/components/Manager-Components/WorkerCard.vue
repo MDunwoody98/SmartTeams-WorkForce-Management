@@ -1,17 +1,24 @@
 <template>
   <div>
     <v-card
-      :key="worker"
+      :key="workerId"
       class="workerCard"
       min-width="10vw"
-      min-height="20vh"
+      min-height="15vh"
       link
       nuxt
-      :to="`worker/${worker}`"
+      :to="`worker/${workerId}`"
     >
-      <v-card-title class="workerName">
-        {{ linkedWorkerObj.name }}
-      </v-card-title>
+      <v-card-subtitle class="workerName">
+        {{ linkedWorkerObj ? linkedWorkerObj.name.firstName : '' }}
+        {{ linkedWorkerObj ? linkedWorkerObj.name.lastName : '' }}
+      </v-card-subtitle>
+      <v-avatar size="100">
+        <v-img :src="require('~/assets/Mugshot_1.jpg')" />
+      </v-avatar>
+      <v-card-subtitle class="workerJob">
+        {{ linkedWorkerObj ? linkedWorkerObj.position.job_title : '' }}
+      </v-card-subtitle>
     </v-card>
   </div>
 </template>
@@ -36,3 +43,11 @@ export default {
   },
 }
 </script>
+<style scoped>
+.workerName {
+  font-size: 1.5rem;
+}
+.workerJob {
+  font-size: 1rem;
+}
+</style>

@@ -85,6 +85,13 @@
         <v-btn color="blue darken-1" text @click="addTimeEntry()">Save</v-btn>
       </v-card-actions>
     </v-card>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="4000"
+      color="#2D9FA0"
+      rounded="pill"
+      >{{ errorMessage }}</v-snackbar
+    >
   </v-dialog>
 </template>
 <script>
@@ -104,7 +111,9 @@ export default {
       hours: null,
       comments: null,
       tab: null,
+      snackbar: false,
       items: ['Enter Time', 'Enter Time Off'],
+      errorMessage: null,
     }
   },
   computed: {
@@ -152,31 +161,68 @@ export default {
   },
   methods: {
     async addTimeEntry() {
-      let entriesPosted = 0
-      await this.dates.forEach((selectedDate) => {
-        this.$axios.post('/time_entry', {
-          workerId: this.$auth.user.workerId,
-          date: selectedDate,
-          timeCodeId: this.selectedTimeCode,
-          hours: this.hours,
-          comments: this.comments,
-          approved: false,
+      if (this.validateNewEntry()) {
+        let entriesPosted = 0
+        await this.dates.forEach((selectedDate) => {
+          let timeEntry = {
+            workerId: this.$auth.user.workerId,
+            date: selectedDate,
+            timeCodeId: this.selectedTimeCode,
+            hours: this.hours,
+            comments: this.comments,
+            approved: false,
+          }
+
+          if (this.tabs === 0)
+            timeEntry = { ...timeEntry, timeCodeId: this.selectedTimeCode }
+          else
+            timeEntry = {
+              ...timeEntry,
+              timeOffCodeId: this.selectedTimeOffCode,
+            }
+
+          this.$axios.post('/time_entry', timeEntry)
+          entriesPosted++
+          // Re-render DayView component if you add a time entry for the same date that you initially clicked
+          if (
+            this.dates[0] === this.formatSelectedDate(this.timeEntryDate)[0] &&
+            this.dates.length === 1
+          ) {
+            this.$emit('updateParent')
+            return
+          }
+          // Re-render all DayView components on screen if you entered multiple time entries, or if your single entry was not for the initial date selected
+          if (entriesPosted === this.dates.length) {
+            this.$emit('updateContainer')
+          }
         })
-        entriesPosted++
-        // Re-render DayView component if you add a time entry for the same date that you initially clicked
-        if (
-          this.dates[0] === this.formatSelectedDate(this.timeEntryDate)[0] &&
-          this.dates.length === 1
-        ) {
-          this.$emit('updateParent')
-          return
-        }
-        // Re-render all DayView components on screen if you entered multiple time entries, or if your single entry was not for the initial date selected
-        if (entriesPosted === this.dates.length) {
-          this.$emit('updateContainer')
-        }
-      })
-      this.closeWindow()
+        this.closeWindow()
+      }
+    },
+    validateNewEntry() {
+      let errorMessage = ''
+      if (this.hours % 0.25 !== 0)
+        errorMessage = 'Please enter hours in increments of 0.25'
+      if (this.hours < 0 || this.hours > 24)
+        errorMessage =
+          'Please enter a valid number of hours for this time entry'
+      if (!this.hours)
+        errorMessage = 'Please enter the number of hours for this time entry'
+      if (this.dates.length === 0)
+        errorMessage = 'Please enter a date for your time entry'
+      if (!this.selectedTimeOffCode && this.tab === 1)
+        errorMessage = 'Please enter a valid time off code for this time entry'
+      if (!this.selectedTimeCode && this.tab === 0)
+        errorMessage = 'Please enter a valid time code for this time entry'
+      if (errorMessage !== '') {
+        this.errorMessage = errorMessage
+        this.toggleAlert()
+        return false
+      }
+      return true
+    },
+    toggleAlert() {
+      this.snackbar = !this.snackbar
     },
     formatSelectedDate(inputDate) {
       const selectedDate = new Date(inputDate)

@@ -160,7 +160,7 @@ export default {
       if (entry.rejected) {
         classes += ' rejected'
       }
-      if (entry.isTimeOff) {
+      if (entry.timeOffCodeId) {
         classes += ' timeOff'
       }
       if (entry.approved) {

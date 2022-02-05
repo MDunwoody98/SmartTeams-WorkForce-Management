@@ -63,10 +63,7 @@ export default function (ctx, inject) {
       "method": "post",
       "propertyName": "token"
     },
-    "logout": {
-      "url": "/auth/logout",
-      "method": "post"
-    },
+    "logout": false,
     "refresh": {
       "url": "/auth/refresh",
       "method": "post"

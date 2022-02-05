@@ -53,7 +53,8 @@ const {
 const {
   createWorker,
   readWorker,
-  readWorkerById,
+  readWorkerByWorkerId,
+  checkUserManagesTargetWorker,
   updateWorker,
   deleteWorker,
 } = require('../controllers/worker_controller');
@@ -122,7 +123,8 @@ router
 router
   .post('/worker', createWorker)
   .get('/worker', readWorker)
-  .get('/worker/:id', readWorkerById)
+  .get('/worker/:id', readWorkerByWorkerId)
+  .get('/worker/checkManager/:id',checkUserManagesTargetWorker)
   .put('/worker/:id', updateWorker)
   .delete('/worker/:id', deleteWorker);
 
