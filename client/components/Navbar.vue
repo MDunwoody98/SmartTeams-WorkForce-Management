@@ -1,6 +1,13 @@
 <template>
   <nav class="navigation">
-    <v-app-bar app dense dark class="toolbar" color="#091C58" clipped-left>
+    <v-app-bar
+      app
+      dense
+      dark
+      class="toolbar"
+      color="var(--color-primary)"
+      clipped-left
+    >
       <v-toolbar-title>
         <span> SmartTeams </span>
       </v-toolbar-title>
@@ -111,7 +118,7 @@ export default {
 }
 .toolbar {
   position: relative;
-  color: '#091C58';
+  color: var(--color-primary);
   height: 80vh;
 }
 .sidenav {

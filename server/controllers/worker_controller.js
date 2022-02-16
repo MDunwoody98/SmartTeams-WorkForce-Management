@@ -21,14 +21,19 @@ const createWorker = (req, res) => {
 };
 
 const readWorker = (req, res) => {
-    Worker.find()
-    .then((data) => {
-      res.status(200).json(data);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).json(err);
-    });
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = parseJWT(token)
+  if (!payload.isAdmin) {
+    return res.status(501).json('Only admin users can retrieve all workers')
+  }
+  Worker.find()
+  .then((data) => {
+    res.status(200).json(data);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).json(err);
+  });
 };
 
 const readWorkerByWorkerId = (req, res) => {

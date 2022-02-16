@@ -165,7 +165,7 @@ router
 .get('/time_entry', readTimeEntry)
 .get('/time_entry/:id', readTimeEntryById)
 .put('/time_entry/approve/:id', approveTimeEntry)
-.put('/time_entry/approveAll', approveTimeEntries)
+.put('/time_entry/approveDay', approveTimeEntries)
 .put('/time_entry/reject/:id', rejectTimeEntry)
 .put('/time_entry/:id', updateTimeEntry)
 .put('/time_entry/submit/day', submitEntriesForDay)

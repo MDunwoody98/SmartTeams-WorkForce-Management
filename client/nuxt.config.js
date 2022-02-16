@@ -48,6 +48,7 @@ export default {
       '~/components/Dashboard-Components',
       '~/components/Dashboard-Components/DayView-Components',
       '~/components/Manager-Components',
+      '~/components/Admin-Components',
     ],
   },
   /*

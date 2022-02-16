@@ -62,18 +62,14 @@ const workerSchema = new Schema(
                 type: String,
                 required: [true, 'job title is required'],
             },
-            management_level: {
-                type: String,
-                required: false,
-            },
-            department: {
-                type: String,
-                required: false,
-            },
         },
+        photo: {
+            type: String,
+            required: false,
+        }
     },
     { timestamps: true },
 );
 
 module.exports = model('worker', workerSchema);
-//email/password/hire date/term date/supervisor ID/2fa/profile photo
+//email/password/hire date/term date/2fa/profile photo/address/department/management level

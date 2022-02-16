@@ -1,7 +1,9 @@
 <template>
   <div>
     <v-card class="elevation-12 login-card">
-      <v-card-title color="#091C58" class="subtitle">Sign in</v-card-title>
+      <v-card-title color="var(--color-primary)" class="subtitle"
+        >Sign in</v-card-title
+      >
       <v-form @submit.prevent="logIn()">
         <v-card-text>
           <v-card-actions class="form-group">
@@ -11,7 +13,7 @@
               type="text"
               class="form-element"
               placeholder="Worker ID"
-              color="#091C58"
+              color="var(--color-primary)"
             ></v-text-field>
           </v-card-actions>
           <v-card-actions class="form-group">
@@ -21,14 +23,14 @@
               type="password"
               class="form-element"
               placeholder="Password"
-              color="#091C58"
+              color="var(--color-primary)"
             ></v-text-field>
           </v-card-actions>
           <v-card-actions class="form-group">
             <v-checkbox
               v-model="remember"
               label="Remember me"
-              color="#091C58"
+              color="var(--color-primary)"
             ></v-checkbox>
           </v-card-actions>
           <div class="forgot-password-container">
@@ -45,7 +47,7 @@
             block
             outlined
             nuxt
-            color="#091C58"
+            color="var(--color-primary)"
             >Sign In</v-btn
           ><!--to="/dashboard ??-->
         </v-card-text>
@@ -54,7 +56,7 @@
     <v-snackbar
       v-model="snackbar"
       :timeout="4000"
-      color="#2D9FA0"
+      color="var(--color-secondary)"
       rounded="pill"
       >{{ text }}</v-snackbar
     >
@@ -117,11 +119,11 @@ export default {
   justify-content: center;
   padding: 20px;
   font-size: 2rem;
-  color: #091c58;
+  color: var(--color-primary);
 }
 
 .form-control:focus {
-  border-color: #091c58;
+  border-color: var(--color-primary);
   box-shadow: none;
 }
 
@@ -131,15 +133,15 @@ export default {
 }
 
 .form-group {
-  color: '#091C58';
+  color: 'var(--color-primary)';
 }
 .v-text-field {
-  color: '#091C58';
+  color: 'var(--color-primary)';
 }
 
 .forgot-password {
   font-size: 1rem;
-  color: #091c58;
+  color: var(--color-primary);
   cursor: pointer;
 }
 

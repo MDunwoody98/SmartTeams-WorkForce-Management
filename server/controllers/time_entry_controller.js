@@ -78,7 +78,7 @@ const retrieveTimeEntriesForDay = async (req, res) => {
     console.error(err);
     res.status(500).json(err);
   });
-}
+};
 
 const updateTimeEntry = (req, res) => {
     TimeEntry.findByIdAndUpdate(req.params.id, req.body, {
@@ -165,8 +165,66 @@ const approveTimeEntry = async (req, res) => {
 //Can only approve certain entries depending on time code approval type
 //Only line managers can approve time off
 const approveTimeEntries = async (req, res) => {
+  try {
+  // Are you an admin or the manager of the worker ??
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = WorkerController.parseJWT(token)
+  const currentUser = payload.user
+  const requestedWorker = req.body.workerId
+  const currentUserIsAdmin = payload.isAdmin
+  const currentUserManagesRequestedWorker = WorkerController.validateManageMent(currentUser, requestedWorker)
+  let allowRequest = true
+  let approveAsPM = false
+  let errorMessage = ""
 
-}
+  //Also need to check if currrentUser is project manager of time code of time entry
+  if (!currentUserIsAdmin && !currentUserManagesRequestedWorker) {
+    allowRequest = false
+    errorMessage = `You are requesting time entries for worker ${requestedWorker} but are logged in as worker ${currentUser}`
+  }
+
+   const date = new Date(req.body.date.key)
+   const entries = await TimeEntry.find({workerId: requestedWorker, date: date })
+   if (entries.length == 0) {
+     return res.status(200).json('No entries for date')
+   }
+   //Filter out any entries that are already rejected or already approved
+   const entriesToApprove = entries.filter(timeEntry => (timeEntry.submitted && !timeEntry.approved && !timeEntry.rejected))
+   //Using counter as forEach is synchronous and executing in parallel
+   var entriesProcessed = 0
+   console.log(entriesToApprove.length)
+   entriesToApprove.forEach(async timeEntry => {
+     approveAsPM = false
+     //If allowRequest is false and the current user is not the project manager for the project of the time code ID, do not update time entry
+     if (!allowRequest && !timeEntry.timeOffCodeId) {
+       const linkedTimeCode = await TimeCode.findById(timeEntry.timeCodeId)
+       if (linkedTimeCode.approvalByProjectManager) {
+         console.log(linkedProject.managerId)
+         const linkedProject = await Project.findById(linkedTimeCode.projectId)
+         if (linkedProject.managerId == currentUser) {
+           approveAsPM = true
+         }
+       }
+     }
+     //Approve entry if user is team manager, admin, or project manager
+     if (allowRequest || approveAsPM) {
+       timeEntry.submitted = false
+       timeEntry.approved = true
+       timeEntry.rejected = false
+       timeEntry.rejectionMessage = null
+       timeEntry.approverId = currentUser
+       timeEntry.approvalDate = new Date() // Upon approval, this approvalDate should be more-or-less identical to the lastUpdate on the schema timestamp
+       await timeEntry.save()
+     }
+     entriesProcessed++
+     if (entriesProcessed == entriesToApprove.length) {
+       return res.status(200).json("Successfully submitted time entries");
+     }
+   })
+  } catch (err) {
+    return res.status(500).json(err)
+  }
+};
 
 const rejectTimeEntry = async (req, res) => {
   // Are you an admin or the manager of the worker ??
@@ -218,7 +276,6 @@ const rejectTimeEntry = async (req, res) => {
     //At this point, we are authorized
     //Set submitted to false - send back to worker
     //Rejection message to return info back to worker
-    console.log('got here ' + timeEntry)
     timeEntry.submitted = false
     timeEntry.rejected = true
     timeEntry.rejectionMessage = rejectionMessage
@@ -227,7 +284,7 @@ const rejectTimeEntry = async (req, res) => {
   } catch (err) {
     return res.status(500).json(err)
   }
-  }
+};
 
   const submitEntriesForDay = async (req, res) => {
     const token = req.get("Authorization").split(' ')[1]

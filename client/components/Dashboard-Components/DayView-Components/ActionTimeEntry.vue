@@ -83,7 +83,7 @@
               <v-btn color="green darken-1" text @click="deleteTimeEntry()">
                 Delete
               </v-btn>
-              <v-btn color="green darken-1" text @click="closeWindows()">
+              <v-btn color="green darken-1" text @click="dialog = false">
                 Cancel
               </v-btn>
             </v-card-actions>
@@ -117,7 +117,7 @@
     <v-snackbar
       v-model="snackbar"
       :timeout="4000"
-      color="#2D9FA0"
+      color="var(--color-secondary)"
       rounded="pill"
       >{{ errorMessage }}</v-snackbar
     >

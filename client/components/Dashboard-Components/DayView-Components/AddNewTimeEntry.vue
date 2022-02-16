@@ -88,7 +88,7 @@
     <v-snackbar
       v-model="snackbar"
       :timeout="4000"
-      color="#2D9FA0"
+      color="var(--color-secondary)"
       rounded="pill"
       >{{ errorMessage }}</v-snackbar
     >

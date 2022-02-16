@@ -11,7 +11,7 @@
           outlined
           to="/login"
           nuxt
-          color="#091C58"
+          color="var(color-primary)"
           >Sign In</v-btn
         >
       </div>

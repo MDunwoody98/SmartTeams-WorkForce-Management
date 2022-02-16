@@ -64,7 +64,7 @@ html {
 }
 
 .custom-shape-divider-top-1634301248 .shape-fill {
-  fill: #2d9fa0;
+  fill: var(--color-secondary);
 }
 
 .custom-shape-divider-bottom-1634301354 {
@@ -85,7 +85,7 @@ html {
 }
 
 .custom-shape-divider-bottom-1634301354 .shape-fill {
-  fill: #091c58;
+  fill: var(--color-primary);
 }
 
 .footer .header {

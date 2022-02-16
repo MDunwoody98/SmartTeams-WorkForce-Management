@@ -2,7 +2,12 @@
   <div class="dayview-container">
     <div class="container-top">
       <div class="submit">
-        <v-btn rounded color="#2D9FA0" dark @click="submitTimeEntries()">
+        <v-btn
+          rounded
+          color="var(--color-secondary)"
+          dark
+          @click="submitTimeEntries()"
+        >
           Submit Time Entries
         </v-btn>
       </div>

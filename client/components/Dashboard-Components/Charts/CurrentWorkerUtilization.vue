@@ -14,13 +14,19 @@ export default {
     },
   },
   async mounted() {
+    const secondaryColor = window
+      .getComputedStyle(document.body)
+      .getPropertyValue('--color-secondary')
+    const primaryColor = window
+      .getComputedStyle(document.body)
+      .getPropertyValue('--color-primary')
     // Start and End date params should be available somewhere to generate utilization charts
     const utilizationChartData = {
       labels: ['Absence', 'Non-utilized', 'Utilized'],
       datasets: [
         {
           label: 'Annual Leave',
-          backgroundColor: ['grey', '#091C58', '#2D9FA0'],
+          backgroundColor: ['grey', primaryColor, secondaryColor],
           data: [4, 20, 76],
         },
       ],

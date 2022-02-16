@@ -23,7 +23,7 @@
 }
 .home-footer {
   bottom: 0;
-  background: #2d9fa0;
+  background: var(--color-secondary);
   position: fixed;
   padding: 10px 0;
 }

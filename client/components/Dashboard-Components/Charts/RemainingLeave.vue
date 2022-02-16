@@ -14,13 +14,19 @@ export default {
     },
   },
   mounted() {
+    const secondaryColor = window
+      .getComputedStyle(document.body)
+      .getPropertyValue('--color-secondary')
+    const primaryColor = window
+      .getComputedStyle(document.body)
+      .getPropertyValue('--color-primary')
     // Ideally we would have some options here for providing a date range to calculate AL used
     const annualLeaveChartData = {
       labels: ['Leave used', 'Leave remaining'],
       datasets: [
         {
           label: 'Annual Leave',
-          backgroundColor: ['#091C58', '#2D9FA0'],
+          backgroundColor: [primaryColor, secondaryColor],
           data: [16.25, 35],
         },
       ],

@@ -26,6 +26,42 @@
   "WorkerCard": {
     "description": "Auto imported from components/Manager-Components/WorkerCard.vue"
   },
+  "CreateProject": {
+    "description": "Auto imported from components/Admin-Components/CreateProject.vue"
+  },
+  "CreateTeam": {
+    "description": "Auto imported from components/Admin-Components/CreateTeam.vue"
+  },
+  "CreateTimeCode": {
+    "description": "Auto imported from components/Admin-Components/CreateTimeCode.vue"
+  },
+  "CreateTimeOffCode": {
+    "description": "Auto imported from components/Admin-Components/CreateTimeOffCode.vue"
+  },
+  "CreateUser": {
+    "description": "Auto imported from components/Admin-Components/CreateUser.vue"
+  },
+  "EditUser": {
+    "description": "Auto imported from components/Admin-Components/EditUser.vue"
+  },
+  "UpdateAnnualLeavePolicy": {
+    "description": "Auto imported from components/Admin-Components/UpdateAnnualLeavePolicy.vue"
+  },
+  "UpdateFTE": {
+    "description": "Auto imported from components/Admin-Components/UpdateFTE.vue"
+  },
+  "UpdateProject": {
+    "description": "Auto imported from components/Admin-Components/UpdateProject.vue"
+  },
+  "UpdateTeam": {
+    "description": "Auto imported from components/Admin-Components/UpdateTeam.vue"
+  },
+  "UpdateTimeCode": {
+    "description": "Auto imported from components/Admin-Components/UpdateTimeCode.vue"
+  },
+  "UpdateTimeOffCode": {
+    "description": "Auto imported from components/Admin-Components/UpdateTimeOffCode.vue"
+  },
   "Login": {
     "description": "Auto imported from components/Login.vue"
   },
