@@ -100,7 +100,7 @@
 <script>
 export default {
   props: {
-    workerId: { type: String, default: null },
+    workerId: { type: Number, default: null },
     managerView: { type: Boolean, default: false },
   },
   data() {
@@ -200,14 +200,14 @@ export default {
   methods: {
     getMonday(inputDate) {
       inputDate = new Date(inputDate)
-      inputDate.setHours(0, 0, 0, 0)
+      inputDate.setUTCHours(0, 0, 0, 0)
       const day = inputDate.getDay()
       const diff = inputDate.getDate() - day + (day === 0 ? -6 : 1) // adjust when day is sunday
       return new Date(inputDate.setDate(diff))
     },
     getSaturday(inputDate) {
       inputDate = new Date(inputDate)
-      inputDate.setHours(0, 0, 0, 0)
+      inputDate.setUTCHours(0, 0, 0, 0)
       const day = inputDate.getDay()
       const diff = inputDate.getDate() - day + (day === 0 ? 0 : 6) // adjust when day is sunday
       return new Date(inputDate.setDate(diff))
@@ -264,13 +264,10 @@ export default {
         )
       }
     },
-    updateAllDayViewComponents() {
-      setTimeout(() => this.componentKey++, 100) // Small delay of 100ms to ensure render captures data changes
-    },
     goToSpecifiedWeek(providedDateString) {
       // if cardCount is not 7 and selected date is Sat or Sun, weekend view is true and getSaturday
       const providedDate = new Date(providedDateString)
-      providedDate.setHours(0, 0, 0, 0)
+      providedDate.setUTCHours(0, 0, 0, 0)
       const day = providedDate.getDay()
       this.menu = false
       if (this.cardCount !== 7 && (day === 6 || day === 0)) {
@@ -283,6 +280,9 @@ export default {
         this.weekendView = false
         this.generateCalendarWeek(this.getMonday(providedDate), this.cardCount)
       }
+    },
+    updateAllDayViewComponents() {
+      setTimeout(() => this.componentKey++, 100) // Small delay of 100ms to ensure render captures data changes
     },
     async submitTimeEntries() {
       let counter = 0

@@ -52,18 +52,20 @@
 </template>
 
 <script>
+import jwtDecode from 'jwt-decode'
 export default {
   layout: 'background_home',
   asyncData({ params }) {
-    const ManagedWorker = params.ManagedWorker // When calling /abc the ManagedWorker will be "abc"
+    const ManagedWorker = parseInt(params.ManagedWorker) // When calling /abc the ManagedWorker will be "abc"
     return { ManagedWorker }
   },
   // Is the current user an admin or a manager of this worker?
   async validate({ params, store }) {
+    const token = jwtDecode(store.$auth.strategy.token.get())
     const response = await store.$axios.get(
       `/worker/checkManager/${params.ManagedWorker}`
     )
-    if (!response.data && !store.$auth.user.isAdmin) {
+    if (!response.data && !token?.isAdmin) {
       throw new Error('401 Unauthorized')
     } else return true
   },

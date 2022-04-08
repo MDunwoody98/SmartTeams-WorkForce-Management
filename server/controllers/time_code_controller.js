@@ -2,6 +2,7 @@
 
 const TimeCode = require('../models/time_code_schema');
 const Team = require('../models/team_schema');
+const Project = require('../models/project_schema');
 const WorkerController = require('./worker_controller');
 
 const createTimeCode = (req, res) => {
@@ -63,18 +64,23 @@ const retrieveTimeCodesForWorker = async (req, res) => {
   let projectsAndAssociatedTimeCodes = new Map()
   try {
     const teams = await Team.find({memberId: requestedWorker})
-    const projects = teams.map(team => team.projectId)[0]
+    // Get all project IDs from all teams that the worker is a member of, then flatten the nested arrays into 1 array and remove duplicates
+    let projects = WorkerController.flatten(teams.map(team => team.projectId)).reduce(function(a,b){if(a.indexOf(b)<0)a.push(b);return a;},[])
     if (!projects) {
       res.status(200).json('{}')
       return
     }
     //Using counter as forEach is synchronous and executing in parallel
     var projectsProcessed = 0
+    console.log(projects)
+
     //To wait for all the iterations to finish before moving on, use a foreach to process in parallel
       await projects.forEach(async project => {
       let linkedTimeCodes = await TimeCode.find({projectId: project})
       linkedTimeCodes = linkedTimeCodes.map(timeCode => [timeCode._id, timeCode.timeCodeName])
-      projectsAndAssociatedTimeCodes.set(project, linkedTimeCodes)
+      let projectObj = await Project.findById(project)
+      projectObj = JSON.stringify(projectObj)
+      projectsAndAssociatedTimeCodes.set(projectObj, linkedTimeCodes)
       projectsProcessed++
       if (projectsProcessed == projects.length) {
         res.status(200).json(Object.fromEntries(projectsAndAssociatedTimeCodes))
@@ -83,6 +89,7 @@ const retrieveTimeCodesForWorker = async (req, res) => {
     })
   }
   catch (err) {
+    console.log(err)
     res.status(500).json(err)
   }
 }
@@ -108,21 +115,27 @@ const updateTimeCode = (req, res) => {
 };
 
 const deleteTimeCode = (req, res) => {
-    TimeCode.findById(req.params.id)
-    .then((data) => {
-      if (!data) {
-        throw new Error('Time Code not available');
-      }
-      return data.remove();
-    })
-    .then((data) => {
-      console.log('Time Code removed!');
-      res.status(200).json(data);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).json(err);
-    });
+  //TODO - project manager can also delete time code
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = WorkerController.parseJWT(token)
+  if (!payload.isAdmin) {
+    return res.status(501).json('Only admin users can delete time codes')
+  }
+  TimeCode.findById(req.params.id)
+  .then((data) => {
+    if (!data) {
+      throw new Error('Time Code not available');
+    }
+    return data.remove();
+  })
+  .then((data) => {
+    console.log('Time Code removed!');
+    res.status(200).json(data);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).json(err);
+  });
 };
 
 module.exports = {

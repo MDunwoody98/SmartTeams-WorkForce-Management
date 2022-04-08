@@ -27,6 +27,11 @@ const createProject = (req, res) => {
 };
 
 const readProject = (req, res) => {
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = WorkerController.parseJWT(token)
+  if (!payload.isAdmin) {
+    return res.status(501).json('Only admin users can retrieve all projects')
+  }
     Project.find()
     .then((data) => {
       res.status(200).json(data);

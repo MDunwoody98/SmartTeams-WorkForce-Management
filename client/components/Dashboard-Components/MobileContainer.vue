@@ -161,7 +161,6 @@ export default {
         this.weekendView = !this.weekendView
       }
       this.selectedDate.setDate(this.selectedDate.getDate() + this.cardCount)
-      console.log(this.selectedDate)
       if (this.weekendView) {
         this.generateCalendarWeek(
           this.getSaturday(this.selectedDate),
@@ -179,7 +178,6 @@ export default {
         this.weekendView = !this.weekendView
       }
       this.selectedDate.setDate(this.selectedDate.getDate() - this.cardCount)
-      console.log(this.selectedDate)
       if (this.weekendView) {
         this.generateCalendarWeek(
           this.getSaturday(this.selectedDate),

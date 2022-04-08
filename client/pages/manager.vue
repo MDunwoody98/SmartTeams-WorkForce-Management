@@ -7,9 +7,14 @@
         Click on team card to navigate to page for that team - tabulated view for analytics
       -->
       <ManagerTeamViewContainer />
+      <!--
+        The below is a future addition for project managers to be handled in addition to team managers.
+        It is currently unfinished and descoped from the project but contains a grid that can be more easily exported to other business tools such as Excel
+        
       <v-row cols="12">
         <ManagedTeams />
       </v-row>
+      -->
     </v-container>
   </div>
 </template>

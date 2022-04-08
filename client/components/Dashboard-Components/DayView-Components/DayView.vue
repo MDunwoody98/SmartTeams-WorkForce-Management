@@ -70,7 +70,7 @@ export default {
       default: null,
     },
     workerId: {
-      type: String,
+      type: Number,
       default: null,
     },
     managerView: {

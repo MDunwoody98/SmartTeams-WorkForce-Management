@@ -4,7 +4,7 @@ const time_code_schema = new Schema(
     {
         projectId: {
             type: String,
-            required: false, //Not all time codes are for a project
+            required: true, //All time codes require a project
         },
         timeCodeName: {
             type: String,
@@ -22,9 +22,9 @@ const time_code_schema = new Schema(
             type: Boolean,
             required: [true, 'It must be stated whether this time code is approved by project managers'],
         },
-        utilized: {
+        utilised: {
             type: Boolean,
-            required: [true, 'It must be stated whether this time code is utilized'],
+            required: [true, 'It must be stated whether this time code is utilised'],
         },
         billed: {
             type: Boolean,

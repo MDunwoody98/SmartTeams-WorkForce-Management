@@ -3,7 +3,7 @@ const {Schema, model} = require("mongoose");
 const time_entry_schema = new Schema(
     {
         workerId: {
-            type: String,
+            type: Number,
             required: [true,'A worker must be linked to every time entry'],
         },
         date: {

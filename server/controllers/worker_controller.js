@@ -99,23 +99,31 @@ const deleteWorker = (req, res) => {
     });
 };
 
+function flatten(arr) {
+  return arr.reduce(function (flat, toFlatten) {
+    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+  }, []);
+}
+
 const validateManageMent = async (currentUser, targetWorker) => {
   //find all teams for which currentUser is a manager
   //get worker IDs of all members of those teams
+  if (!targetWorker || !currentUser) return
   const managedTeams = await Team.find({managerId: currentUser})
   if (managedTeams.length == 0) return false
-  const membersInManagedTeams = managedTeams.map(team => team.memberId[0])
-  return membersInManagedTeams.includes(targetWorker)
+  //Array of arrays => flatten to 1 array => remove duplicates
+  const membersInManagedTeams = flatten(managedTeams.map(team => team.memberId)).reduce(function(a,b){if(a.indexOf(b)<0)a.push(b);return a;},[])
+  return membersInManagedTeams.includes(parseInt(targetWorker))
 }
 
 const checkUserManagesTargetWorker = async (req, res) => {
+  const requestedWorker = req.params.id
   const token = req.get("Authorization").split(' ')[1]
   const payload = parseJWT(token)
   const currentUser = payload.user
-  const requestedWorker = req.params.id
   const currentUserIsAdmin = payload.isAdmin
   const currentUserManagesRequestedWorker = await validateManageMent(currentUser, requestedWorker)
-  return res.status(200).json(currentUserManagesRequestedWorker);
+  return res.status(200).json(currentUserManagesRequestedWorker);  
 }
 
 function parseJWT (token) {
@@ -133,6 +141,7 @@ module.exports = {
   readWorker,
   readWorkerByWorkerId,
   validateManageMent,
+  flatten,
   checkUserManagesTargetWorker,
   updateWorker,
   deleteWorker,

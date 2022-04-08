@@ -161,15 +161,13 @@ export default {
         Object.fromEntries(this.availableTimeCodes)[0] === '{'
       )
         return availableTimeCodes
-
-      this.availableTimeCodes?.forEach((timeCodeAndName, projectId) => {
-        availableTimeCodes.push({ header: projectId })
+      this.availableTimeCodes?.forEach((timeCodeAndName, project) => {
+        availableTimeCodes.push({ header: JSON.parse(project).name })
         timeCodeAndName?.forEach((idAndName) => {
           availableTimeCodes.push({ value: idAndName[0], text: idAndName[1] })
         })
         availableTimeCodes.push({ divider: true })
       })
-
       return availableTimeCodes
     },
     availableTimeOffCodeIdList() {
@@ -253,6 +251,10 @@ export default {
         ('0' + selectedDate.getDate()).slice(-2)
     },
     closeWindows() {
+      // If the window is closing without hours being set to a valid value, update container
+      if (this.hours % 0.25 !== 0) {
+        this.$emit('updateParent')
+      }
       this.dialog = false
       this.show = false
     },
@@ -280,7 +282,7 @@ export default {
       let errorMessage = ''
       if (this.hours % 0.25 !== 0)
         errorMessage = 'Please enter hours in increments of 0.25'
-      if (this.hours < 0 || this.hours > 24)
+      if (this.hours < 0.25 || this.hours > 24)
         errorMessage =
           'Please enter a valid number of hours for this time entry'
       if (!this.hours) {

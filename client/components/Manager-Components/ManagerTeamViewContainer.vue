@@ -45,7 +45,7 @@
 <script>
 export default {
   props: {
-    workerId: { type: String, default: null },
+    workerId: { type: Number, default: null },
     managerView: { type: Boolean, default: false },
   },
   data() {

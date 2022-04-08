@@ -5,7 +5,7 @@ export default {
   extends: Pie,
   props: {
     workerId: {
-      type: String,
+      type: Number,
       default: null,
     },
     options: {

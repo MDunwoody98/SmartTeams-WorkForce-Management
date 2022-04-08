@@ -8,7 +8,7 @@ const projectSchema = new Schema(
             unique: true,
         },
         managerId: {
-            type: [String],
+            type: [Number],
             required: [true, 'At least one worker must be assigned as a team manager'],
             validate: {
                 validator: (v) => v.length > 0

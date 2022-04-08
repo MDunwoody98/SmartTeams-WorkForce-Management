@@ -1,25 +1,23 @@
 const {Schema, model} = require("mongoose");
+const mongoose = require("mongoose")
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const teamSchema = new Schema(
     {
-        teamId: {
-            type: String,
-            required: false,
-            unique: true,
-        },
         name: {
             type: String,
             required: [true, 'Team Name is required'],
+            unique: true,
         },
         managerId: {
-            type: [String],
+            type: [Number],
             required: [true, 'At least one worker must be assigned as a team manager'],
             validate: {
                 validator: (v) => v.length > 0
             },
         },
         memberId: {
-            type: [String],
+            type: [Number],
             required: [true, 'At least one worker must be assigned as a team member'],
             validate: {
                 validator: (v) => v.length > 0
@@ -35,4 +33,5 @@ const teamSchema = new Schema(
         },
     }
 )
+teamSchema.plugin(AutoIncrement, {inc_field: 'teamId'});
 module.exports = model('team', teamSchema);

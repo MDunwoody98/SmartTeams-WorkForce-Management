@@ -14,7 +14,15 @@
         {{ linkedWorkerObj ? linkedWorkerObj.name.lastName : '' }}
       </v-card-subtitle>
       <v-avatar size="100">
-        <v-img :src="require('~/assets/Mugshot_1.jpg')" />
+        <v-img
+          :src="
+            require(`@/${
+              linkedWorkerObj && linkedWorkerObj.photo
+                ? linkedWorkerObj.photo
+                : 'assets/empty.png'
+            }`)
+          "
+        />
       </v-avatar>
       <v-card-subtitle class="workerJob">
         {{ linkedWorkerObj ? linkedWorkerObj.position.job_title : '' }}
@@ -25,7 +33,7 @@
 <script>
 export default {
   props: {
-    workerId: { type: String, default: null },
+    workerId: { type: Number, default: null },
   },
   data() {
     return {

@@ -40,6 +40,8 @@ const logIn = async (req, res, next) => {
   try {
     const { workerId, password } = req.body;
     const user = await userModel.findOne({ workerId: workerId });
+    console.log(user)
+    console.log(workerId)
 
     if (!user) {
       const error = new Error("No employee with this ID exists on SmartTeams");
@@ -59,9 +61,8 @@ const logIn = async (req, res, next) => {
     console.log("Logged in")
     //Is the worker a manager?
     let workerIsManager = false
-    if (await teamModel.find({managerId: workerId})) {
-      workerIsManager = true
-    }
+    const managedTeams = await teamModel.find({managerId: workerId})
+    if (managedTeams.length > 0) workerIsManager = true
     //Is the worker an admin?
     let workerIsAdmin = false
     if (user.isAdmin) {
@@ -122,7 +123,7 @@ const getUserOnLogin = async (req, res, next) => {
     next(err);
   }
 };
-//needs work
+//POST request to refresh token
 const refreshToken = (req, res) => {
   const tokenToRefresh = req.body.refresh_token
   console.log(tokenToRefresh)
@@ -146,7 +147,7 @@ const refreshToken = (req, res) => {
        expiresIn: "30m",
      });
      console.log(accessToken)
-     res.status(200).json({refresh_token: tokenToRefresh, access_token: accessToken, user: '12342'})  
+     res.status(200).json({refresh_token: tokenToRefresh, access_token: accessToken, user: userID})  
    } else {
      res.status(403).json('Invalid request')
    }

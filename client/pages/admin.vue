@@ -23,10 +23,7 @@
             <v-card-subtitle>Create Team</v-card-subtitle>
           </v-card>
           <v-card @click="updateTeam = true">
-            <v-card-subtitle
-              >Update/Delte team - assign
-              managers/members/projects</v-card-subtitle
-            >
+            <v-card-subtitle>Update/Delete team</v-card-subtitle>
           </v-card>
         </v-col>
         <v-col cols="4">

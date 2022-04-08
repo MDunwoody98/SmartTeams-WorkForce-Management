@@ -1,12 +1,9 @@
 const { Schema, model } = require('mongoose');
+const mongoose = require("mongoose")
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const userSchema = new Schema(
   {
-    workerId: {
-        type: String,
-        required: [true, 'Worker ID is required'],
-        unique: true,
-    },
     password: {
         type: String,
         required: [true, 'Password is required'],
@@ -20,4 +17,5 @@ const userSchema = new Schema(
   { timestamps: true },
 );
 
+userSchema.plugin(AutoIncrement, {inc_field: 'workerId'});
 module.exports = model('users', userSchema);

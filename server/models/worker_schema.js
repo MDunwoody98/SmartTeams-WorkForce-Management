@@ -3,7 +3,7 @@ const {Schema, model} = require("mongoose");
 const workerSchema = new Schema(
     {
         workerId: {
-            type: String,
+            type: Number,
             required: [true, 'Worker ID is required'],
             unique: true,
         },
@@ -41,9 +41,11 @@ const workerSchema = new Schema(
                         'Worker personal mobile phone number is required if Worker personal home phone number is specified'
                     ],
                 },
-                phone_personal_work: {
+                phone_work: {
                     type: String,
                     required: false,
+                    unique: true,
+                    spares: true,
                 },
             },
             email: {
@@ -54,6 +56,8 @@ const workerSchema = new Schema(
                 email_work: {
                     type: String,
                     required: false,
+                    unique: true,
+                    spares: true,
                 },
             },
         },
@@ -72,4 +76,4 @@ const workerSchema = new Schema(
 );
 
 module.exports = model('worker', workerSchema);
-//email/password/hire date/term date/2fa/profile photo/address/department/management level
+//email/password/hire date/term date/2fa/address/department/management level

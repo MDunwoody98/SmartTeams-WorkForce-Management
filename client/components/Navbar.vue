@@ -29,7 +29,15 @@
       <v-row no-gutters>
         <v-col cols="12" align="center" class="nav-header">
           <v-avatar v-if="!mobile" size="100">
-            <v-img :src="require('~/assets/Mugshot_1.jpg')" />
+            <v-img
+              :src="
+                require(`@/${
+                  $auth.user.worker.photo
+                    ? $auth.user.worker.photo
+                    : 'assets/empty.png'
+                }`)
+              "
+            />
           </v-avatar>
         </v-col>
         <v-col
@@ -77,6 +85,7 @@ export default {
         { icon: 'dashboard', text: 'Dashboard', route: '/dashboard' },
         { icon: 'person', text: 'Profile', route: '/profile' },
       ],
+      worker: null,
     }
   },
   computed: {
