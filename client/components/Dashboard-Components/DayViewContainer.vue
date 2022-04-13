@@ -78,20 +78,39 @@
     <v-bottom-navigation v-if="mobile" v-model="mobileNavValue" fixed grow>
       <v-btn value="previous week" @click="goToPreviousWeek()">
         <span>Previous week</span>
-
-        <v-icon>mdi-history</v-icon>
       </v-btn>
 
-      <v-btn value="Select Date" @click="goToSpecifiedWeek()">
-        <span>Select Date</span>
-
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
+      <v-menu
+        ref="menu"
+        :key="menuKey"
+        v-model="menu"
+        nudge-left="120vw"
+        :close-on-content-click="false"
+        :return-value.sync="pickedDate"
+        offset-y
+        min-width="auto"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-icon large v-bind="attrs" v-on="on">calendar_month</v-icon>
+        </template>
+        <v-date-picker
+          v-model="pickedDate"
+          no-title
+          scrollable
+          reactive
+          event-color="black"
+        >
+          <v-spacer></v-spacer>
+          <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
+          <!-- <v-btn text color="primary" @click="$refs.menu.save(dapickedDatetes)">-->
+          <v-btn text color="primary" @click="goToSpecifiedWeek(pickedDate)">
+            OK
+          </v-btn>
+        </v-date-picker>
+      </v-menu>
 
       <v-btn value="Next Week" @click="goToNextWeek()">
         <span>Next Week</span>
-
-        <v-icon>mdi-map-marker</v-icon>
       </v-btn>
     </v-bottom-navigation>
   </div>
@@ -411,12 +430,13 @@ export default {
     margin-left: 56px;
     margin-bottom: 20px;
     flex-grow: 1;
+    /*Width is full width of screen minus 56px*/
+    width: -webkit-calc(100% - 56px);
+    width: -moz-calc(100% - 56px);
+    width: calc(100% - 56px);
   }
   .v-bottom-navigation * {
     align-self: center;
-  }
-  span.v-btn__content {
-    margin-bottom: 20px;
   }
 }
 </style>

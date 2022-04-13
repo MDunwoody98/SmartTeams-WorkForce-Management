@@ -7,6 +7,10 @@ const userSchema = new Schema(
     password: {
         type: String,
         required: [true, 'Password is required'],
+        // Password regex validation
+        validate: {
+          validator: (v) => /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(v)
+      },
     },
     isAdmin: {
       type: Boolean,

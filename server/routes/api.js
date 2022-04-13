@@ -46,7 +46,6 @@ const {
 const {
   logIn,
   refreshToken,
-  registerNewUser,
   getUserOnLogin,
 } = require('../controllers/auth_controller');
 
@@ -111,12 +110,11 @@ router
   .post('/user', createUser)
   .get('/user', readUser)
   .get('/user/:id', readUserById)
-  .put('/worker/:id', updateUser)
-  .delete('/worker/:id', deleteUser);
+  .put('/user/:id', updateUser)
+  .delete('/user/:id', deleteUser);
 
 router
   .post('/auth/login', logIn)
-  .post('/auth/register', registerNewUser)
   .post('/auth/refresh', refreshToken)
   .get('/auth/user', getUserOnLogin);
 

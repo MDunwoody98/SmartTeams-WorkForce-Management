@@ -4,38 +4,6 @@ const workerModel = require('../models/worker_schema');
 const teamModel = require('../models/team_schema');
 const jwt = require("jsonwebtoken");
 
-const registerNewUser = async (req, res, next) => {
-  const { workerId, password } = req.body;
-  try {
-    const userExists = await userModel.findOne({ workerId: workerId });
-    if (userExists) {
-      const error = new Error(
-        "A user account already exists for this worker"
-      );
-      res.status(409).json({
-        error: "A user account already exists for this worker",
-      });
-      error.statusCode = 409;
-      throw error;
-    }
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const user = new userModel({
-      workerId: workerId,
-      password: hashedPassword,
-    });
-    const result = await user.save();
-    res.status(200).json({
-      message: "User created",
-      user: { objectId: result._id, workerId: result.workerId },
-    });
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-  }
-};
-
 const logIn = async (req, res, next) => {
   try {
     const { workerId, password } = req.body;
@@ -154,7 +122,6 @@ const refreshToken = (req, res) => {
 }
 
 module.exports = {
-    registerNewUser,
     logIn,
     getUserOnLogin,
     refreshToken,

@@ -27,37 +27,42 @@ const workerSchema = new Schema(
                     type: String,
                     required: [
                         function(){
-                            return this.phone_personal_mobile == null
+                            return this.phone_personal_mobile != null
                         },
-                        'Worker personal home phone number is required if Worker personal mobile phone number is specified'
+                        'Worker personal home phone number is required if Worker personal mobile phone number is not specified'
                     ],
                 },
                 phone_personal_mobile: {
                     type: String,
                     required: [
                         function(){
-                            return this.phone_personal_home == null
+                            return this.phone_personal_home != null
                         },
-                        'Worker personal mobile phone number is required if Worker personal home phone number is specified'
+                        'Worker personal mobile phone number is required if Worker personal home phone number is not specified'
                     ],
                 },
                 phone_work: {
                     type: String,
                     required: false,
                     unique: true,
-                    spares: true,
+                    sparse: true,
                 },
             },
             email: {
                 email_personal: {
                     type: String,
                     required: [true,'Worker personal email is required'],
+                    // Email regex validation
+                    validator: (v) => {
+                        var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+                        return emailRegex.test(v);
+                    }
                 },
                 email_work: {
                     type: String,
                     required: false,
                     unique: true,
-                    spares: true,
+                    sparse: true,
                 },
             },
         },

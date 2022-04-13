@@ -2,59 +2,28 @@
   <v-dialog v-model="show" max-width="500px">
     <v-card>
       <v-card-title>
-        <span class="headline">Create Project</span>
+        <span class="headline">Register New User</span>
       </v-card-title>
       <v-card-text>
-        <v-text-field v-model="projectName" label="Project Name"></v-text-field>
-        <v-autocomplete
-          v-model="selectedWorkers"
-          :disabled="loading"
-          :items="availableWorkers"
-          filled
-          chips
-          label="Project Manager"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="workerId"
-          multiple
-        >
-          <template v-slot:selection="data">
-            <v-chip
-              v-bind="data.attrs"
-              :input-value="data.selected"
-              close
-              @click="data.select"
-              @click:close="remove(data.item.workerId)"
-            >
-              <v-avatar left>
-                <v-img :src="data.item.photo"></v-img>
-              </v-avatar>
-              {{ data.item.name }}
-            </v-chip>
-          </template>
-          <template v-slot:item="data">
-            <!-- Below statement is required for Vue syntax highlighting bug. Equivalent to "if data type if object"-->
-            <template v-if="!!(typeof data.item !== 'object')">
-              <v-list-item-content v-text="data.item"></v-list-item-content>
-            </template>
-            <template v-else>
-              <v-list-item-avatar>
-                <v-img :src="data.item.photo" />
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title> {{ data.item.name }}</v-list-item-title>
-                <v-list-item-subtitle
-                  >{{ data.item.position }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </template>
-          </template>
-        </v-autocomplete>
+        <v-text-field v-model="firstName" label="First Name"></v-text-field>
+        <v-text-field v-model="lastName" label="Last Name"></v-text-field>
+        <v-text-field
+          v-model="password"
+          type="password"
+          label="Password"
+        ></v-text-field>
+        <v-text-field v-model="jobTitle" label="Job Title"></v-text-field>
+        <v-text-field v-model="mobileNo" label="Mobile Number"></v-text-field>
+        <v-text-field v-model="email" label="Email Address"></v-text-field>
+        <v-card-title class="label-title">
+          <span class="label-field">Is Admin?</span>
+          <v-checkbox v-model="isAdmin"></v-checkbox>
+        </v-card-title>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="closeWindow()">Close</v-btn>
-        <v-btn color="blue darken-1" text @click="createProject()">Save</v-btn>
+        <v-btn color="blue darken-1" text @click="createWorker()">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -66,10 +35,13 @@ export default {
   },
   data() {
     return {
-      loading: true,
-      selectedWorkers: [],
-      availableWorkers: [{ header: 'Available Workers' }],
-      projectName: null,
+      firstName: null,
+      lastName: null,
+      jobTitle: null,
+      password: null,
+      mobileNo: null,
+      email: null,
+      isAdmin: false,
     }
   },
   computed: {
@@ -86,49 +58,99 @@ export default {
     show() {
       if (this.show) {
         // Each time you display CreateProject, retrieve all valid workers
-        this.retrieveWorkers()
       } else this.snackbar = false // ensure datepicker is not active if parent componenet not displayed
     },
   },
   methods: {
-    async retrieveWorkers() {
-      let response = await this.$axios.get('/worker')
-      response = response.data.map((worker) => ({
-        workerId: worker.workerId,
-        name: `${worker.name.firstName} ${worker.name.lastName}`,
-        position: worker.position.job_title,
-        photo: `_nuxt/${worker.photo ? worker.photo : 'assets/empty.png'}`,
-      }))
-      this.availableWorkers.push.apply(this.availableWorkers, response)
-      this.loading = false // Allow manager to be selected on load
+    validatePassword(password) {
+      const re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+      // Regex for passwords to contain at least 8 chars, 1 lower case letter, 1 upper case letter, 1 number, and 1 symbol
+      return re.test(password)
     },
-    async createProject() {
-      if (!this.projectName || this.selectedWorkers.length === 0) {
+    validateEmail(email) {
+      const re =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      // Regex for strings that match the format of an email address
+      return re.test(String(email).toLowerCase())
+    },
+    async createWorker() {
+      let createdUser = -1
+      // Validate name
+      if (!this.firstName || !this.lastName) {
         return this.$emit(
           'showSnackbar',
-          'Error. Please enter a project name and select at least one project manager'
+          'Error. Please enter a first and last name for the worker'
         )
       }
-      try {
-        await this.$axios.post('/project', {
-          name: this.projectName,
-          managerId: this.selectedWorkers,
-        })
-        this.$emit('showSnackbar', 'Successfully created project')
-        this.closeWindow()
-      } catch (ex) {
+      // Validate job title and mobile number
+      if (!this.jobTitle || !this.mobileNo) {
         return this.$emit(
           'showSnackbar',
-          'Error creating project. Please ensure the project name is unique'
+          'Error. Please enter a job title and mobile number for the worker'
         )
+      }
+      // Validate Password
+      if (!this.validatePassword(this.password)) {
+        return this.$emit(
+          'showSnackbar',
+          'Error. Please ensure that the provided password is at least 8 characters long and contains at least 1 upper case letter, lower case letter, number, and symbol'
+        )
+      }
+      // Validate email
+      if (!this.validateEmail(this.email)) {
+        return this.$emit(
+          'showSnackbar',
+          'Error. Please ensure that the provided email address is valid'
+        )
+      }
+      // No separate validations for phone number field currently exists due to the different possible formats across various localities
+      try {
+        await this.$axios
+          .post('/user', {
+            password: this.password,
+            isAdmin: this.isAdmin,
+          })
+          .then((response) => {
+            if (response.data) {
+              if (response.data !== '[]') {
+                createdUser = response.data.user.workerId
+              }
+            }
+          })
+      } catch (ex) {
+        return this.$emit('showSnackbar', 'Error creating user.')
+      }
+      // New user created, now create associated worker profile
+      try {
+        await this.$axios.post('/worker', {
+          workerId: createdUser,
+          name: {
+            firstName: this.firstName,
+            lastName: this.lastName,
+          },
+          contact: {
+            phone: {
+              phone_personal_mobile: this.mobileNo,
+              phone_work: createdUser, // Temporary - this will be removed when next the schemas are dropped. Issue due to sparse indexes needs recreation to resolve
+            },
+            email: {
+              email_personal: this.email,
+              email_work: createdUser, // Temporary - this will be removed when next the schemas are dropped. Issue due to sparse indexes needs recreation to resolve
+            },
+          },
+          position: {
+            job_title: this.jobTitle,
+          },
+        })
+        this.$emit('showSnackbar', `Successfully created worker ${createdUser}`)
+        this.closeWindow()
+      } catch (ex) {
+        // User object created successfully but worker object not - should never happen
+        return this.$emit('showSnackbar', 'Error creating worker.')
       }
     },
     closeWindow() {
       this.show = false
-    },
-    remove(item) {
-      const index = this.selectedWorkers.indexOf(item)
-      if (index >= 0) this.selectedWorkers.splice(index, 1)
     },
   },
 }
@@ -137,8 +159,8 @@ export default {
 template {
   position: absolute;
 }
-.comments-box {
-  width: 91%;
-  margin: 0 auto;
+.label-title {
+  padding: 0;
+  font-size: 1.1rem;
 }
 </style>

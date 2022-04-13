@@ -10,12 +10,11 @@ import '..\\assets\\main.css'
 
 import '..\\node_modules\\vuetify\\dist\\vuetify.css'
 
-import _3079e20e from '..\\layouts\\background_blank.vue'
 import _077cae9a from '..\\layouts\\background_home.vue'
 import _2dde6162 from '..\\layouts\\background_splash.vue'
 import _6f6c098b from './layouts/default.vue'
 
-const layouts = { "_background_blank": sanitizeComponent(_3079e20e),"_background_home": sanitizeComponent(_077cae9a),"_background_splash": sanitizeComponent(_2dde6162),"_default": sanitizeComponent(_6f6c098b) }
+const layouts = { "_background_home": sanitizeComponent(_077cae9a),"_background_splash": sanitizeComponent(_2dde6162),"_default": sanitizeComponent(_6f6c098b) }
 
 export default {
   render (h, props) {

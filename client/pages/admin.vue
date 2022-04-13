@@ -4,10 +4,10 @@
       <v-row>
         <v-col cols="6">
           <v-card @click="createUser = true">
-            <v-card-subtitle>Register User - pwpush API</v-card-subtitle>
+            <v-card-subtitle>Register New User</v-card-subtitle>
           </v-card>
           <v-card @click="updateUser = true">
-            <v-card-subtitle>Update/delete user</v-card-subtitle>
+            <v-card-subtitle>Update/Delete User</v-card-subtitle>
           </v-card>
         </v-col>
         <v-col cols="6">
@@ -23,7 +23,7 @@
             <v-card-subtitle>Create Team</v-card-subtitle>
           </v-card>
           <v-card @click="updateTeam = true">
-            <v-card-subtitle>Update/Delete team</v-card-subtitle>
+            <v-card-subtitle>Update/Delete Team</v-card-subtitle>
           </v-card>
         </v-col>
         <v-col cols="4">
@@ -31,10 +31,7 @@
             <v-card-subtitle>Create Project</v-card-subtitle>
           </v-card>
           <v-card @click="updateProject = true">
-            <v-card-subtitle
-              >Update/Delete Project - change manager, maybe linked
-              teams</v-card-subtitle
-            >
+            <v-card-subtitle>Update/Delete Project</v-card-subtitle>
           </v-card>
         </v-col>
         <v-col cols="4">
@@ -48,7 +45,7 @@
             <v-card-subtitle>Create Time Off Code</v-card-subtitle>
           </v-card>
           <v-card @click="updateTimeOffCode = true">
-            <v-card-subtitle>Update/Delete Time Code</v-card-subtitle>
+            <v-card-subtitle>Update/Delete Time Off Code</v-card-subtitle>
           </v-card>
         </v-col>
       </v-row>
