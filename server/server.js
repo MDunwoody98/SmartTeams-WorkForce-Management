@@ -24,7 +24,7 @@ app.use(express.json());
 //Helmet to enhance API security
 app.use(helmet());
 //Morgan to log HTTP requests
-app.use(morgan('combined'));
+app.use(morgan('combined'))
 
 app.set('view engine', 'html');
 

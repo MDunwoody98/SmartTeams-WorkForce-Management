@@ -4,20 +4,25 @@ const Worker = require('../models/worker_schema');
 const Team = require('../models/team_schema');
 
 const createWorker = (req, res) => {
-    Worker.create(req.body)
-    .then((data) => {
-      console.log('New Worker Created!', data);
-      res.status(201).json(data);
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        console.error('Error Validating!', err);
-        res.status(422).json(err);
-      } else {
-        console.error(err);
-        res.status(500).json(err);
-      }
-    });
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = parseJWT(token)
+  if (!payload.isAdmin) {
+    return res.status(501).json('Only admin users can create workers')
+  }
+  Worker.create(req.body)
+  .then((data) => {
+    console.log('New Worker Created!', data);
+    res.status(201).json(data);
+  })
+  .catch((err) => {
+    if (err.name === 'ValidationError') {
+      console.error('Error Validating!', err);
+      res.status(422).json(err);
+    } else {
+      console.error(err);
+      res.status(500).json(err);
+    }
+  });
 };
 
 const readWorker = (req, res) => {
@@ -62,7 +67,13 @@ const readWorkerByWorkerId = (req, res) => {
 };
 
 const updateWorker = (req, res) => {
-    Worker.findByIdAndUpdate(req.params.id, req.body, {
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = parseJWT(token)
+  if (!payload.isAdmin) {
+    return res.status(501).json('Only admin users can update workers')
+  }
+
+    Worker.findOneAndUpdate({workerId: String(req.params.id)}, req.body, {
     useFindAndModify: false,
     new: true,
   })
@@ -82,21 +93,26 @@ const updateWorker = (req, res) => {
 };
 
 const deleteWorker = (req, res) => {
-    Worker.findById(req.params.id)
-    .then((data) => {
-      if (!data) {
-        throw new Error('Worker not available');
-      }
-      return data.remove();
-    })
-    .then((data) => {
-      console.log('Worker removed!');
-      res.status(200).json(data);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).json(err);
-    });
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = parseJWT(token)
+  if (!payload.isAdmin) {
+    return res.status(501).json('Only admin users can delete workers')
+  }
+  Worker.findOne({workerId: String(req.params.id)})
+  .then((data) => {
+    if (!data) {
+      throw new Error('Worker not available');
+    }
+    return data.remove();
+  })
+  .then((data) => {
+    console.log('Worker removed!');
+    res.status(200).json(data);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).json(err);
+  });
 };
 
 function flatten(arr) {

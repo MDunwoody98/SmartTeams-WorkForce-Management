@@ -50,7 +50,7 @@
             </v-chip>
           </template>
           <template v-slot:item="data">
-            <!-- Below statement is required for Vue syntax highlighting bug. Equivalent to "if data type if object"-->
+            <!-- Below statement is required for Vue syntax highlighting bug. Equivalent to "if data type is object"-->
             <template v-if="!!(typeof data.item !== 'object')">
               <v-list-item-content v-text="data.item"></v-list-item-content>
             </template>

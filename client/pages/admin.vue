@@ -2,7 +2,7 @@
   <div class="container">
     <v-container>
       <v-row>
-        <v-col cols="6">
+        <v-col cols="4">
           <v-card @click="createUser = true">
             <v-card-subtitle>Register New User</v-card-subtitle>
           </v-card>
@@ -10,7 +10,7 @@
             <v-card-subtitle>Update/Delete User</v-card-subtitle>
           </v-card>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="4">
           <v-card @click="updateFTE = true">
             <v-card-subtitle>Update Company FTE</v-card-subtitle>
           </v-card>
@@ -41,6 +41,8 @@
           <v-card @click="updateTimeCode = true">
             <v-card-subtitle>Update/Delete Time Code</v-card-subtitle>
           </v-card>
+        </v-col>
+        <v-col cols="4">
           <v-card @click="createTimeOffCode = true">
             <v-card-subtitle>Create Time Off Code</v-card-subtitle>
           </v-card>

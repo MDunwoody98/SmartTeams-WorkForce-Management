@@ -56,9 +56,9 @@ export default {
   },
   watch: {
     show() {
-      if (this.show) {
-        // Each time you display CreateProject, retrieve all valid workers
-      } else this.snackbar = false // ensure datepicker is not active if parent componenet not displayed
+      if (!this.show) {
+        this.snackbar = false // ensure datepicker is not active if parent componenet not displayed
+      }
     },
   },
   methods: {
