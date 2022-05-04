@@ -272,7 +272,7 @@ export default {
           rejected: false,
           rejectionMessage: null,
         }
-        if (this.tabs === 0)
+        if (this.tab === 0)
           timeEntry = { ...timeEntry, timeCodeId: this.timeCode }
         else timeEntry = { ...timeEntry, timeOffCodeId: this.timeOffCode }
 
