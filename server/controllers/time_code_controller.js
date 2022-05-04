@@ -72,20 +72,18 @@ const retrieveTimeCodesForWorker = async (req, res) => {
     }
     //Using counter as forEach is synchronous and executing in parallel
     var projectsProcessed = 0
-    console.log(projects)
-
     //To wait for all the iterations to finish before moving on, use a foreach to process in parallel
-      await projects.forEach(async project => {
-      let linkedTimeCodes = await TimeCode.find({projectId: project})
-      linkedTimeCodes = linkedTimeCodes.map(timeCode => [timeCode._id, timeCode.timeCodeName])
-      let projectObj = await Project.findById(project)
-      projectObj = JSON.stringify(projectObj)
-      projectsAndAssociatedTimeCodes.set(projectObj, linkedTimeCodes)
-      projectsProcessed++
-      if (projectsProcessed == projects.length) {
-        res.status(200).json(Object.fromEntries(projectsAndAssociatedTimeCodes))
-        return
-      }
+    await projects.forEach(async project => {
+    let linkedTimeCodes = await TimeCode.find({projectId: project})
+    linkedTimeCodes = linkedTimeCodes.map(timeCode => [timeCode._id, timeCode.timeCodeName])
+    let projectObj = await Project.findById(project)
+    projectObj = JSON.stringify(projectObj)
+    projectsAndAssociatedTimeCodes.set(projectObj, linkedTimeCodes)
+    projectsProcessed++
+    if (projectsProcessed == projects.length) {
+      res.status(200).json(Object.fromEntries(projectsAndAssociatedTimeCodes))
+      return
+    }
     })
   }
   catch (err) {

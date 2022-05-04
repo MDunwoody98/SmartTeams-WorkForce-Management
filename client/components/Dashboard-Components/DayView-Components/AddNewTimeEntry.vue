@@ -144,7 +144,10 @@ export default {
     availableTimeOffCodeIdList() {
       const timeOffCodes = []
       this.availableTimeOffCodes?.forEach((timeOffCode) => {
-        timeOffCodes.push({ value: timeOffCode._id, text: timeOffCode.name })
+        timeOffCodes.push({
+          value: timeOffCode.timeOffCodeId,
+          text: timeOffCode.timeOffCodeName,
+        })
       })
       return timeOffCodes
     },
@@ -165,20 +168,20 @@ export default {
           let timeEntry = {
             workerId: this.$auth.user.workerId,
             date: selectedDate,
-            timeCodeId: this.selectedTimeCode,
             hours: this.hours,
             comments: this.comments,
             approved: false,
           }
-
-          if (this.tabs === 0)
+          if (this.tab === 0) {
             timeEntry = { ...timeEntry, timeCodeId: this.selectedTimeCode }
-          else
+          } else {
             timeEntry = {
               ...timeEntry,
               timeOffCodeId: this.selectedTimeOffCode,
             }
-
+          }
+          console.log(timeEntry)
+          console.log(this.tab)
           this.$axios.post('/time_entry', timeEntry)
           entriesPosted++
           // Re-render DayView component if you add a time entry for the same date that you initially clicked

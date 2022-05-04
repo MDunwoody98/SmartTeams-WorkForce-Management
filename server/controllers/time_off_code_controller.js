@@ -73,14 +73,14 @@ const retrieveTimeOffCodesForWorker = async (req, res) => {
     //Using counter as forEach is synchronous and executing in parallel
     var timeOffCodesProcessed = 0
     //To wait for all the iterations to finish before moving on, use a foreach to process in parallel
-      await timeOffCodeIds.forEach(async timeOffCodeID => {
-      let timeOffCodeObj = await TimeOffCode.find({_id: timeOffCodeID})
-      timeOffCodeObj = timeOffCodeObj.map(timeOffCodeObj => {timeOffCodeObj._id, timeOffCodeObj.timeOffCodeName})
-      timeOffCodes.push(timeOffCodeObj)
-      timeOffCodesProcessed++
-      if (timeOffCodesProcessed == timeOffCodeIds.length) {
-        res.status(200).json(timeOffCodes)
-      }
+    await timeOffCodeIds.forEach(async timeOffCodeId => {
+    let timeOffCodeObj = await TimeOffCode.find({_id: timeOffCodeId})
+    let timeOffCodeName = timeOffCodeObj.map(timeOffCodeObj => timeOffCodeObj.timeOffCodeName)[0]
+    timeOffCodes.push({timeOffCodeId, timeOffCodeName})
+    timeOffCodesProcessed++
+    if (timeOffCodesProcessed == timeOffCodeIds.length) {
+      res.status(200).json(timeOffCodes)
+    }
     })
   }
   catch (err) {

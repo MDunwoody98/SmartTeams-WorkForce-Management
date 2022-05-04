@@ -135,6 +135,8 @@
           item-text="name"
           item-value="id"
           multiple
+          chips
+          deletable-chips
         >
           <template v-slot:item="data">
             {{ data.item.name }}
@@ -279,8 +281,16 @@ export default {
       this.loadingWorkers = false // Allow team members and managers to be selected on load
     },
     async retrieveTimeOffCodes() {
+      let response = await this.$axios.get('/time_off_code')
+      response = response.data.map((timeOffCode) => ({
+        id: timeOffCode._id,
+        name: timeOffCode.timeOffCodeName,
+      }))
+      this.availableTimeOffCodes.push.apply(
+        this.availableTimeOffCodes,
+        response
+      )
       this.loadingTimeOffCodes = false
-      return await true
     },
     async updateTeam() {
       if (

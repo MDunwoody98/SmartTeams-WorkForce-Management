@@ -173,7 +173,10 @@ export default {
     availableTimeOffCodeIdList() {
       const timeOffCodes = []
       this.availableTimeOffCodes?.forEach((timeOffCode) => {
-        timeOffCodes.push({ value: timeOffCode._id, text: timeOffCode.name })
+        timeOffCodes.push({
+          value: timeOffCode.timeOffCodeId,
+          text: timeOffCode.timeOffCodeName,
+        })
       })
       return timeOffCodes
     },

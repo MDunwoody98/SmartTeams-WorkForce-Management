@@ -2,6 +2,7 @@
 
 const TimeEntry = require('../models/time_entry_schema');
 const TimeCode = require('../models/time_code_schema');
+const TimeOffCode = require('../models/time_off_code_schema');
 const WorkerController = require('./worker_controller');
 
 const createTimeEntry = (req, res) => {
@@ -71,18 +72,30 @@ const retrieveTimeEntriesForDay = async (req, res) => {
   await TimeEntry.find({ date: req.body.date, workerId: requestedWorker })
     .then(async (data) => {
       const timeCodes = data.map((timeEntry) => timeEntry.timeCodeId);
-      const timeCodeIdNameMap = {};
+      const timeOffCodes = data.map((timeEntry) => timeEntry.timeOffCodeId);
+      const timeCodeAndTimeOffCodeIdNameMap = {};
       //Also want the time code name for each entry when returning data
       for await (const timeCode of timeCodes) {
-        const linkedTimeCode = await TimeCode.findById(timeCode);
-        timeCodeIdNameMap[timeCode] = linkedTimeCode.timeCodeName;
+        if (timeCode) {
+          const linkedTimeCode = await TimeCode.findById(timeCode);
+          timeCodeAndTimeOffCodeIdNameMap[timeCode] = linkedTimeCode.timeCodeName;
+        }
+      }
+      // Return time off code name for each entry that is a time off
+      for await (const timeOffCode of timeOffCodes) {
+        if (timeOffCode) {
+          const linkedTimeOffCode = await TimeOffCode.findById(timeOffCode);
+          timeCodeAndTimeOffCodeIdNameMap[timeOffCode] = linkedTimeOffCode.timeOffCodeName;
+        }
       }
       const entriesToReturn = [];
       for await (let timeEntry of data) {
+        // If timeOffCodeName, add that, if timeCodeName, add that
+        const timeCode = timeEntry.timeCodeId ?? timeEntry.timeOffCodeId
         let jsonEntry = JSON.parse(JSON.stringify(timeEntry));
         jsonEntry = {
           ...jsonEntry,
-          timeCodeName: timeCodeIdNameMap[timeEntry.timeCodeId],
+          timeCodeName: timeCodeAndTimeOffCodeIdNameMap[timeCode],
         };
         entriesToReturn.push(jsonEntry);
       }
@@ -206,7 +219,6 @@ const approveTimeEntries = async (req, res) => {
    const entriesToApprove = entries.filter(timeEntry => (timeEntry.submitted && !timeEntry.approved && !timeEntry.rejected))
    //Using counter as forEach is synchronous and executing in parallel
    var entriesProcessed = 0
-   console.log(entriesToApprove.length)
    entriesToApprove.forEach(async timeEntry => {
      approveAsPM = false
      //If allowRequest is false and the current user is not the project manager for the project of the time code ID, do not update time entry
