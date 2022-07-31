@@ -6,47 +6,29 @@
       </v-card-title>
       <v-card-text>
         <v-text-field
-          v-model="timeCodeName"
-          label="Time Code Name"
+          v-model="timeOffCodeName"
+          label="Time Off Code Name"
         ></v-text-field>
-        <v-autocomplete
-          v-model="selectedProject"
-          :disabled="loadingProjects"
-          :items="availableProjects"
-          filled
-          label="Project"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="id"
-        >
-          <template v-slot:item="data">
-            {{ data.item.name }}
-          </template>
-        </v-autocomplete>
-        <v-card-title class="label-title">
-          <span class="label-field">Billed?</span>
-          <v-checkbox v-model="billed"></v-checkbox>
-        </v-card-title>
-        <v-card-title class="label-title">
-          <span class="label-field">Utilised?</span>
-          <v-checkbox v-model="utilised"></v-checkbox>
-        </v-card-title>
         <v-card-title class="label-title">
           <span class="label-field">Auto-approve?</span>
           <v-checkbox v-model="autoApprove"></v-checkbox>
         </v-card-title>
         <v-card-title class="label-title">
-          <span>Approver</span>
+          <span class="label-field">Paid?</span>
+          <v-checkbox v-model="paid"></v-checkbox>
         </v-card-title>
-        <v-radio-group v-model="approver" :disabled="autoApprove" row mandatory>
-          <v-radio label="Team Lead" value="teamManager"></v-radio>
-          <v-radio label="Project Manager" value="projectManager"></v-radio>
-        </v-radio-group>
+        <v-card-title class="label-title">
+          <!--Future feature - approval from at least 1 lead of all teams in which worker is a member-->
+          <span class="label-field">Requires Multiple Approvals?</span>
+          <v-checkbox v-model="multiApprove"></v-checkbox>
+        </v-card-title>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="closeWindow()">Close</v-btn>
-        <v-btn color="blue darken-1" text @click="createTimeCode()">Save</v-btn>
+        <v-btn color="blue darken-1" text @click="createTimeOffCode()"
+          >Save</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -58,14 +40,10 @@ export default {
   },
   data() {
     return {
-      loadingProjects: true,
-      selectedProject: null,
-      availableProjects: [{ header: 'Available Projects' }],
-      timeCodeName: null,
-      approver: null,
-      billed: false,
-      utilised: false,
+      timeOffCodeName: null,
+      paid: true,
       autoApprove: false,
+      multiApprove: false,
     }
   },
   computed: {
@@ -78,62 +56,32 @@ export default {
       },
     },
   },
-  watch: {
-    show() {
-      if (this.show) {
-        this.retrieveProjects()
-      }
-    },
-  },
   methods: {
-    async retrieveProjects() {
-      let response = await this.$axios.get('/project')
-      response = response.data.map((project) => ({
-        id: project._id,
-        name: project.name,
-        managers: project.managerId,
-      }))
-      this.availableProjects.push.apply(this.availableProjects, response)
-      this.loadingProjects = false // Projects loaded
-    },
-
-    async createTimeCode() {
-      if (!this.timeCodeName || !this.selectedProject) {
+    async createTimeOffCode() {
+      if (!this.timeOffCodeName) {
         return this.$emit(
           'showSnackbar',
-          'Error. Please enter a time code name and select a project'
+          'Error. Please enter a time off code name'
         )
       }
       try {
-        await this.$axios.post('/time_code', {
-          timeCodeName: this.timeCodeName,
-          projectId: this.selectedProject,
+        await this.$axios.post('/time_off_code', {
+          timeOffCodeName: this.timeOffCodeName,
+          paid: this.paid,
           autoApprove: this.autoApprove,
-          approvalByTeamManager: this.approver === 'teamManager',
-          approvalByProjectManager: this.approver === 'projectManager',
-          utilised: this.utilised,
-          billed: this.billed,
+          requiresMultipleApprovals: this.multiApprove,
         })
-        this.$emit('showSnackbar', 'Successfully created time code')
+        this.$emit('showSnackbar', 'Successfully created time off code')
         this.closeWindow()
       } catch (ex) {
         return this.$emit(
           'showSnackbar',
-          'Error creating time code. Please ensure the time code name is unique and a project is selected'
+          'Error creating time off code. Please ensure the time off code name is unique'
         )
       }
     },
     closeWindow() {
       this.show = false
-    },
-    // Need to use v-chip for workers as their chips contain avatars, projects can be handled on the directive
-    removeManager(item) {
-      const index = this.selectedManagers.indexOf(item)
-      if (index >= 0) this.selectedManagers.splice(index, 1)
-    },
-    removeMember(item) {
-      const index = this.selectedMembers.indexOf(item)
-      if (index >= 0) this.selectedMembers.splice(index, 1)
     },
   },
 }

@@ -62,6 +62,15 @@
   "UpdateTimeOffCode": {
     "description": "Auto imported from components/Admin-Components/UpdateTimeOffCode.vue"
   },
+  "ChangeMyPassword": {
+    "description": "Auto imported from components/Profile-Components/ChangeMyPassword.vue"
+  },
+  "ChangeMyPhoto": {
+    "description": "Auto imported from components/Profile-Components/ChangeMyPhoto.vue"
+  },
+  "UpdateMyDetails": {
+    "description": "Auto imported from components/Profile-Components/UpdateMyDetails.vue"
+  },
   "Login": {
     "description": "Auto imported from components/Login.vue"
   },

@@ -180,8 +180,6 @@ export default {
               timeOffCodeId: this.selectedTimeOffCode,
             }
           }
-          console.log(timeEntry)
-          console.log(this.tab)
           this.$axios.post('/time_entry', timeEntry)
           entriesPosted++
           // Re-render DayView component if you add a time entry for the same date that you initially clicked

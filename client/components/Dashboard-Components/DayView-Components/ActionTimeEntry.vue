@@ -314,7 +314,7 @@ export default {
       this.show = false
       this.$emit('updateParent')
     },
-    // TODO - Manager functions when actioning a single time entry
+    // Manager functions when actioning a single time entry
     async rejectTimeEntry() {
       await this.$axios.put(`/time_entry/reject/${this.timeEntry._id}`, {
         workerId: this.workerId,

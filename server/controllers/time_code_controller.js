@@ -6,6 +6,12 @@ const Project = require('../models/project_schema');
 const WorkerController = require('./worker_controller');
 
 const createTimeCode = (req, res) => {
+  //TODO - project manager can also create time code
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = WorkerController.parseJWT(token)
+  if (!payload.isAdmin) {
+    return res.status(501).json('Only admin users can delete time codes')
+  }
     TimeCode.create(req.body)
     .then((data) => {
       console.log('New Time Code Created!', data);
@@ -93,6 +99,12 @@ const retrieveTimeCodesForWorker = async (req, res) => {
 }
 
 const updateTimeCode = (req, res) => {
+  //TODO - project manager can also update time code
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = WorkerController.parseJWT(token)
+  if (!payload.isAdmin) {
+    return res.status(501).json('Only admin users can delete time codes')
+  }
     TimeCode.findByIdAndUpdate(req.params.id, req.body, {
     useFindAndModify: false,
     new: true,

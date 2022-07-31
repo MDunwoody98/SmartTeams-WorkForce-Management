@@ -17,6 +17,7 @@
               <v-list-item-content
                 @click.passive="editSelectedTimeEntry(entry)"
               >
+                <v-icon v-if="entry.timeOffCodeId">beach_access</v-icon>
                 <v-list-item-title>
                   <p class="timeCode">
                     {{ entry.timeCodeName }}
@@ -229,10 +230,6 @@ export default {
   cursor: pointer;
 }
 
-.timeOff {
-  background-color: #ffedec;
-}
-
 .submitted {
   background-color: #dcdcdc;
 }
@@ -247,10 +244,6 @@ export default {
   background-color: #f3f6fd;
 }
 
-.timeOff:hover {
-  background-color: #f5bbcc;
-}
-
 .submitted:hover {
   background-color: #b5b5b5;
 }
@@ -258,23 +251,6 @@ export default {
   background-color: lightgreen;
 }
 .rejected:hover {
-  background-color: #ff817e;
-}
-.submitted.timeOff {
-  background-color: #f3aac0;
-}
-/*
-.approved.timeOff {
-}
-.rejected.timeOff {
-}*/
-.submitted.timeOff:hover {
-  background-color: #ee87a6;
-}
-.approved.timeOff:hover {
-  background-color: lightgreen;
-}
-.rejected.timeOff:hover {
   background-color: #ff817e;
 }
 

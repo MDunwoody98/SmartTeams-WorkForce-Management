@@ -5,6 +5,7 @@ const time_off_code_schema = new Schema(
         timeOffCodeName: {
             type: String,
             required: true, //All time offs need a name
+            unique: true, // Time Off Codes must have a unique name
         },
         autoApprove: {
             type: Boolean,

@@ -12,6 +12,7 @@ const _5febc020 = () => interopDefault(import('..\\pages\\profile.vue' /* webpac
 const _0509bde3 = () => interopDefault(import('..\\pages\\team\\_ManagedTeam.vue' /* webpackChunkName: "pages/team/_ManagedTeam" */))
 const _5305bd36 = () => interopDefault(import('..\\pages\\worker\\_ManagedWorker.vue' /* webpackChunkName: "pages/worker/_ManagedWorker" */))
 const _67d94259 = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages/index" */))
+const _c1cbf998 = () => interopDefault(import('..\\pages\\_tenant\\dashboard.vue' /* webpackChunkName: "pages/_tenant/dashboard" */))
 
 const emptyFn = () => {}
 
@@ -56,6 +57,10 @@ export const routerOptions = {
     path: "/",
     component: _67d94259,
     name: "index"
+  }, {
+    path: "/:tenant/dashboard",
+    component: _c1cbf998,
+    name: "tenant-dashboard"
   }],
 
   fallback: false

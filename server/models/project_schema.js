@@ -14,6 +14,14 @@ const projectSchema = new Schema(
                 validator: (v) => v.length > 0
             },
         },
+        startDate: {
+            type: Date,
+            required: false,
+        },
+        endDate: {
+            type: Date,
+            required: false,
+        }
     }
 )
 module.exports = model('project', projectSchema);

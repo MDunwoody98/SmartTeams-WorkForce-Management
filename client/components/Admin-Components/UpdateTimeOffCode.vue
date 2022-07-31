@@ -2,59 +2,74 @@
   <v-dialog v-model="show" max-width="500px">
     <v-card>
       <v-card-title>
-        <span class="headline">Create Project</span>
+        <span class="headline">Update/Delete Time Off Code</span>
       </v-card-title>
       <v-card-text>
-        <v-text-field v-model="projectName" label="Project Name"></v-text-field>
         <v-autocomplete
-          v-model="selectedWorkers"
-          :disabled="loading"
-          :items="availableWorkers"
+          v-model="selectedTimeOffCode"
+          :disabled="loadingTimeOffCodes"
+          :items="availableTimeOffCodes"
           filled
-          chips
-          label="Project Manager"
+          label="Time Code"
           color="blue-grey lighten-2"
           item-text="name"
-          item-value="workerId"
-          multiple
+          item-value="id"
         >
-          <template v-slot:selection="data">
-            <v-chip
-              v-bind="data.attrs"
-              :input-value="data.selected"
-              close
-              @click="data.select"
-              @click:close="remove(data.item.workerId)"
-            >
-              <v-avatar left>
-                <v-img :src="data.item.photo"></v-img>
-              </v-avatar>
-              {{ data.item.name }}
-            </v-chip>
-          </template>
           <template v-slot:item="data">
-            <!-- Below statement is required for Vue syntax highlighting bug. Equivalent to "if data type if object"-->
-            <template v-if="!!(typeof data.item !== 'object')">
-              <v-list-item-content v-text="data.item"></v-list-item-content>
-            </template>
-            <template v-else>
-              <v-list-item-avatar>
-                <v-img :src="data.item.photo" />
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title> {{ data.item.name }}</v-list-item-title>
-                <v-list-item-subtitle
-                  >{{ data.item.position }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </template>
+            {{ data.item.name }}
           </template>
         </v-autocomplete>
+        <v-text-field
+          v-model="timeOffCodeName"
+          label="Time Off Code Name"
+        ></v-text-field>
+        <v-card-title class="label-title">
+          <span class="label-field">Paid?</span>
+          <v-checkbox v-model="paid"></v-checkbox>
+        </v-card-title>
+        <v-card-title class="label-title">
+          <span class="label-field">Auto-approve?</span>
+          <v-checkbox v-model="autoApprove"></v-checkbox>
+        </v-card-title>
+        <v-card-title class="label-title">
+          <span class="label-field">Requires Multiple Approvals?</span>
+          <v-checkbox v-model="multiApprove"></v-checkbox>
+        </v-card-title>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
+        <v-dialog v-model="dialog" max-width="300">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="blue darken-1"
+              :disabled="selectedTimeOffCode === null"
+              text
+              v-bind="attrs"
+              v-on="on"
+            >
+              Delete
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title> </v-card-title>
+            <v-card-text class="deletion-prompt">
+              Are you sure you wish to delete this time off code?
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green darken-1" text @click="deleteTimeOffCode()">
+                Delete
+              </v-btn>
+              <v-btn color="green darken-1" text @click="dialog = false">
+                Cancel
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-btn color="blue darken-1" text @click="closeWindow()">Close</v-btn>
-        <v-btn color="blue darken-1" text @click="createProject()">Save</v-btn>
+        <v-btn color="blue darken-1" text @click="updateTimeOffCode()"
+          >Save</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -66,10 +81,14 @@ export default {
   },
   data() {
     return {
-      loading: true,
-      selectedWorkers: [],
-      availableWorkers: [{ header: 'Available Workers' }],
-      projectName: null,
+      selectedTimeOffCode: null,
+      availableTimeOffCodes: [{ header: 'Available Time Off Codes' }],
+      timeOffCodeName: null,
+      autoApprove: false,
+      paid: false,
+      multiApprove: false,
+      loadingTimeOffCodes: true,
+      dialog: false,
     }
   },
   computed: {
@@ -85,50 +104,73 @@ export default {
   watch: {
     show() {
       if (this.show) {
-        // Each time you display CreateProject, retrieve all valid workers
-        this.retrieveWorkers()
-      } else this.snackbar = false // ensure datepicker is not active if parent componenet not displayed
+        this.retrieveTimeOffCodes()
+      }
+    },
+    selectedTimeOffCode() {
+      this.timeOffCodeName = this.availableTimeOffCodes.find(
+        (timeOffCode) => timeOffCode.id === this.selectedTimeOffCode
+      )?.name
+      this.paid = this.availableTimeOffCodes.find(
+        (timeOffCode) => timeOffCode.id === this.selectedTimeOffCode
+      )?.paid
+      this.autoApprove = this.availableTimeOffCodes.find(
+        (timeOffCode) => timeOffCode.id === this.selectedTimeOffCode
+      )?.autoApprove
+      this.multiApprove = this.availableTimeOffCodes.find(
+        (timeOffCode) => timeOffCode.id === this.selectedTimeOffCode
+      )?.multiApprove
     },
   },
   methods: {
-    async retrieveWorkers() {
-      let response = await this.$axios.get('/worker')
-      response = response.data.map((worker) => ({
-        workerId: worker.workerId,
-        name: `${worker.name.firstName} ${worker.name.lastName}`,
-        position: worker.position.job_title,
-        photo: `_nuxt/${worker.photo ? worker.photo : 'assets/empty.png'}`,
+    async retrieveTimeOffCodes() {
+      let response = await this.$axios.get('/time_off_code')
+      response = response.data.map((timeOffCode) => ({
+        id: timeOffCode._id,
+        name: timeOffCode.timeOffCodeName,
+        paid: timeOffCode.paid,
+        autoApprove: timeOffCode.autoApprove,
+        multiApprove: timeOffCode.requiresMultipleApproval,
       }))
-      this.availableWorkers.push.apply(this.availableWorkers, response)
-      this.loading = false // Allow manager to be selected on load
+      this.availableTimeOffCodes.push.apply(
+        this.availableTimeOffCodes,
+        response
+      )
+      this.loadingTimeOffCodes = false // Time Codes loaded
     },
-    async createProject() {
-      if (!this.projectName || this.selectedWorkers.length === 0) {
+
+    async updateTimeCode() {
+      if (!this.selectedTimeOffCode) {
         return this.$emit(
           'showSnackbar',
-          'Error. Please enter a project name and select at least one project manager'
+          'Error. Please select a time off code to update'
         )
       }
       try {
-        await this.$axios.post('/project', {
-          name: this.projectName,
-          managerId: this.selectedWorkers,
+        await this.$axios.put(`/time_off_code/${this.selectedTimeOffCode}`, {
+          timeOffCodeName: this.timeOffCodeName,
+          paid: this.paid,
+          autoApprove: this.autoApprove,
+          requiresMultipleApproval: this.multiApprove,
         })
-        this.$emit('showSnackbar', 'Successfully created project')
+        this.$emit('showSnackbar', 'Successfully updated time off code')
         this.closeWindow()
       } catch (ex) {
         return this.$emit(
           'showSnackbar',
-          'Error creating project. Please ensure the project name is unique'
+          'Error updating time off code. Please ensure the time off code name is unique'
         )
       }
     },
-    closeWindow() {
-      this.show = false
+    async deleteTimeOffCode() {
+      // TODO - Try catch so code is not currently assigned to any teams! Do same with project! And just mark time codes as inactive, don't actually delete those
+      await this.$axios.delete(`/time_off_code/${this.selectedTimeOffCode}`)
+      this.$emit('showSnackbar', 'Successfully deleted time code')
+      this.closeWindow()
     },
-    remove(item) {
-      const index = this.selectedWorkers.indexOf(item)
-      if (index >= 0) this.selectedWorkers.splice(index, 1)
+    closeWindow() {
+      Object.assign(this.$data, this.$options.data())
+      this.show = false
     },
   },
 }
@@ -140,5 +182,13 @@ template {
 .comments-box {
   width: 91%;
   margin: 0 auto;
+}
+.label-title {
+  padding: 0;
+  font-size: 1.1rem;
+}
+.label-field {
+  width: 160px;
+  text-align: left;
 }
 </style>

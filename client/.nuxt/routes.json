@@ -46,5 +46,11 @@
     "path": "/",
     "component": "C:\\\\Users\\\\mic_a\\\\Desktop\\\\SmartTeams-WorkForce-Management\\\\client\\\\pages\\\\index.vue",
     "chunkName": "pages/index"
+  },
+  {
+    "name": "tenant-dashboard",
+    "path": "/:tenant/dashboard",
+    "component": "C:\\\\Users\\\\mic_a\\\\Desktop\\\\SmartTeams-WorkForce-Management\\\\client\\\\pages\\\\_tenant\\\\dashboard.vue",
+    "chunkName": "pages/_tenant/dashboard"
   }
 ]

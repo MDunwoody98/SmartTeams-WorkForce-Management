@@ -5,6 +5,12 @@ const Team = require('../models/team_schema');
 const WorkerController = require('./worker_controller');
 
 const createTimeOffCode = (req, res) => {
+  //TODO - project manager can also create time off code
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = WorkerController.parseJWT(token)
+  if (!payload.isAdmin) {
+    return res.status(501).json('Only admin users can delete time codes')
+  }
     TimeOffCode.create(req.body)
     .then((data) => {
       console.log('New Time Off Code Created!', data);
@@ -90,6 +96,12 @@ const retrieveTimeOffCodesForWorker = async (req, res) => {
 }
 
 const updateTimeOffCode = (req, res) => {
+  //TODO - project manager can also update time off code
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = WorkerController.parseJWT(token)
+  if (!payload.isAdmin) {
+    return res.status(501).json('Only admin users can delete time codes')
+  }
     TimeOffCode.findByIdAndUpdate(req.params.id, req.body, {
     useFindAndModify: false,
     new: true,
@@ -110,6 +122,13 @@ const updateTimeOffCode = (req, res) => {
 };
 
 const deleteTimeOffCode = (req, res) => {
+  //TODO - cannot delete if assigned to a team
+  //TODO - project manager can also delete time code
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = WorkerController.parseJWT(token)
+  if (!payload.isAdmin) {
+    return res.status(501).json('Only admin users can delete time codes')
+  }
     TimeOffCode.findById(req.params.id)
     .then((data) => {
       if (!data) {
