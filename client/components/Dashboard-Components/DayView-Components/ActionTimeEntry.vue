@@ -127,7 +127,7 @@
 export default {
   props: {
     value: Boolean,
-    timeEntry: { type: Object, default: null },
+    timeEntryProp: { type: Object, default: null },
     selectedTimeCode: { type: Object, default: null },
     selectedTimeOffCode: { type: Object, default: null },
     availableTimeCodes: { type: Map, default: null },
@@ -142,7 +142,8 @@ export default {
       tab: null,
       items: ["Enter Time", "Enter Time Off"],
       snackbar: false,
-      errorMessage: null
+      errorMessage: null,
+      timeEntry: this.timeEntryProp
     };
   },
   computed: {

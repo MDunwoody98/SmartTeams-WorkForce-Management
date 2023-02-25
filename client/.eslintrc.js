@@ -23,6 +23,9 @@ module.exports = {
       {
         endOfLine: "auto"
       }
-    ]
+    ],
+    "vue/multi-word-component-names": "off",
+    "vue/no-v-text-v-html-on-component": "off",
+    "vue/no-mutating-props": ["error", { propProps: false }]
   }
 };

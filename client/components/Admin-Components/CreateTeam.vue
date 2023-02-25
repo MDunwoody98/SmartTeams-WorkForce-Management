@@ -18,7 +18,7 @@
           item-value="workerId"
           multiple
         >
-          <template v-slot:selection="data">
+          <template #selection="data">
             <v-chip
               v-bind="data.attrs"
               :input-value="data.selected"
@@ -32,10 +32,10 @@
               {{ data.item.name }}
             </v-chip>
           </template>
-          <template v-slot:item="data">
+          <template #item="data">
             <!-- Below statement is required for Vue syntax highlighting bug. Equivalent to "if data type if object"-->
             <template v-if="!!(typeof data.item !== 'object')">
-              <v-list-item-content v-text="data.item"></v-list-item-content>
+              <v-list-item-content> {{ data.item }}</v-list-item-content>
             </template>
             <template v-else>
               <v-list-item-avatar>
@@ -62,7 +62,7 @@
           item-value="workerId"
           multiple
         >
-          <template v-slot:selection="data">
+          <template #selection="data">
             <v-chip
               v-bind="data.attrs"
               :input-value="data.selected"
@@ -76,10 +76,10 @@
               {{ data.item.name }}
             </v-chip>
           </template>
-          <template v-slot:item="data">
+          <template #item="data">
             <!-- Below statement is required for Vue syntax highlighting bug. Equivalent to "if data type if object"-->
             <template v-if="!!(typeof data.item !== 'object')">
-              <v-list-item-content v-text="data.item"></v-list-item-content>
+              <v-list-item-content> {{ data.item }}</v-list-item-content>
             </template>
             <template v-else>
               <v-list-item-avatar>
@@ -107,7 +107,7 @@
           chips
           deletable-chips
         >
-          <template v-slot:item="data">
+          <template #item="data">
             {{ data.item.name }}
           </template>
         </v-autocomplete>
@@ -122,7 +122,7 @@
           item-value="id"
           multiple
         >
-          <template v-slot:item="data">
+          <template #item="data">
             {{ data.item.name }}
           </template>
         </v-autocomplete>

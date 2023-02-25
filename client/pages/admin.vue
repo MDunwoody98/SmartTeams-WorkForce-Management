@@ -86,8 +86,8 @@
 </template>
 <script>
 export default {
-  middleware: "validate-admin",
   layout: "background_home",
+  middleware: "validate-admin",
   data() {
     return {
       createUser: false,

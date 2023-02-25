@@ -49,7 +49,7 @@
           <template v-slot:item="data">
             <!-- Below statement is required for Vue syntax highlighting bug. Equivalent to "if data type if object"-->
             <template v-if="!!(typeof data.item !== 'object')">
-              <v-list-item-content v-text="data.item"></v-list-item-content>
+              <v-list-item-content>{{ data.item }}</v-list-item-content>
             </template>
             <template v-else>
               <v-list-item-avatar>
@@ -93,7 +93,7 @@
           <template v-slot:item="data">
             <!-- Below statement is required for Vue syntax highlighting bug. Equivalent to "if data type if object"-->
             <template v-if="!!(typeof data.item !== 'object')">
-              <v-list-item-content v-text="data.item"></v-list-item-content>
+              <v-list-item-content> {{ data.item }}</v-list-item-content>
             </template>
             <template v-else>
               <v-list-item-avatar>
