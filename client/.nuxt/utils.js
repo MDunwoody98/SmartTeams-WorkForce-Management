@@ -4,14 +4,14 @@ import { isSamePath as _isSamePath, joinURL, normalizeURL, withQuery, withoutTra
 // window.{{globals.loadedCallback}} hook
 // Useful for jsdom testing or plugins (https://github.com/tmpvar/jsdom#dealing-with-asynchronous-script-loading)
 if (process.client) {
-  window.onNuxtReadyCbs = []
+  window.onNuxtReadyCbs =[]
   window.onNuxtReady = (cb) => {
     window.onNuxtReadyCbs.push(cb)
   }
 }
 
-export function createGetCounter (counterObject, defaultKey = '') {
-  return function getCounter (id = defaultKey) {
+export function createGetCounter(counterObject, defaultKey = '') {
+  return function getCounter(id = defaultKey) {
     if (counterObject[id] === undefined) {
       counterObject[id] = 0
     }
@@ -19,81 +19,81 @@ export function createGetCounter (counterObject, defaultKey = '') {
   }
 }
 
-export function empty () {}
+export function empty() { }
 
-export function globalHandleError (error) {
+export function globalHandleError(error) {
   if (Vue.config.errorHandler) {
     Vue.config.errorHandler(error)
   }
 }
 
-export function interopDefault (promise) {
+export function interopDefault(promise) {
   return promise.then(m => m.default || m)
 }
 
 export function hasFetch(vm) {
-  return vm.$options && typeof vm.$options.fetch === 'function' && !vm.$options.fetch.length
-}
-export function purifyData(data) {
-  if (process.env.NODE_ENV === 'production') {
-    return data
+    return vm.$options && typeof vm.$options.fetch === 'function' && !vm.$options.fetch.length
   }
-
-  return Object.entries(data).filter(
-    ([key, value]) => {
-      const valid = !(value instanceof Function) && !(value instanceof Promise)
-      if (!valid) {
-        console.warn(`${key} is not able to be stringified. This will break in a production environment.`)
-      }
-      return valid
+  export function purifyData(data) {
+    if (process.env.NODE_ENV === 'production') {
+      return data
     }
+
+    return Object.entries(data).filter(
+      ([key, value]) => {
+        const valid = !(value instanceof Function) && !(value instanceof Promise)
+        if (!valid) {
+          console.warn(`${key} is not able to be stringified. This will break in a production environment.`)
+        }
+        return valid
+      }
     ).reduce((obj, [key, value]) => {
       obj[key] = value
       return obj
     }, {})
-}
-export function getChildrenComponentInstancesUsingFetch(vm, instances = []) {
-  const children = vm.$children || []
-  for (const child of children) {
-    if (child.$fetch) {
-      instances.push(child)
-      continue; // Don't get the children since it will reload the template
+  }
+  export function getChildrenComponentInstancesUsingFetch(vm, instances = []) {
+    const children = vm.$children || []
+    for (const child of children) {
+      if (child.$fetch) {
+        instances.push(child)
+        continue; // Don't get the children since it will reload the template
+      }
+      if (child.$children) {
+        getChildrenComponentInstancesUsingFetch(child, instances)
+      }
     }
-    if (child.$children) {
-      getChildrenComponentInstancesUsingFetch(child, instances)
+    return instances
+  }
+
+export function applyAsyncData(Component, asyncData) {
+    if (
+      // For SSR, we once all this function without second param to just apply asyncData
+      // Prevent doing this for each SSR request
+      !asyncData && Component.options.__hasNuxtData
+    ) {
+      return
+    }
+
+    const ComponentData = Component.options._originDataFn || Component.options.data || function () { return {} }
+    Component.options._originDataFn = ComponentData
+
+    Component.options.data = function () {
+      const data = ComponentData.call(this, this)
+      if (this.$ssrContext) {
+        asyncData = this.$ssrContext.asyncData[Component.cid]
+      }
+      return { ...data, ...asyncData }
+    }
+
+    Component.options.__hasNuxtData = true
+
+    if (Component._Ctor && Component._Ctor.options) {
+      Component._Ctor.options.data = Component.options.data
     }
   }
-  return instances
-}
 
-export function applyAsyncData (Component, asyncData) {
-  if (
-    // For SSR, we once all this function without second param to just apply asyncData
-    // Prevent doing this for each SSR request
-    !asyncData && Component.options.__hasNuxtData
-  ) {
-    return
-  }
-
-  const ComponentData = Component.options._originDataFn || Component.options.data || function () { return {} }
-  Component.options._originDataFn = ComponentData
-
-  Component.options.data = function () {
-    const data = ComponentData.call(this, this)
-    if (this.$ssrContext) {
-      asyncData = this.$ssrContext.asyncData[Component.cid]
-    }
-    return { ...data, ...asyncData }
-  }
-
-  Component.options.__hasNuxtData = true
-
-  if (Component._Ctor && Component._Ctor.options) {
-    Component._Ctor.options.data = Component.options.data
-  }
-}
-
-export function sanitizeComponent (Component) {
+export function sanitizeComponent(Component) {
   // If Component already sanitized
   if (Component.options && Component._Ctor === Component) {
     return Component
@@ -112,7 +112,7 @@ export function sanitizeComponent (Component) {
   return Component
 }
 
-export function getMatchedComponents (route, matches = false, prop = 'components') {
+export function getMatchedComponents(route, matches = false, prop = 'components') {
   return Array.prototype.concat.apply([], route.matched.map((m, index) => {
     return Object.keys(m[prop]).map((key) => {
       matches && matches.push(index)
@@ -121,11 +121,11 @@ export function getMatchedComponents (route, matches = false, prop = 'components
   }))
 }
 
-export function getMatchedComponentsInstances (route, matches = false) {
+export function getMatchedComponentsInstances(route, matches = false) {
   return getMatchedComponents(route, matches, 'instances')
 }
 
-export function flatMapComponents (route, fn) {
+export function flatMapComponents(route, fn) {
   return Array.prototype.concat.apply([], route.matched.map((m, index) => {
     return Object.keys(m.components).reduce((promises, key) => {
       if (m.components[key]) {
@@ -138,7 +138,7 @@ export function flatMapComponents (route, fn) {
   }))
 }
 
-export function resolveRouteComponents (route, fn) {
+export function resolveRouteComponents(route, fn) {
   return Promise.all(
     flatMapComponents(route, async (Component, instance, match, key) => {
       // If component is a function, resolve it
@@ -173,7 +173,7 @@ export function resolveRouteComponents (route, fn) {
   )
 }
 
-export async function getRouteData (route) {
+export async function getRouteData(route) {
   if (!route) {
     return
   }
@@ -188,19 +188,19 @@ export async function getRouteData (route) {
   }
 }
 
-export async function setContext (app, context) {
+export async function setContext(app, context) {
   // If context not defined, create it
   if (!app.context) {
     app.context = {
       isStatic: process.static,
       isDev: true,
       isHMR: false,
-      app,
+        app,
       store: app.store,
       payload: context.payload,
-      error: context.error,
-      base: app.router.options.base,
-      env: {}
+        error: context.error,
+          base: app.router.options.base,
+            env: {}
     }
     // Only set once
 
@@ -212,107 +212,107 @@ export async function setContext (app, context) {
     }
 
     if (context.ssrContext) {
-      app.context.ssrContext = context.ssrContext
+    app.context.ssrContext = context.ssrContext
+  }
+  app.context.redirect = (status, path, query) => {
+    if (!status) {
+      return
     }
-    app.context.redirect = (status, path, query) => {
-      if (!status) {
-        return
-      }
-      app.context._redirected = true
-      // if only 1 or 2 arguments: redirect('/') or redirect('/', { foo: 'bar' })
-      let pathType = typeof path
-      if (typeof status !== 'number' && (pathType === 'undefined' || pathType === 'object')) {
-        query = path || {}
-        path = status
-        pathType = typeof path
-        status = 302
-      }
-      if (pathType === 'object') {
-        path = app.router.resolve(path).route.fullPath
-      }
-      // "/absolute/route", "./relative/route" or "../relative/route"
-      if (/(^[.]{1,2}\/)|(^\/(?!\/))/.test(path)) {
+    app.context._redirected = true
+    // if only 1 or 2 arguments: redirect('/') or redirect('/', { foo: 'bar' })
+    let pathType = typeof path
+    if (typeof status !== 'number' && (pathType === 'undefined' || pathType === 'object')) {
+      query = path || {}
+      path = status
+      pathType = typeof path
+      status = 302
+    }
+    if (pathType === 'object') {
+      path = app.router.resolve(path).route.fullPath
+    }
+    // "/absolute/route", "./relative/route" or "../relative/route"
+    if (/(^[.]{1,2}\/)|(^\/(?!\/))/.test(path)) {
+      app.context.next({
+        path,
+        query,
+        status
+      })
+    } else {
+      path = withQuery(path, query)
+      if (process.server) {
         app.context.next({
           path,
-          query,
           status
         })
-      } else {
-        path = withQuery(path, query)
-        if (process.server) {
-          app.context.next({
-            path,
-            status
-          })
-        }
-        if (process.client) {
-          // https://developer.mozilla.org/en-US/docs/Web/API/Location/replace
-          window.location.replace(path)
+      }
+      if (process.client) {
+        // https://developer.mozilla.org/en-US/docs/Web/API/Location/replace
+        window.location.replace(path)
 
-          // Throw a redirect error
-          throw new Error('ERR_REDIRECT')
-        }
+        // Throw a redirect error
+        throw new Error('ERR_REDIRECT')
       }
     }
-    if (process.server) {
-      app.context.beforeNuxtRender = fn => context.beforeRenderFns.push(fn)
+  }
+  if (process.server) {
+    app.context.beforeNuxtRender = fn => context.beforeRenderFns.push(fn)
+  }
+  if (process.client) {
+    app.context.nuxtState = window.__NUXT__
     }
-    if (process.client) {
-      app.context.nuxtState = window.__NUXT__
-    }
-  }
+}
 
-  // Dynamic keys
-  const [currentRouteData, fromRouteData] = await Promise.all([
-    getRouteData(context.route),
-    getRouteData(context.from)
-  ])
+// Dynamic keys
+const [currentRouteData, fromRouteData] = await Promise.all([
+  getRouteData(context.route),
+  getRouteData(context.from)
+])
 
-  if (context.route) {
-    app.context.route = currentRouteData
-  }
+if (context.route) {
+  app.context.route = currentRouteData
+}
 
-  if (context.from) {
-    app.context.from = fromRouteData
-  }
+if (context.from) {
+  app.context.from = fromRouteData
+}
 
-  app.context.next = context.next
-  app.context._redirected = false
-  app.context._errored = false
-  app.context.isHMR = Boolean(context.isHMR)
+app.context.next = context.next
+app.context._redirected = false
+app.context._errored = false
+app.context.isHMR =  Boolean(context.isHMR)
   app.context.params = app.context.route.params || {}
-  app.context.query = app.context.route.query || {}
+app.context.query = app.context.route.query || {}
 }
 
-export function middlewareSeries (promises, appContext) {
-  if (!promises.length || appContext._redirected || appContext._errored) {
-    return Promise.resolve()
-  }
-  return promisify(promises[0], appContext)
-    .then(() => {
-      return middlewareSeries(promises.slice(1), appContext)
-    })
-}
-
-export function promisify (fn, context) {
-  let promise
-  if (fn.length === 2) {
-      console.warn('Callback-based asyncData, fetch or middleware calls are deprecated. ' +
-        'Please switch to promises or async/await syntax')
-
-    // fn(context, callback)
-    promise = new Promise((resolve) => {
-      fn(context, function (err, data) {
-        if (err) {
-          context.error(err)
-        }
-        data = data || {}
-        resolve(data)
+export function middlewareSeries(promises, appContext) {
+    if (!promises.length || appContext._redirected || appContext._errored) {
+      return Promise.resolve()
+    }
+    return promisify(promises[0], appContext)
+      .then(() => {
+        return middlewareSeries(promises.slice(1), appContext)
       })
-    })
-  } else {
-    promise = fn(context)
   }
+
+export function promisify(fn, context) {
+    let promise
+    if (fn.length === 2) {
+        console.warn('Callback-based asyncData, fetch or middleware calls are deprecated. ' +
+          'Please switch to promises or async/await syntax')
+
+          // fn(context, callback)
+          promise = new Promise((resolve) => {
+            fn(context, function (err, data) {
+              if (err) {
+                context.error(err)
+              }
+              data = data || {}
+              resolve(data)
+            })
+          })
+    } else {
+      promise = fn(context)
+    }
 
   if (promise && promise instanceof Promise && typeof promise.then === 'function') {
     return promise
@@ -321,7 +321,7 @@ export function promisify (fn, context) {
 }
 
 // Imported from vue-router
-export function getLocation (base, mode) {
+export function getLocation(base, mode) {
   if (mode === 'hash') {
     return window.location.hash.replace(/^#\//, '')
   }
@@ -347,11 +347,11 @@ export function getLocation (base, mode) {
  * @param  {Object=}            options
  * @return {!function(Object=, Object=)}
  */
-export function compile (str, options) {
+export function compile(str, options) {
   return tokensToFunction(parse(str, options), options)
 }
 
-export function getQueryDiff (toQuery, fromQuery) {
+export function getQueryDiff(toQuery, fromQuery) {
   const diff = {}
   const queries = { ...toQuery, ...fromQuery }
   for (const k in queries) {
@@ -362,7 +362,7 @@ export function getQueryDiff (toQuery, fromQuery) {
   return diff
 }
 
-export function normalizeError (err) {
+export function normalizeError(err) {
   let message
   if (!(err.message || typeof err === 'string')) {
     try {
@@ -405,7 +405,7 @@ const PATH_REGEXP = new RegExp([
  * @param  {Object=} options
  * @return {!Array}
  */
-function parse (str, options) {
+function parse(str, options) {
   const tokens = []
   let key = 0
   let index = 0
@@ -477,7 +477,7 @@ function parse (str, options) {
  * @param  {string}
  * @return {string}
  */
-function encodeURIComponentPretty (str, slashAllowed) {
+function encodeURIComponentPretty(str, slashAllowed) {
   const re = slashAllowed ? /[?#]/g : /[/?#]/g
   return encodeURI(str).replace(re, (c) => {
     return '%' + c.charCodeAt(0).toString(16).toUpperCase()
@@ -490,7 +490,7 @@ function encodeURIComponentPretty (str, slashAllowed) {
  * @param  {string}
  * @return {string}
  */
-function encodeAsterisk (str) {
+function encodeAsterisk(str) {
   return encodeURIComponentPretty(str, true)
 }
 
@@ -500,7 +500,7 @@ function encodeAsterisk (str) {
  * @param  {string} str
  * @return {string}
  */
-function escapeString (str) {
+function escapeString(str) {
   return str.replace(/([.+*?=^!:${}()[\]|/\\])/g, '\\$1')
 }
 
@@ -510,14 +510,14 @@ function escapeString (str) {
  * @param  {string} group
  * @return {string}
  */
-function escapeGroup (group) {
+function escapeGroup(group) {
   return group.replace(/([=!:$/()])/g, '\\$1')
 }
 
 /**
  * Expose a method for transforming tokens into the path function.
  */
-function tokensToFunction (tokens, options) {
+function tokensToFunction(tokens, options) {
   // Compile all the tokens into regexps.
   const matches = new Array(tokens.length)
 
@@ -604,7 +604,7 @@ function tokensToFunction (tokens, options) {
  * @param  {Object} options
  * @return {string}
  */
-function flags (options) {
+function flags(options) {
   return options && options.sensitive ? '' : 'i'
 }
 
@@ -623,8 +623,8 @@ export const stripTrailingSlash = withoutTrailingSlash
 
 export const isSamePath = _isSamePath
 
-export function setScrollRestoration (newVal) {
+export function setScrollRestoration(newVal) {
   try {
     window.history.scrollRestoration = newVal;
-  } catch(e) {}
+  } catch (e) { }
 }
