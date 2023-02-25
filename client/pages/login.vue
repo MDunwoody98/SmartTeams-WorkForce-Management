@@ -6,8 +6,8 @@
 
 <script>
 export default {
-  layout: 'background_splash',
-}
+  layout: "background_splash"
+};
 </script>
 
 <style>

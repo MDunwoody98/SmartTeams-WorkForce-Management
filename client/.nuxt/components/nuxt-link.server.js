@@ -1,8 +1,8 @@
-import Vue from 'vue'
+import Vue from "vue";
 
 export default {
-  name: 'NuxtLink',
-  extends: Vue.component('RouterLink'),
+  name: "NuxtLink",
+  extends: Vue.component("RouterLink"),
   props: {
     prefetch: {
       type: Boolean,
@@ -13,4 +13,4 @@ export default {
       default: false
     }
   }
-}
+};

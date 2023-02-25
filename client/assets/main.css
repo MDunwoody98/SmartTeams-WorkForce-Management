@@ -1,14 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
 * {
-    font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
-.home-enter-active, .home-leave-active { 
-    transition: opacity .25s; 
+.home-enter-active,
+.home-leave-active {
+  transition: opacity 0.25s;
 }
-.home-enter, .home-leave-active { 
-    opacity: 0;
+.home-enter,
+.home-leave-active {
+  opacity: 0;
 }
 :root {
-    --color-secondary: #2d9fa0;
-    --color-primary: #091C58;
+  --color-secondary: #2d9fa0;
+  --color-primary: #091c58;
 }

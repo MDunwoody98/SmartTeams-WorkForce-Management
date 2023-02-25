@@ -16,7 +16,11 @@
               <v-card-title class="report-item-title">{{
                 ManagedTeam
               }}</v-card-title>
-              <Charts-RemainingLeave :data="annualLeaveChartData" :options="chartOptions" class="pie-chart" />
+              <Charts-RemainingLeave
+                :data="annualLeaveChartData"
+                :options="chartOptions"
+                class="pie-chart"
+              />
             </v-card>
           </div>
         </v-col>
@@ -27,7 +31,11 @@
               <v-card-title class="report-item-title">{{
                 ManagedTeam
               }}</v-card-title>
-              <Charts-CurrentWorkerUtilization :data="utilizationChartData" :options="chartOptions" class="pie-chart" />
+              <Charts-CurrentWorkerUtilization
+                :data="utilizationChartData"
+                :options="chartOptions"
+                class="pie-chart"
+              />
             </v-card>
           </div>
         </v-col>
@@ -39,53 +47,53 @@
 
 <script>
 export default {
-  layout: 'background_home',
+  layout: "background_home",
   asyncData({ params }) {
-    const ManagedTeam = params.ManagedTeam // When calling /abc the slug will be "abc"
-    return { ManagedTeam }
+    const ManagedTeam = params.ManagedTeam; // When calling /abc the slug will be "abc"
+    return { ManagedTeam };
   },
   // Is the current user an admin, or a manager of this team?
   validate({ params, store }) {
     // Throws a 500 internal server error with custom message
-    throw new Error('Under Construction!')
+    throw new Error("Under Construction!");
   },
   data() {
     return {
       utilizationChartData: {
-        labels: ['Absence', 'Non-utilized', 'Utilized'],
+        labels: ["Absence", "Non-utilized", "Utilized"],
         datasets: [
           {
-            label: 'Annual Leave',
-            backgroundColor: ['grey', '#091C58', '#2D9FA0'],
-            data: [4, 20, 76],
-          },
-        ],
+            label: "Annual Leave",
+            backgroundColor: ["grey", "#091C58", "#2D9FA0"],
+            data: [4, 20, 76]
+          }
+        ]
       },
       annualLeaveChartData: {
-        labels: ['Leave used', 'Leave remaining'],
+        labels: ["Leave used", "Leave remaining"],
         datasets: [
           {
-            label: 'Annual Leave',
-            backgroundColor: ['#091C58', '#2D9FA0'],
-            data: [16.25, 35],
-          },
-        ],
+            label: "Annual Leave",
+            backgroundColor: ["#091C58", "#2D9FA0"],
+            data: [16.25, 35]
+          }
+        ]
       },
       chartOptions: {
         legend: {
-          position: 'right',
+          position: "right"
         },
         responsive: true,
-        maintainAspectRatio: false,
-      },
-    }
+        maintainAspectRatio: false
+      }
+    };
   },
   computed: {
     mobile() {
-      return this.$vuetify.breakpoint.smAndDown
-    },
-  },
-}
+      return this.$vuetify.breakpoint.smAndDown;
+    }
+  }
+};
 </script>
 
 <style scoped>

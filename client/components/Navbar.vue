@@ -1,6 +1,13 @@
 <template>
   <nav class="navigation">
-    <v-app-bar app dense dark class="toolbar" color="var(--color-primary)" clipped-left>
+    <v-app-bar
+      app
+      dense
+      dark
+      class="toolbar"
+      color="var(--color-primary)"
+      clipped-left
+    >
       <v-toolbar-title>
         <span> SmartTeams </span>
       </v-toolbar-title>
@@ -10,19 +17,35 @@
         <v-icon right large>exit_to_app</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-navigation-drawer light class="sidenav" :mini-variant="mobile" permanent clipped app width="210px">
+    <v-navigation-drawer
+      light
+      class="sidenav"
+      :mini-variant="mobile"
+      permanent
+      clipped
+      app
+      width="210px"
+    >
       <v-row no-gutters>
         <v-col cols="12" align="center" class="nav-header">
           <v-avatar v-if="!mobile" size="100">
-            <v-img :src="
-              require(`@/${$auth.user.worker.photo
-                  ? $auth.user.worker.photo
-                  : 'assets/empty.png'
+            <v-img
+              :src="
+                require(`@/${
+                  $auth.user.worker.photo
+                    ? $auth.user.worker.photo
+                    : 'assets/empty.png'
                 }`)
-            " />
+              "
+            />
           </v-avatar>
         </v-col>
-        <v-col v-if="!mobile" cols="12" align="center" class="nav-header-username">
+        <v-col
+          v-if="!mobile"
+          cols="12"
+          align="center"
+          class="nav-header-username"
+        >
           <p class="subheading user-name-nav">
             {{ this.$auth.user.worker.name.firstName }}
             {{ this.$auth.user.worker.name.lastName }}
@@ -33,7 +56,12 @@
       <v-list>
         <!-- Nav items depend on cookie stored at client side (admin, manager). Causes hydration error if rendered server side -->
         <client-only>
-          <v-list-item v-for="navItem in navItems" :key="navItem.text" :to="navItem.route" nuxt>
+          <v-list-item
+            v-for="navItem in navItems"
+            :key="navItem.text"
+            :to="navItem.route"
+            nuxt
+          >
             <v-list-item-action>
               <v-icon>{{ navItem.icon }}</v-icon>
             </v-list-item-action>
@@ -49,48 +77,48 @@
 </template>
 
 <script>
-import jwtDecode from 'jwt-decode'
+import jwtDecode from "jwt-decode";
 export default {
   data() {
     return {
       navItems: [
-        { icon: 'dashboard', text: 'Dashboard', route: '/dashboard' },
-        { icon: 'person', text: 'Profile', route: '/profile' },
+        { icon: "dashboard", text: "Dashboard", route: "/dashboard" },
+        { icon: "person", text: "Profile", route: "/profile" }
       ],
-      worker: null,
-    }
+      worker: null
+    };
   },
   computed: {
     mobile() {
-      return this.$vuetify.breakpoint.smAndDown
-    },
+      return this.$vuetify.breakpoint.smAndDown;
+    }
   },
   created() {
-    this.generateNavItems()
+    this.generateNavItems();
   },
   methods: {
     async logOut() {
-      await this.$auth.logout()
+      await this.$auth.logout();
     },
     generateNavItems() {
-      const token = jwtDecode(this.$auth.strategy.token.get())
+      const token = jwtDecode(this.$auth.strategy.token.get());
       if (token.isManager) {
         this.navItems.push({
-          icon: 'manage_accounts',
-          text: 'Manager Zone',
-          route: '/manager',
-        })
+          icon: "manage_accounts",
+          text: "Manager Zone",
+          route: "/manager"
+        });
       }
       if (token.isAdmin) {
         this.navItems.push({
-          icon: 'settings',
-          text: 'Admin',
-          route: '/admin',
-        })
+          icon: "settings",
+          text: "Admin",
+          route: "/admin"
+        });
       }
-    },
-  },
-}
+    }
+  }
+};
 </script>
 
 <style scoped>

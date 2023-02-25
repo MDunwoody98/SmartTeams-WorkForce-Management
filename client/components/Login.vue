@@ -1,19 +1,37 @@
 <template>
   <div>
     <v-card class="elevation-12 login-card">
-      <v-card-title color="var(--color-primary)" class="subtitle">Sign in</v-card-title>
+      <v-card-title color="var(--color-primary)" class="subtitle"
+        >Sign in</v-card-title
+      >
       <v-form @submit.prevent="logIn()">
         <v-card-text>
           <v-card-actions class="form-group">
-            <v-text-field v-model.number="login.workerId" prepend-icon="person" type="text" class="form-element"
-              placeholder="Worker ID" color="var(--color-primary)"></v-text-field>
+            <v-text-field
+              v-model.number="login.workerId"
+              prepend-icon="person"
+              type="text"
+              class="form-element"
+              placeholder="Worker ID"
+              color="var(--color-primary)"
+            ></v-text-field>
           </v-card-actions>
           <v-card-actions class="form-group">
-            <v-text-field v-model="login.password" prepend-icon="lock" type="password" class="form-element"
-              placeholder="Password" color="var(--color-primary)"></v-text-field>
+            <v-text-field
+              v-model="login.password"
+              prepend-icon="lock"
+              type="password"
+              class="form-element"
+              placeholder="Password"
+              color="var(--color-primary)"
+            ></v-text-field>
           </v-card-actions>
           <v-card-actions class="form-group">
-            <v-checkbox v-model="remember" label="Remember me" color="var(--color-primary)"></v-checkbox>
+            <v-checkbox
+              v-model="remember"
+              label="Remember me"
+              color="var(--color-primary)"
+            ></v-checkbox>
           </v-card-actions>
           <div class="forgot-password-container">
             <div class="forgot-password" @click="forgotPassword()">
@@ -21,12 +39,27 @@
             </div>
           </div>
 
-          <v-btn type="submit" class="btnLogin" elevation="4" large block outlined nuxt color="var(--color-primary)">Sign
-            In</v-btn><!--to="/dashboard ??-->
+          <v-btn
+            type="submit"
+            class="btnLogin"
+            elevation="4"
+            large
+            block
+            outlined
+            nuxt
+            color="var(--color-primary)"
+            >Sign In</v-btn
+          ><!--to="/dashboard ??-->
         </v-card-text>
       </v-form>
     </v-card>
-    <v-snackbar v-model="snackbar" :timeout="4000" color="var(--color-secondary)" rounded="pill">{{ text }}</v-snackbar>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="4000"
+      color="var(--color-secondary)"
+      rounded="pill"
+      >{{ text }}</v-snackbar
+    >
   </div>
 </template>
 
@@ -34,52 +67,50 @@
 export default {
   data() {
     return {
-      text: '',
+      text: "",
       snackbar: false,
       remember: false,
       login: {
-        workerId: '',
-        password: '',
-      },
-    }
+        workerId: "",
+        password: ""
+      }
+    };
   },
   methods: {
     async logIn() {
       try {
-        await this.$auth
-          .loginWith('local', { data: this.login })
-          .then((res) => {
-            this.$auth.setUserToken(res.data.token, res.data.refresh_token)
-          })
+        await this.$auth.loginWith("local", { data: this.login }).then(res => {
+          this.$auth.setUserToken(res.data.token, res.data.refresh_token);
+        });
       } catch (err) {
-        console.log(JSON.stringify(err))
-        this.text = 'Error. Please try again or contact your administrator.'
-        this.toggleAlert()
+        console.log(JSON.stringify(err));
+        this.text = "Error. Please try again or contact your administrator.";
+        this.toggleAlert();
       }
     },
     forgotPassword() {
       this.text =
-        'Please contact your administrator to perform a password reset'
-      this.toggleAlert()
+        "Please contact your administrator to perform a password reset";
+      this.toggleAlert();
     },
     toggleAlert() {
-      this.snackbar = !this.snackbar
+      this.snackbar = !this.snackbar;
     },
     parseJWT(token) {
-      const base64Url = token.split('.')[1]
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
       const jsonPayload = decodeURIComponent(
         atob(base64)
-          .split('')
+          .split("")
           .map(function (c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
           })
-          .join('')
-      )
-      return JSON.parse(jsonPayload)
-    },
-  },
-}
+          .join("")
+      );
+      return JSON.parse(jsonPayload);
+    }
+  }
+};
 </script>
 
 <style>
@@ -101,11 +132,11 @@ export default {
 }
 
 .form-group {
-  color: 'var(--color-primary)';
+  color: "var(--color-primary)";
 }
 
 .v-text-field {
-  color: 'var(--color-primary)';
+  color: "var(--color-primary)";
 }
 
 .forgot-password {

@@ -18,11 +18,19 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-snackbar v-model="snackbar" :timeout="4000" color="var(--color-secondary)" rounded="pill">{{ snackbarText
-      }}</v-snackbar>
+      <v-snackbar
+        v-model="snackbar"
+        :timeout="4000"
+        color="var(--color-secondary)"
+        rounded="pill"
+        >{{ snackbarText }}</v-snackbar
+      >
     </v-container>
     <div data-app>
-      <ChangeMyPassword v-model="changeMyPassword" @showSnackbar="showSnackbar" />
+      <ChangeMyPassword
+        v-model="changeMyPassword"
+        @showSnackbar="showSnackbar"
+      />
       <UpdateMyDetails v-model="updateMyDetails" @showSnackbar="showSnackbar" />
       <ChangeMyPhoto v-model="changeMyPhoto" @showSnackbar="showSnackbar" />
     </div>
@@ -30,28 +38,28 @@
 </template>
 <script>
 export default {
-  layout: 'background_home',
+  layout: "background_home",
   data() {
     return {
       changeMyPassword: false,
       updateMyDetails: false,
       changeMyPhoto: false,
       snackbar: false,
-      snackbarText: null,
-    }
+      snackbarText: null
+    };
   },
   computed: {
     mobile() {
-      return this.$vuetify.breakpoint.smAndDown
-    },
+      return this.$vuetify.breakpoint.smAndDown;
+    }
   },
   methods: {
     showSnackbar(text) {
-      this.snackbarText = text
-      this.snackbar = !this.snackbar
-    },
-  },
-}
+      this.snackbarText = text;
+      this.snackbar = !this.snackbar;
+    }
+  }
+};
 </script>
 <style scoped>
 .container {

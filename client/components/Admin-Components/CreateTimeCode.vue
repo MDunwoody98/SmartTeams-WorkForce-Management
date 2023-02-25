@@ -5,10 +5,21 @@
         <span class="headline">Create Time Code</span>
       </v-card-title>
       <v-card-text>
-        <v-text-field v-model="timeCodeName" label="Time Code Name"></v-text-field>
-        <v-autocomplete v-model="selectedProject" :disabled="loadingProjects" :items="availableProjects" filled
-          label="Project" color="blue-grey lighten-2" item-text="name" item-value="id">
-          <template v-slot:item="data">
+        <v-text-field
+          v-model="timeCodeName"
+          label="Time Code Name"
+        ></v-text-field>
+        <v-autocomplete
+          v-model="selectedProject"
+          :disabled="loadingProjects"
+          :items="availableProjects"
+          filled
+          label="Project"
+          color="blue-grey lighten-2"
+          item-text="name"
+          item-value="id"
+        >
+          <template #item="data">
             {{ data.item.name }}
           </template>
         </v-autocomplete>
@@ -43,80 +54,80 @@
 <script>
 export default {
   props: {
-    value: Boolean,
+    value: Boolean
   },
   data() {
     return {
       loadingProjects: true,
       selectedProject: null,
-      availableProjects: [{ header: 'Available Projects' }],
+      availableProjects: [{ header: "Available Projects" }],
       timeCodeName: null,
       approver: null,
       billed: false,
       utilised: false,
-      autoApprove: false,
-    }
+      autoApprove: false
+    };
   },
   computed: {
     show: {
       get() {
-        return this.value
+        return this.value;
       },
       set(value) {
-        this.$emit('input', value)
-      },
-    },
+        this.$emit("input", value);
+      }
+    }
   },
   watch: {
     show() {
       if (this.show) {
-        this.retrieveProjects()
+        this.retrieveProjects();
       }
-    },
+    }
   },
   methods: {
     async retrieveProjects() {
-      let response = await this.$axios.get('/project')
-      response = response.data.map((project) => ({
+      let response = await this.$axios.get("/project");
+      response = response.data.map(project => ({
         id: project._id,
         name: project.name,
-        managers: project.managerId,
-      }))
-      this.availableProjects.push.apply(this.availableProjects, response)
-      this.loadingProjects = false // Projects loaded
+        managers: project.managerId
+      }));
+      this.availableProjects.push.apply(this.availableProjects, response);
+      this.loadingProjects = false; // Projects loaded
     },
 
     async createTimeCode() {
       if (!this.timeCodeName || !this.selectedProject) {
         return this.$emit(
-          'showSnackbar',
-          'Error. Please enter a time code name and select a project'
-        )
+          "showSnackbar",
+          "Error. Please enter a time code name and select a project"
+        );
       }
       try {
-        await this.$axios.post('/time_code', {
+        await this.$axios.post("/time_code", {
           timeCodeName: this.timeCodeName,
           projectId: this.selectedProject,
           autoApprove: this.autoApprove,
-          approvalByTeamManager: this.approver === 'teamManager',
-          approvalByProjectManager: this.approver === 'projectManager',
+          approvalByTeamManager: this.approver === "teamManager",
+          approvalByProjectManager: this.approver === "projectManager",
           utilised: this.utilised,
-          billed: this.billed,
-        })
-        this.$emit('showSnackbar', 'Successfully created time code')
-        this.closeWindow()
+          billed: this.billed
+        });
+        this.$emit("showSnackbar", "Successfully created time code");
+        this.closeWindow();
       } catch (ex) {
         return this.$emit(
-          'showSnackbar',
-          'Error creating time code. Please ensure the time code name is unique and a project is selected'
-        )
+          "showSnackbar",
+          "Error creating time code. Please ensure the time code name is unique and a project is selected"
+        );
       }
     },
     closeWindow() {
-      this.show = false
-    },
-  },
-}
+      this.show = false;
+    }
+  }
+};
 </script>
 <style scoped>
 template {

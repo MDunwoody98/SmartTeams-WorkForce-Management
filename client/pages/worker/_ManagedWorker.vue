@@ -7,7 +7,11 @@
           <!-- date/week selector -->
           <!--View of current week and associated time entries-->
           <!-- When navigating back to dashboard, re-render component -->
-          <DayViewContainer :key="$route.fullPath" :worker-id="ManagedWorker" :manager-view="true" />
+          <DayViewContainer
+            :key="$route.fullPath"
+            :worker-id="ManagedWorker"
+            :manager-view="true"
+          />
         </v-col>
         <v-col v-if="!mobile" cols="6">
           <!--In here goes the time entry cards-->
@@ -16,8 +20,12 @@
               <v-card-title class="report-item-title">{{
                 ManagedWorker
               }}</v-card-title>
-              <Charts-RemainingLeave :data="annualLeaveChartData" :options="chartOptions" :worker-id="ManagedWorker"
-                class="pie-chart" />
+              <Charts-RemainingLeave
+                :data="annualLeaveChartData"
+                :options="chartOptions"
+                :worker-id="ManagedWorker"
+                class="pie-chart"
+              />
             </v-card>
           </div>
         </v-col>
@@ -28,8 +36,12 @@
               <v-card-title class="report-item-title">{{
                 ManagedWorker
               }}</v-card-title>
-              <Charts-CurrentWorkerUtilization :data="utilizationChartData" :options="chartOptions"
-                :worker-id="ManagedWorker" class="pie-chart" />
+              <Charts-CurrentWorkerUtilization
+                :data="utilizationChartData"
+                :options="chartOptions"
+                :worker-id="ManagedWorker"
+                class="pie-chart"
+              />
             </v-card>
           </div>
         </v-col>
@@ -40,60 +52,60 @@
 </template>
 
 <script>
-import jwtDecode from 'jwt-decode'
+import jwtDecode from "jwt-decode";
 export default {
-  layout: 'background_home',
+  layout: "background_home",
   asyncData({ params }) {
-    const ManagedWorker = parseInt(params.ManagedWorker) // When calling /abc the ManagedWorker will be "abc"
-    return { ManagedWorker }
+    const ManagedWorker = parseInt(params.ManagedWorker); // When calling /abc the ManagedWorker will be "abc"
+    return { ManagedWorker };
   },
   // Is the current user an admin or a manager of this worker?
   async validate({ params, store }) {
-    const token = jwtDecode(store.$auth.strategy.token.get())
+    const token = jwtDecode(store.$auth.strategy.token.get());
     const response = await store.$axios.get(
       `/worker/checkManager/${params.ManagedWorker}`
-    )
+    );
     if (!response.data && !token?.isAdmin) {
-      throw new Error('401 Unauthorized')
-    } else return true
+      throw new Error("401 Unauthorized");
+    } else return true;
   },
   data() {
     return {
       utilizationChartData: {
-        labels: ['Absence', 'Non-utilized', 'Utilized'],
+        labels: ["Absence", "Non-utilized", "Utilized"],
         datasets: [
           {
-            label: 'Annual Leave',
-            backgroundColor: ['grey', '#091C58', '#2D9FA0'],
-            data: [4, 20, 76],
-          },
-        ],
+            label: "Annual Leave",
+            backgroundColor: ["grey", "#091C58", "#2D9FA0"],
+            data: [4, 20, 76]
+          }
+        ]
       },
       annualLeaveChartData: {
-        labels: ['Leave used', 'Leave remaining'],
+        labels: ["Leave used", "Leave remaining"],
         datasets: [
           {
-            label: 'Annual Leave',
-            backgroundColor: ['#091C58', '#2D9FA0'],
-            data: [16.25, 35],
-          },
-        ],
+            label: "Annual Leave",
+            backgroundColor: ["#091C58", "#2D9FA0"],
+            data: [16.25, 35]
+          }
+        ]
       },
       chartOptions: {
         legend: {
-          position: 'right',
+          position: "right"
         },
         responsive: true,
-        maintainAspectRatio: false,
-      },
-    }
+        maintainAspectRatio: false
+      }
+    };
   },
   computed: {
     mobile() {
-      return this.$vuetify.breakpoint.smAndDown
-    },
-  },
-}
+      return this.$vuetify.breakpoint.smAndDown;
+    }
+  }
+};
 </script>
 
 <style scoped>

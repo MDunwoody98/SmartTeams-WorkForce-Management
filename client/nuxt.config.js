@@ -3,35 +3,35 @@ export default {
    ** Nuxt target
    ** See https://nuxtjs.org/api/configuration-target
    */
-  target: 'server',
+  target: "server",
   /*
    ** Headers of the page
    ** See https://nuxtjs.org/api/configuration-head
    */
   head: {
-    title: 'SmartTeams - Time Management System',
+    title: "SmartTeams - Time Management System",
     meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
-        hid: 'description',
-        name: 'description',
-        content: process.env.npm_package_description || '',
-      },
+        hid: "description",
+        name: "description",
+        content: process.env.npm_package_description || ""
+      }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
   /*
    ** Global CSS
    */
-  css: ['~/assets/main.css'],
+  css: ["~/assets/main.css"],
   layoutTransition: {
-    name: 'home',
-    mode: 'out-in',
+    name: "home",
+    mode: "out-in"
   },
   pageTransition: {
-    name: 'home',
-    mode: 'out-in',
+    name: "home",
+    mode: "out-in"
   },
   /*
    ** Plugins to load before mounting the App
@@ -44,75 +44,75 @@ export default {
    */
   components: {
     dirs: [
-      '~/components',
-      '~/components/Dashboard-Components',
-      '~/components/Dashboard-Components/DayView-Components',
-      '~/components/Manager-Components',
-      '~/components/Admin-Components',
-      '~/components/Profile-Components',
-    ],
+      "~/components",
+      "~/components/Dashboard-Components",
+      "~/components/Dashboard-Components/DayView-Components",
+      "~/components/Manager-Components",
+      "~/components/Admin-Components",
+      "~/components/Profile-Components"
+    ]
   },
   /*
    ** Nuxt.js dev-modules
    ** See https://nuxtjs.org/api/configuration-modules/#buildmodules
    */
-  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/vuetify'],
+  buildModules: ["@nuxtjs/eslint-module", "@nuxtjs/vuetify"],
   /*
    ** Nuxt.js modules
    */
   modules: [
     // Doc: https://nuxtjs.org/api/configuration-modules/
-    '@nuxtjs/auth-next',
-    '@nuxtjs/axios',
-    'cookie-universal-nuxt',
+    "@nuxtjs/auth-next",
+    "@nuxtjs/axios",
+    "cookie-universal-nuxt"
   ],
   // auth setup
   auth: {
     redirect: {
-      login: '/login', // User will be redirected to this path if login is required
-      logout: '/', // User will be redirected to this path if after logout
+      login: "/login", // User will be redirected to this path if login is required
+      logout: "/", // User will be redirected to this path if after logout
       callback: false, // User will be redirected to this path by the identity provider after login
-      home: '/dashboard', // User will be redirected to this path after login
+      home: "/dashboard" // User will be redirected to this path after login
     },
     strategies: {
       local: {
-        scheme: 'refresh',
+        scheme: "refresh",
         token: {
-          property: 'access_token', // property - which field of response JSON to use as token
+          property: "access_token", // property - which field of response JSON to use as token
           maxAge: 1800, // 30 minutes
-          global: true, // Auth token used on all axios requests
+          global: true // Auth token used on all axios requests
           // type: 'Bearer'
         },
         refreshToken: {
-          property: 'refresh_token',
-          data: 'refresh_token', // property name in request
+          property: "refresh_token",
+          data: "refresh_token", // property name in request
           maxAge: 60 * 60 * 24 * 30, // 30 days
-          tokenRequired: true,
+          tokenRequired: true
         },
         user: {
-          property: 'user', // <--- Default "user"
-          autoFetch: true,
+          property: "user", // <--- Default "user"
+          autoFetch: true
         },
         endpoints: {
-          login: { url: '/auth/login', method: 'post', propertyName: 'token' },
+          login: { url: "/auth/login", method: "post", propertyName: "token" },
           logout: false, // No API for logging out - just remove token from browser
-          refresh: { url: '/auth/refresh', method: 'post' }, // this.$auth.refreshTokens() to manually refresh
-          user: { url: '/auth/user', method: 'get', propertyName: false },
+          refresh: { url: "/auth/refresh", method: "post" }, // this.$auth.refreshTokens() to manually refresh
+          user: { url: "/auth/user", method: "get", propertyName: false }
         },
         redirect: {
-          login: '/login', // User will be redirected to this path if login is required
-          logout: '/', // User will be redirected to this path if after logout
+          login: "/login", // User will be redirected to this path if login is required
+          logout: "/", // User will be redirected to this path if after logout
           callback: false, // User will be redirected to this path by the identity provider after login
-          home: '/dashboard', // User will be redirected to this path after login
-        },
+          home: "/dashboard" // User will be redirected to this path after login
+        }
         // autologout is false
-      },
-    },
+      }
+    }
   },
   axios: {
     // proxyHeaders: false
     baseUrl: process.env.API_URL,
-    https: process.env.HTTPS,
+    https: process.env.HTTPS
   },
   /*
    ** Build configuration
@@ -125,32 +125,32 @@ export default {
   },
   router: {
     // Always redirect user to /login page if loggedIn is false
-    middleware: ['auth'],
+    middleware: ["auth"]
   },
   vuetify: {
     theme: {
       themes: {
         light: {
-          primary: '#091C58',
-          secondary: '#3B8070',
+          primary: "#091C58",
+          secondary: "#3B8070"
         },
         dark: {
-          primary: '#091C58',
-          secondary: '#3B8070',
-        },
-      },
+          primary: "#091C58",
+          secondary: "#3B8070"
+        }
+      }
     },
     defaultAssets: {
       font: true,
-      icons: 'md',
+      icons: "md"
     },
     icons: {
-      iconfont: 'md',
-    },
+      iconfont: "md"
+    }
   },
   eslint: {
     rules: {
-      'no-console': 'off',
-    },
-  },
-}
+      "no-console": "off"
+    }
+  }
+};

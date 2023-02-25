@@ -14,4 +14,5 @@ img {
     max-height: 340px;
     /*resizing for most 13" displays*/
   }
-}</style>
+}
+</style>

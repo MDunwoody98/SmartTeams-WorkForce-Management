@@ -3,7 +3,8 @@
   <div class="container">
     <v-card class="dayview-card">
       <v-toolbar dense flat class="card-header">
-        <v-toolbar-title class="title-dayName">{{ data.day.substr(0, 3) }} {{ data.date }}
+        <v-toolbar-title class="title-dayName"
+          >{{ data.day.substr(0, 3) }} {{ data.date }}
         </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-title>{{ totalHours }}h</v-toolbar-title>
@@ -13,7 +14,9 @@
         <v-list dense>
           <template v-for="entry in timeEntries">
             <v-list-item :key="entry._id" ripple :class="cardClass(entry)">
-              <v-list-item-content @click.passive="editSelectedTimeEntry(entry)">
+              <v-list-item-content
+                @click.passive="editSelectedTimeEntry(entry)"
+              >
                 <v-icon v-if="entry.timeOffCodeId">beach_access</v-icon>
                 <v-list-item-title>
                   <p class="timeCode">
@@ -22,7 +25,7 @@
                 </v-list-item-title>
                 <v-list-item-subtitle>
                   <p class="hours">
-                    {{ entry.hours }} {{ entry.hours != 1 ? 'hours' : 'hour' }}
+                    {{ entry.hours }} {{ entry.hours != 1 ? "hours" : "hour" }}
                   </p>
                 </v-list-item-subtitle>
                 <div class="timeEntry-comment">{{ entry.comments }}</div>
@@ -40,12 +43,23 @@
       </div>
     </v-card>
     <div data-app>
-      <ActionTimeEntry v-model="editTimeEntry" :time-entry="selectedTimeEntry" :selected-time-code="selectedTimeCode"
-        :available-time-codes="availableTimeCodes" :available-time-off-codes="availableTimeOffCodes"
-        :manager-view="managerView" @updateParent.passive="updateDayView" />
-      <AddNewTimeEntry v-model="addNewTimeEntry" :time-entry-date="new Date(data.key)"
-        :available-time-codes="availableTimeCodes" :available-time-off-codes="availableTimeOffCodes"
-        @updateParent="updateDayView" @updateContainer.passive="updateDayViewContainer" />
+      <ActionTimeEntry
+        v-model="editTimeEntry"
+        :time-entry="selectedTimeEntry"
+        :selected-time-code="selectedTimeCode"
+        :available-time-codes="availableTimeCodes"
+        :available-time-off-codes="availableTimeOffCodes"
+        :manager-view="managerView"
+        @updateParent.passive="updateDayView"
+      />
+      <AddNewTimeEntry
+        v-model="addNewTimeEntry"
+        :time-entry-date="new Date(data.key)"
+        :available-time-codes="availableTimeCodes"
+        :available-time-off-codes="availableTimeOffCodes"
+        @updateParent="updateDayView"
+        @updateContainer.passive="updateDayViewContainer"
+      />
     </div>
   </div>
 </template>
@@ -54,16 +68,16 @@ export default {
   props: {
     data: {
       type: Object,
-      default: null,
+      default: null
     },
     workerId: {
       type: Number,
-      default: null,
+      default: null
     },
     managerView: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
@@ -77,103 +91,103 @@ export default {
       selectedTimeCode: null,
       availableTimeCodes: new Map(),
       availableTimeOffCodes: [],
-      totalHours: 0,
-    }
+      totalHours: 0
+    };
   },
   async created() {
-    await this.renderComponent()
+    await this.renderComponent();
   },
   methods: {
     async retrieveTimeEntryList() {
       await this.$axios
-        .post('/time_entry/full_day', {
+        .post("/time_entry/full_day", {
           workerId: this.workerId,
-          date: new Date(this.data.key),
+          date: new Date(this.data.key)
         })
-        .then((response) => {
+        .then(response => {
           if (response.data) {
-            if (response.data !== '[]') {
-              this.timeEntries = JSON.parse(response.data)
-              this.timeEntries.forEach((element) => {
-                this.totalHours += element.hours
+            if (response.data !== "[]") {
+              this.timeEntries = JSON.parse(response.data);
+              this.timeEntries.forEach(element => {
+                this.totalHours += element.hours;
                 if (!this.timeCodeIds.includes(element.timeCodeId)) {
-                  this.timeCodeIds.push(element.timeCodeId)
+                  this.timeCodeIds.push(element.timeCodeId);
                 }
-              })
+              });
             }
           }
-        })
+        });
     },
     editSelectedTimeEntry(entry) {
-      this.selectedTimeEntry = entry
+      this.selectedTimeEntry = entry;
       this.selectedTimeCode = {
         value: entry.timeCodeId,
-        text: this.timeCodeIdNameMap[entry.timeCodeId],
-      }
-      this.editTimeEntry = true
+        text: this.timeCodeIdNameMap[entry.timeCodeId]
+      };
+      this.editTimeEntry = true;
     },
     isJSONString(str) {
       try {
-        JSON.parse(str)
+        JSON.parse(str);
       } catch (e) {
-        return false
+        return false;
       }
-      return true
+      return true;
     },
     async retrieveValidTimeCodes() {
       await this.$axios
         .get(`/time_code/worker/${this.workerId}`)
-        .then((response) => {
+        .then(response => {
           this.availableTimeCodes =
-            response.data !== '[]'
+            response.data !== "[]"
               ? new Map(Object.entries(response.data))
-              : null
+              : null;
         })
-        .catch((err) => console.log(err))
+        .catch(err => console.log(err));
     },
     async retrieveValidTimeOffCodes() {
       await this.$axios
         .get(`/time_off_code/worker/${this.workerId}`)
-        .then((response) => {
-          if (response.data !== '[]') {
-            response.data.forEach((timeOffCode) => {
-              this.availableTimeOffCodes.push(timeOffCode)
-            })
+        .then(response => {
+          if (response.data !== "[]") {
+            response.data.forEach(timeOffCode => {
+              this.availableTimeOffCodes.push(timeOffCode);
+            });
           }
-        })
+        });
     },
     cardClass(entry) {
-      let classes = 'timeEntry'
+      let classes = "timeEntry";
       if (entry.rejected) {
-        classes += ' rejected'
+        classes += " rejected";
       }
       if (entry.timeOffCodeId) {
-        classes += ' timeOff'
+        classes += " timeOff";
       }
       if (entry.approved) {
-        classes += ' approved'
+        classes += " approved";
       }
       if (entry.submitted) {
-        classes += ' submitted'
+        classes += " submitted";
       }
-      return classes
+      return classes;
     },
     renderComponent() {
-      this.totalHours = 0
+      this.totalHours = 0;
       Promise.all([
         this.retrieveValidTimeCodes(),
         this.retrieveValidTimeOffCodes(),
-        this.retrieveTimeEntryList(),
-      ])
+        this.retrieveTimeEntryList()
+      ]);
     },
     updateDayView() {
-      setTimeout(() => this.renderComponent(), 100) // Small delay of 100ms to ensure render captures data changes
+      setTimeout(() => this.renderComponent(), 100); // Small delay of 100ms to ensure render captures data changes
     },
     updateDayViewContainer() {
-      this.$emit('renderContainer')
-    },
-  },
-}
+      this.$emit("renderContainer");
+    }
+  }
+};
 </script>
 <style scoped>
 .container {

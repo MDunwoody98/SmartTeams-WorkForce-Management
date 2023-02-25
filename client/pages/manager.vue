@@ -21,17 +21,17 @@
 </template>
 <script>
 export default {
-  middleware: 'validate-manager',
-  layout: 'background_home',
+  middleware: "validate-manager",
+  layout: "background_home",
   data() {
-    return {}
+    return {};
   },
   computed: {
     mobile() {
-      return this.$vuetify.breakpoint.smAndDown
-    },
-  },
-}
+      return this.$vuetify.breakpoint.smAndDown;
+    }
+  }
+};
 </script>
 <style scoped>
 .container {
@@ -61,4 +61,5 @@ export default {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}</style>
+}
+</style>

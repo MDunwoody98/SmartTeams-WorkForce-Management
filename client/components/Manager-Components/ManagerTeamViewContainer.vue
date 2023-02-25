@@ -3,18 +3,40 @@
     <template>
       <span id="teams-i-manage">Teams I manage</span>
       <!-- Declare one row for each team that the user manages -->
-      <v-row v-for="index in managedTeamCount" :key="index" cols="12" no-gutters>
+      <v-row
+        v-for="index in managedTeamCount"
+        :key="index"
+        cols="12"
+        no-gutters
+      >
         <div class="teamContainer">
           <!-- One card to route to team management view -->
-          <v-card :key="managedTeams[index - 1]._id" class="teamCard" link nuxt
-            :to="`/team/${managedTeams[index - 1]._id}`" min-width="10vw" min-height="10vh" elevation="14">
+          <v-card
+            :key="managedTeams[index - 1]._id"
+            class="teamCard"
+            link
+            nuxt
+            :to="`/team/${managedTeams[index - 1]._id}`"
+            min-width="10vw"
+            min-height="10vh"
+            elevation="14"
+          >
             <v-card-title primary-title class="teamTitle">
               {{ managedTeams[index - 1].name }}
             </v-card-title>
           </v-card>
           <!-- One card for each worker in the team -->
-          <WorkerCard v-for="worker in managedTeams[index - 1].memberId" :key="worker" :worker-id="worker"
-            class="workerCard" min-width="10vw" min-height="20vh" nuxt link :to="`worker/${worker}`" />
+          <WorkerCard
+            v-for="worker in managedTeams[index - 1].memberId"
+            :key="worker"
+            :worker-id="worker"
+            class="workerCard"
+            min-width="10vw"
+            min-height="20vh"
+            nuxt
+            link
+            :to="`worker/${worker}`"
+          />
         </div>
       </v-row>
     </template>
@@ -24,27 +46,27 @@
 export default {
   props: {
     workerId: { type: Number, default: null },
-    managerView: { type: Boolean, default: false },
+    managerView: { type: Boolean, default: false }
   },
   data() {
     return {
       managedTeams: [],
-      managedTeamCount: 0,
-    }
+      managedTeamCount: 0
+    };
   },
   async created() {
-    await this.retrieveManagedTeams()
+    await this.retrieveManagedTeams();
   },
   methods: {
     async retrieveManagedTeams() {
       const response = await this.$axios.get(
         `/team/manager/${this.$auth.user.workerId}`
-      )
-      this.managedTeams = response.data
-      this.managedTeamCount = this.managedTeams.length
-    },
-  },
-}
+      );
+      this.managedTeams = response.data;
+      this.managedTeamCount = this.managedTeams.length;
+    }
+  }
+};
 </script>
 <style scoped>
 #teams-i-manage {

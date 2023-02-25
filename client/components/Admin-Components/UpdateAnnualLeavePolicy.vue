@@ -5,18 +5,44 @@
         <span class="headline">Update Project</span>
       </v-card-title>
       <v-card-text>
-        <v-autocomplete v-model="selectedProject" :disabled="loading" :items="availableProjects" filled label="Project"
-          color="blue-grey lighten-2" item-text="name" item-value="id">
+        <v-autocomplete
+          v-model="selectedProject"
+          :disabled="loading"
+          :items="availableProjects"
+          filled
+          label="Project"
+          color="blue-grey lighten-2"
+          item-text="name"
+          item-value="id"
+        >
           <template v-slot:item="data">
             {{ data.item.name }}
           </template>
         </v-autocomplete>
-        <v-text-field v-model="selectedProjectName" label="Updated Name"></v-text-field>
-        <v-autocomplete v-model="selectedWorkers" :disabled="loading" :items="availableWorkers" filled chips
-          label="Project Manager" color="blue-grey lighten-2" item-text="name" item-value="workerId" multiple>
+        <v-text-field
+          v-model="selectedProjectName"
+          label="Updated Name"
+        ></v-text-field>
+        <v-autocomplete
+          v-model="selectedWorkers"
+          :disabled="loading"
+          :items="availableWorkers"
+          filled
+          chips
+          label="Project Manager"
+          color="blue-grey lighten-2"
+          item-text="name"
+          item-value="workerId"
+          multiple
+        >
           <template v-slot:selection="data">
-            <v-chip v-bind="data.attrs" :input-value="data.selected" close @click="data.select"
-              @click:close="remove(data.item.workerId)">
+            <v-chip
+              v-bind="data.attrs"
+              :input-value="data.selected"
+              close
+              @click="data.select"
+              @click:close="remove(data.item.workerId)"
+            >
               <v-avatar left>
                 <v-img :src="data.item.photo"></v-img>
               </v-avatar>
@@ -34,7 +60,8 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title> {{ data.item.name }}</v-list-item-title>
-                <v-list-item-subtitle>{{ data.item.position }}
+                <v-list-item-subtitle
+                  >{{ data.item.position }}
                 </v-list-item-subtitle>
               </v-list-item-content>
             </template>
@@ -45,7 +72,13 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="300">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="blue darken-1" :disabled="selectedProject === null" text v-bind="attrs" v-on="on">
+            <v-btn
+              color="blue darken-1"
+              :disabled="selectedProject === null"
+              text
+              v-bind="attrs"
+              v-on="on"
+            >
               Delete
             </v-btn>
           </template>
@@ -66,8 +99,13 @@
           </v-card>
         </v-dialog>
         <v-btn color="blue darken-1" text @click="closeWindow()">Close</v-btn>
-        <v-btn color="blue darken-1" text :disabled="!selectedProject || selectedWorkers.length === 0"
-          @click="updateProject()">Save</v-btn>
+        <v-btn
+          color="blue darken-1"
+          text
+          :disabled="!selectedProject || selectedWorkers.length === 0"
+          @click="updateProject()"
+          >Save</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -75,7 +113,7 @@
 <script>
 export default {
   props: {
-    value: Boolean,
+    value: Boolean
   },
   data() {
     // Load projects and then set loading to false
@@ -89,95 +127,95 @@ export default {
       selectedProject: null,
       selectedProjectName: null,
       selectedWorkers: [],
-      availableProjects: [{ header: 'Available Projects' }],
-      availableWorkers: [{ header: 'Available Workers' }],
-      dialog: false,
-    }
+      availableProjects: [{ header: "Available Projects" }],
+      availableWorkers: [{ header: "Available Workers" }],
+      dialog: false
+    };
   },
   computed: {
     show: {
       get() {
-        return this.value
+        return this.value;
       },
       set(value) {
-        this.$emit('input', value)
-      },
-    },
+        this.$emit("input", value);
+      }
+    }
   },
   watch: {
     show() {
       if (this.show) {
         // Each time you display UpdateProject, retrieve all valid projects
-        this.retrieveProjects()
-        this.retrieveWorkers()
+        this.retrieveProjects();
+        this.retrieveWorkers();
       }
     },
     selectedProject() {
       this.selectedWorkers = this.availableProjects.find(
-        (project) => project.id === this.selectedProject
-      )?.managers
+        project => project.id === this.selectedProject
+      )?.managers;
       this.selectedProjectName = this.availableProjects.find(
-        (project) => project.id === this.selectedProject
-      )?.name
-    },
+        project => project.id === this.selectedProject
+      )?.name;
+    }
   },
   methods: {
     async retrieveProjects() {
-      let response = await this.$axios.get('/project')
-      response = response.data.map((project) => ({
+      let response = await this.$axios.get("/project");
+      response = response.data.map(project => ({
         id: project._id,
         name: project.name,
-        managers: project.managerId,
-      }))
-      this.availableProjects.push.apply(this.availableProjects, response)
-      this.loading = false // Allow deletion and manager selection to be performed on load
+        managers: project.managerId
+      }));
+      this.availableProjects.push.apply(this.availableProjects, response);
+      this.loading = false; // Allow deletion and manager selection to be performed on load
     },
     async retrieveWorkers() {
-      let response = await this.$axios.get('/worker')
-      response = response.data.map((worker) => ({
+      let response = await this.$axios.get("/worker");
+      response = response.data.map(worker => ({
         workerId: worker.workerId,
         name: `${worker.name.firstName} ${worker.name.lastName}`,
         position: worker.position.job_title,
-        photo: worker.photo ? `_nuxt/${worker.photo}` : undefined,
-      }))
-      this.availableWorkers.push.apply(this.availableWorkers, response)
+        photo: worker.photo ? `_nuxt/${worker.photo}` : undefined
+      }));
+      this.availableWorkers.push.apply(this.availableWorkers, response);
     },
     async updateProject() {
       if (!this.selectedProject || this.selectedWorkers.length === 0) {
         return this.$emit(
-          'showSnackbar',
-          'Error. Please enter a project name and select at least one project manager'
-        )
+          "showSnackbar",
+          "Error. Please enter a project name and select at least one project manager"
+        );
       }
       try {
         await this.$axios.put(`/project/${this.selectedProject}`, {
           name: this.selectedProjectName,
-          managerId: this.selectedWorkers,
-        })
-        this.$emit('showSnackbar', 'Successfully updated project')
-        this.closeWindow()
+          managerId: this.selectedWorkers
+        });
+        this.$emit("showSnackbar", "Successfully updated project");
+        this.closeWindow();
       } catch (ex) {
         return this.$emit(
-          'showSnackbar',
-          'Error updating project. Please ensure the values provided are valid'
-        )
+          "showSnackbar",
+          "Error updating project. Please ensure the values provided are valid"
+        );
       }
     },
     async deleteProject() {
-      await this.$axios.delete(`/project/${this.selectedProject}`)
-      this.$emit('showSnackbar', 'Successfully deleted project')
-      this.closeWindow()
+      await this.$axios.delete(`/project/${this.selectedProject}`);
+      this.$emit("showSnackbar", "Successfully deleted project");
+      this.closeWindow();
     },
     closeWindow() {
-      Object.assign(this.$data, this.$options.data())
-      this.show = false
+      Object.assign(this.$data, this.$options.data());
+      this.show = false;
     },
     remove(item) {
-      const index = this.selectedWorkers.indexOf(item)
-      if (index >= 0) this.selectedWorkers.splice(index, 1)
-    },
-  },
-}
+      const index = this.selectedWorkers.indexOf(item);
+      if (index >= 0) this.selectedWorkers.splice(index, 1);
+    }
+  }
+};
 </script>
 <style scoped>
 template {

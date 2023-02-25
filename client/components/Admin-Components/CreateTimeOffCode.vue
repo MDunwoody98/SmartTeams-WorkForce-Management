@@ -5,7 +5,10 @@
         <span class="headline">Create Time Code</span>
       </v-card-title>
       <v-card-text>
-        <v-text-field v-model="timeOffCodeName" label="Time Off Code Name"></v-text-field>
+        <v-text-field
+          v-model="timeOffCodeName"
+          label="Time Off Code Name"
+        ></v-text-field>
         <v-card-title class="label-title">
           <span class="label-field">Auto-approve?</span>
           <v-checkbox v-model="autoApprove"></v-checkbox>
@@ -23,7 +26,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="closeWindow()">Close</v-btn>
-        <v-btn color="blue darken-1" text @click="createTimeOffCode()">Save</v-btn>
+        <v-btn color="blue darken-1" text @click="createTimeOffCode()"
+          >Save</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -31,55 +36,55 @@
 <script>
 export default {
   props: {
-    value: Boolean,
+    value: Boolean
   },
   data() {
     return {
       timeOffCodeName: null,
       paid: true,
       autoApprove: false,
-      multiApprove: false,
-    }
+      multiApprove: false
+    };
   },
   computed: {
     show: {
       get() {
-        return this.value
+        return this.value;
       },
       set(value) {
-        this.$emit('input', value)
-      },
-    },
+        this.$emit("input", value);
+      }
+    }
   },
   methods: {
     async createTimeOffCode() {
       if (!this.timeOffCodeName) {
         return this.$emit(
-          'showSnackbar',
-          'Error. Please enter a time off code name'
-        )
+          "showSnackbar",
+          "Error. Please enter a time off code name"
+        );
       }
       try {
-        await this.$axios.post('/time_off_code', {
+        await this.$axios.post("/time_off_code", {
           timeOffCodeName: this.timeOffCodeName,
           paid: this.paid,
           autoApprove: this.autoApprove,
-          requiresMultipleApprovals: this.multiApprove,
-        })
-        this.$emit('showSnackbar', 'Successfully created time off code')
-        this.closeWindow()
+          requiresMultipleApprovals: this.multiApprove
+        });
+        this.$emit("showSnackbar", "Successfully created time off code");
+        this.closeWindow();
       } catch (ex) {
         return this.$emit(
-          'showSnackbar',
-          'Error creating time off code. Please ensure the time off code name is unique'
-        )
+          "showSnackbar",
+          "Error creating time off code. Please ensure the time off code name is unique"
+        );
       }
     },
     closeWindow() {
-      this.show = false
-    },
-  },
-}
+      this.show = false;
+    }
+  }
+};
 </script>
 <style scoped>
 template {
