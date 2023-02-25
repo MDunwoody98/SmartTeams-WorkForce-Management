@@ -52,13 +52,13 @@ function created() {
   }
 }
 
-function $fetch() {
-  if (!this._fetchPromise) {
-    this._fetchPromise = $_fetch.call(this)
-      .then(() => { delete this._fetchPromise })
-  }
-  return this._fetchPromise
-}
+    function $fetch() {
+      if (!this._fetchPromise) {
+        this._fetchPromise = $_fetch.call(this)
+          .then(() => { delete this._fetchPromise })
+      }
+      return this._fetchPromise
+    }
 
 async function $_fetch() {
   this.$nuxt.nbFetching++

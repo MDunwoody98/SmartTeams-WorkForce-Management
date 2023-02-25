@@ -48,12 +48,12 @@ if ($config._app) {
   __webpack_public_path__ = urlJoin($config._app.cdnURL, $config._app.assetsPath)
 }
 
-Object.assign(Vue.config, { "silent": false, "performance": true })
+Object.assign(Vue.config, {"silent":false,"performance":true})
 
 const logs = NUXT.logs || []
-if (logs.length > 0) {
+  if (logs.length > 0) {
   const ssrLogStyle = 'background: #2E495E;border-radius: 0.5em;color: white;font-weight: bold;padding: 2px 0.5em;'
-  console.group && console.group('%cNuxt SSR', ssrLogStyle)
+  console.group && console.group ('%cNuxt SSR', ssrLogStyle)
   logs.forEach(logObj => (console[logObj.type] || console.log)(...logObj.args))
   delete NUXT.logs
   console.groupEnd && console.groupEnd()
@@ -86,7 +86,7 @@ if (!Vue.config.$nuxt) {
           layout = layout(currentApp.context)
         }
         if (layout) {
-          await currentApp.loadLayout(layout).catch(() => { })
+          await currentApp.loadLayout(layout).catch(() => {})
         }
         currentApp.setLayout(layout)
 
@@ -114,7 +114,7 @@ const errorHandler = Vue.config.errorHandler || console.error
 // Create and mount App
 createApp(null, NUXT.config).then(mountApp).catch(errorHandler)
 
-function componentOption(component, key, ...args) {
+function componentOption (component, key, ...args) {
   if (!component || !component.options || !component.options[key]) {
     return {}
   }
@@ -125,7 +125,7 @@ function componentOption(component, key, ...args) {
   return option
 }
 
-function mapTransitions(toComponents, to, from) {
+function mapTransitions (toComponents, to, from) {
   const componentTransitions = (component) => {
     const transition = componentOption(component, 'transition', to, from) || {}
     return (typeof transition === 'string' ? { name: transition } : transition)
@@ -135,22 +135,22 @@ function mapTransitions(toComponents, to, from) {
   const maxDepth = Math.max(toComponents.length, fromComponents.length)
 
   const mergedTransitions = []
-  for (let i = 0; i < maxDepth; i++) {
+  for (let i=0; i<maxDepth; i++) {
     // Clone original objects to prevent overrides
     const toTransitions = Object.assign({}, componentTransitions(toComponents[i]))
     const transitions = Object.assign({}, componentTransitions(fromComponents[i]))
 
     // Combine transitions & prefer `leave` properties of "from" route
     Object.keys(toTransitions)
-      .filter(key => typeof toTransitions[key] !== 'undefined' && !key.toLowerCase().includes('leave'))
-      .forEach((key) => { transitions[key] = toTransitions[key] })
+        .filter(key => typeof toTransitions[key] !== 'undefined' && !key.toLowerCase().includes('leave'))
+        .forEach((key) => { transitions[key] = toTransitions[key] })
 
     mergedTransitions.push(transitions)
   }
   return mergedTransitions
 }
 
-async function loadAsyncComponents(to, from, next) {
+async function loadAsyncComponents (to, from, next) {
   // Check if route changed (this._routeChanged), only if the page is not an error (for validate())
   this._routeChanged = Boolean(app.nuxt.err) || from.name !== to.name
   this._paramChanged = !this._routeChanged && from.path !== to.path
@@ -206,7 +206,7 @@ async function loadAsyncComponents(to, from, next) {
   }
 }
 
-function applySSRData(Component, ssrData) {
+function applySSRData (Component, ssrData) {
   if (NUXT.serverRendered && ssrData) {
     applyAsyncData(Component, ssrData)
   }
@@ -216,7 +216,7 @@ function applySSRData(Component, ssrData) {
 }
 
 // Get matched components
-function resolveComponents(route) {
+function resolveComponents (route) {
   return flatMapComponents(route, async (Component, _, match, key, index) => {
     // If component is not resolved yet, resolve it
     if (typeof Component === 'function' && !Component.options) {
@@ -229,7 +229,7 @@ function resolveComponents(route) {
   })
 }
 
-function callMiddleware(Components, context, layout) {
+function callMiddleware (Components, context, layout) {
   let midd = ["auth"]
   let unknownMiddleware = false
 
@@ -264,7 +264,7 @@ function callMiddleware(Components, context, layout) {
   return middlewareSeries(midd, context)
 }
 
-async function render(to, from, next) {
+async function render (to, from, next) {
   if (this._routeChanged === false && this._paramChanged === false && this._queryChanged === false) {
     return next()
   }
@@ -513,7 +513,7 @@ async function render(to, from, next) {
 }
 
 // Fix components format in matched, it's due to code-splitting of vue-router
-function normalizeComponents(to, ___) {
+function normalizeComponents (to, ___) {
   flatMapComponents(to, (Component, _, match, key) => {
     if (typeof Component === 'object' && !Component.options) {
       // Updated via vue-router resolveAsyncComponents()
@@ -525,7 +525,7 @@ function normalizeComponents(to, ___) {
   })
 }
 
-function setLayoutForNextPage(to) {
+function setLayoutForNextPage (to) {
   // Set layout
   let hasError = Boolean(this.$options.nuxt.err)
   if (this._hadError && this._dateLastError === this.$options.nuxt.dateErr) {
@@ -542,7 +542,7 @@ function setLayoutForNextPage(to) {
   this.setLayout(layout)
 }
 
-function checkForErrors(app) {
+function checkForErrors (app) {
   // Hide error component if no error
   if (app._hadError && app._dateLastError === app.$options.nuxt.dateErr) {
     app.error()
@@ -551,7 +551,7 @@ function checkForErrors(app) {
 
 // When navigating on a different route but the same component is used, Vue.js
 // Will not update the instance data, so we have to update $data ourselves
-function fixPrepatch(to, ___) {
+function fixPrepatch (to, ___) {
   if (this._routeChanged === false && this._paramChanged === false && this._queryChanged === false) {
     return
   }
@@ -596,7 +596,7 @@ function fixPrepatch(to, ___) {
   })
 }
 
-function nuxtReady(_app) {
+function nuxtReady (_app) {
   window.onNuxtReadyCbs.forEach((cb) => {
     if (typeof cb === 'function') {
       cb(_app)
@@ -614,12 +614,12 @@ function nuxtReady(_app) {
 }
 
 const noopData = () => { return {} }
-const noopFetch = () => { }
+const noopFetch = () => {}
 
 // Special hot reload with asyncData(context)
-function getNuxtChildComponents($parent, $components = []) {
+function getNuxtChildComponents ($parent, $components = []) {
   $parent.$children.forEach(($child) => {
-    if ($child.$vnode && $child.$vnode.data.nuxtChild && !$components.find(c => (c.$options.__file === $child.$options.__file))) {
+    if ($child.$vnode && $child.$vnode.data.nuxtChild && !$components.find(c =>(c.$options.__file === $child.$options.__file))) {
       $components.push($child)
     }
     if ($child.$children && $child.$children.length) {
@@ -638,7 +638,7 @@ function hotReloadAPI(_app) {
   $components.forEach(addHotReload.bind(_app))
 }
 
-function addHotReload($component, depth) {
+function addHotReload ($component, depth) {
   if ($component.$vnode.data._hasHotReload) return
   $component.$vnode.data._hasHotReload = true
 
@@ -673,58 +673,58 @@ function addHotReload($component, depth) {
     }
 
     callMiddleware.call(this, Components, context)
-      .then(() => {
-        // If layout changed
-        if (depth !== 0) {
-          return
-        }
+    .then(() => {
+      // If layout changed
+      if (depth !== 0) {
+        return
+      }
 
-        let layout = Component.options.layout || 'default'
-        if (typeof layout === 'function') {
-          layout = layout(context)
-        }
-        if (this.layoutName === layout) {
-          return
-        }
-        let promise = this.loadLayout(layout)
-        promise.then(() => {
-          this.setLayout(layout)
-          Vue.nextTick(() => hotReloadAPI(this))
-        })
-        return promise
+      let layout = Component.options.layout || 'default'
+      if (typeof layout === 'function') {
+        layout = layout(context)
+      }
+      if (this.layoutName === layout) {
+        return
+      }
+      let promise = this.loadLayout(layout)
+      promise.then(() => {
+        this.setLayout(layout)
+        Vue.nextTick(() => hotReloadAPI(this))
       })
+      return promise
+    })
 
-      .then(() => {
-        return callMiddleware.call(this, Components, context, this.layout)
+    .then(() => {
+      return callMiddleware.call(this, Components, context, this.layout)
+    })
+
+    .then(() => {
+      // Call asyncData(context)
+      let pAsyncData = promisify(Component.options.asyncData || noopData, context)
+      pAsyncData.then((asyncDataResult) => {
+        applyAsyncData(Component, asyncDataResult)
+        this.$loading.increase && this.$loading.increase(30)
       })
+      promises.push(pAsyncData)
 
-      .then(() => {
-        // Call asyncData(context)
-        let pAsyncData = promisify(Component.options.asyncData || noopData, context)
-        pAsyncData.then((asyncDataResult) => {
-          applyAsyncData(Component, asyncDataResult)
-          this.$loading.increase && this.$loading.increase(30)
-        })
-        promises.push(pAsyncData)
+      // Call fetch()
+      Component.options.fetch = Component.options.fetch || noopFetch
+      let pFetch = Component.options.fetch.length && Component.options.fetch(context)
+      if (!pFetch || (!(pFetch instanceof Promise) && (typeof pFetch.then !== 'function'))) { pFetch = Promise.resolve(pFetch) }
+      pFetch.then(() => this.$loading.increase && this.$loading.increase(30))
+      promises.push(pFetch)
 
-        // Call fetch()
-        Component.options.fetch = Component.options.fetch || noopFetch
-        let pFetch = Component.options.fetch.length && Component.options.fetch(context)
-        if (!pFetch || (!(pFetch instanceof Promise) && (typeof pFetch.then !== 'function'))) { pFetch = Promise.resolve(pFetch) }
-        pFetch.then(() => this.$loading.increase && this.$loading.increase(30))
-        promises.push(pFetch)
-
-        return Promise.all(promises)
-      })
-      .then(() => {
-        this.$loading.finish && this.$loading.finish()
-        _forceUpdate()
-        setTimeout(() => hotReloadAPI(this), 100)
-      })
+      return Promise.all(promises)
+    })
+    .then(() => {
+      this.$loading.finish && this.$loading.finish()
+      _forceUpdate()
+      setTimeout(() => hotReloadAPI(this), 100)
+    })
   }
 }
 
-async function mountApp(__app) {
+async function mountApp (__app) {
   // Set global variables
   app = __app.app
   router = __app.router

@@ -9,8 +9,8 @@ Vue.use(Vuetify, {
 export default (ctx) => {
   const vuetifyOptions = typeof options === 'function' ? options(ctx) : options
 
-  vuetifyOptions.icons = vuetifyOptions.icons || {}
-  vuetifyOptions.icons.iconfont = 'md'
+      vuetifyOptions.icons = vuetifyOptions.icons || {}
+      vuetifyOptions.icons.iconfont = 'md'
 
   const vuetify = new Vuetify(vuetifyOptions)
 

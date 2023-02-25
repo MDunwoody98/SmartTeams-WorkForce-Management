@@ -30,7 +30,7 @@ export default {
     }
   },
   computed: {
-    options: () => ({ "position": "bottom-right", "backgroundColor": "#2E495E", "color": "#00C48D" }),
+    options: () => ({"position":"bottom-right","backgroundColor":"#2E495E","color":"#00C48D"}),
     indicatorStyle() {
       const [d1, d2] = this.options.position.split('-')
       return {

@@ -37,62 +37,62 @@ export default {
       default: false
     }
   },
-  mounted() {
-    if (this.prefetch && !this.noPrefetch) {
-      this.handleId = requestIdleCallback(this.observe, { timeout: 2e3 })
-    }
-  },
-  beforeDestroy() {
-    cancelIdleCallback(this.handleId)
+mounted() {
+  if (this.prefetch && !this.noPrefetch) {
+    this.handleId = requestIdleCallback(this.observe, { timeout: 2e3 })
+  }
+},
+beforeDestroy() {
+  cancelIdleCallback(this.handleId)
 
-    if (this.__observed) {
-      observer.unobserve(this.$el)
-      delete this.$el.__prefetch
+  if (this.__observed) {
+    observer.unobserve(this.$el)
+    delete this.$el.__prefetch
+  }
+},
+methods: {
+  observe() {
+    // If no IntersectionObserver, avoid prefetching
+    if (!observer) {
+      return
     }
-  },
-  methods: {
-    observe() {
-      // If no IntersectionObserver, avoid prefetching
-      if (!observer) {
-        return
-      }
-      // Add to observer
-      if (this.shouldPrefetch()) {
-        this.$el.__prefetch = this.prefetchLink.bind(this)
-        observer.observe(this.$el)
-        this.__observed = true
-      }
+    // Add to observer
+    if (this.shouldPrefetch()) {
+      this.$el.__prefetch = this.prefetchLink.bind(this)
+      observer.observe(this.$el)
+      this.__observed = true
+    }
     },
-    shouldPrefetch() {
+  shouldPrefetch() {
       return this.getPrefetchComponents().length > 0
     },
-    canPrefetch() {
-      const conn = navigator.connection
-      const hasBadConnection = this.$nuxt.isOffline || (conn && ((conn.effectiveType || '').includes('2g') || conn.saveData))
+  canPrefetch() {
+    const conn = navigator.connection
+    const hasBadConnection = this.$nuxt.isOffline || (conn && ((conn.effectiveType || '').includes('2g') || conn.saveData))
 
-      return !hasBadConnection
-    },
-    getPrefetchComponents() {
-      const ref = this.$router.resolve(this.to, this.$route, this.append)
-      const Components = ref.resolved.matched.map(r => r.components.default)
+    return !hasBadConnection
+  },
+  getPrefetchComponents() {
+    const ref = this.$router.resolve(this.to, this.$route, this.append)
+    const Components = ref.resolved.matched.map(r => r.components.default)
 
-      return Components.filter(Component => typeof Component === 'function' && !Component.options && !Component.__prefetched)
-    },
-    prefetchLink() {
-      if (!this.canPrefetch()) {
-        return
-      }
-      // Stop observing this link (in case of internet connection changes)
-      observer.unobserve(this.$el)
-      const Components = this.getPrefetchComponents()
+    return Components.filter(Component => typeof Component === 'function' && !Component.options && !Component.__prefetched)
+  },
+  prefetchLink() {
+    if (!this.canPrefetch()) {
+      return
+    }
+    // Stop observing this link (in case of internet connection changes)
+    observer.unobserve(this.$el)
+    const Components = this.getPrefetchComponents()
 
       for (const Component of Components) {
-        const componentOrPromise = Component()
-        if (componentOrPromise instanceof Promise) {
-          componentOrPromise.catch(() => { })
+      const componentOrPromise = Component()
+      if (componentOrPromise instanceof Promise) {
+        componentOrPromise.catch(() => { })
         }
-        Component.__prefetched = true
-      }
+      Component.__prefetched = true
+    }
     }
   }
 }

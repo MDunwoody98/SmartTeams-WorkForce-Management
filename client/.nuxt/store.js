@@ -3,33 +3,33 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-let store = {};
+      let store = {};
 
 (function updateModules() {
-  store = normalizeRoot(require('..\\store\\index.js'), 'store/index.js')
+    store = normalizeRoot(require('..\\store\\index.js'), 'store/index.js')
 
   // If store is an exported method = classic mode (deprecated)
 
   if (typeof store === 'function') {
     return console.warn('Classic mode for store/ is deprecated and will be removed in Nuxt 3.')
-  }
+    }
 
-  // Enforce store modules
-  store.modules = store.modules || {}
+      // Enforce store modules
+      store.modules = store.modules || {}
 
   // If the environment supports hot reloading...
 
   if (process.client && module.hot) {
-    // Whenever any Vuex module is updated...
-    module.hot.accept([
-      '..\\store\\index.js',
+      // Whenever any Vuex module is updated...
+      module.hot.accept([
+        '..\\store\\index.js',
     ], () => {
-      // Update `root.modules` with the latest definitions.
-      updateModules()
-      // Trigger a hot update in the store.
-      window.$nuxt.$store.hotUpdate(store)
-    })
-  }
+        // Update `root.modules` with the latest definitions.
+        updateModules()
+        // Trigger a hot update in the store.
+        window.$nuxt.$store.hotUpdate(store)
+      })
+    }
 })()
 
 // createStore
@@ -55,7 +55,7 @@ function normalizeRoot(moduleData, filePath) {
 
 function normalizeModule(moduleData, filePath) {
   if (moduleData.state && typeof moduleData.state !== 'function') {
-    console.warn(`'state' should be a method that returns an object in ${filePath}`)
+      console.warn(`'state' should be a method that returns an object in ${filePath}`)
 
     const state = Object.assign({}, moduleData.state)
     // Avoid TypeError: setting a property that has only a getter when overwriting top level keys
