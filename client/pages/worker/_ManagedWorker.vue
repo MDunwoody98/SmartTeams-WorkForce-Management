@@ -55,10 +55,6 @@
 import jwtDecode from "jwt-decode";
 export default {
   layout: "background_home",
-  asyncData({ params }) {
-    const ManagedWorker = parseInt(params.ManagedWorker); // When calling /abc the ManagedWorker will be "abc"
-    return { ManagedWorker };
-  },
   // Is the current user an admin or a manager of this worker?
   async validate({ params, store }) {
     const token = jwtDecode(store.$auth.strategy.token.get());
@@ -68,6 +64,10 @@ export default {
     if (!response.data && !token?.isAdmin) {
       throw new Error("401 Unauthorized");
     } else return true;
+  },
+  asyncData({ params }) {
+    const ManagedWorker = parseInt(params.ManagedWorker); // When calling /abc the ManagedWorker will be "abc"
+    return { ManagedWorker };
   },
   data() {
     return {
