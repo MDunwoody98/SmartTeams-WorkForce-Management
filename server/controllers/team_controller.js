@@ -9,7 +9,7 @@ const createTeam = (req, res) => {
   if (!payload.isAdmin) {
     return res.status(501).json('Only admin users can create teams')
   }
-    Team.create(req.body)
+  Team.create(req.body)
     .then((data) => {
       console.log('New Team Created!', data);
       res.status(201).json(data);
@@ -31,7 +31,7 @@ const readTeam = (req, res) => {
   if (!payload.isAdmin) {
     return res.status(501).json('Only admin users can retrieve all teams')
   }
-    Team.find()
+  Team.find()
     .then((data) => {
       res.status(200).json(data);
     })
@@ -42,7 +42,7 @@ const readTeam = (req, res) => {
 };
 
 const readTeamById = (req, res) => {
-  Team.findOne({id: req.params.id})
+  Team.findOne({ id: req.params.id })
     .then((data) => {
       res.status(200).json(data);
     })
@@ -53,7 +53,7 @@ const readTeamById = (req, res) => {
 };
 
 const readTeamsByManager = (req, res) => {
-  Team.find({managerId: req.params.id})
+  Team.find({ managerId: req.params.id })
     .then((data) => {
       res.status(200).json(data);
     })
@@ -69,7 +69,7 @@ const updateTeam = (req, res) => {
   if (!payload.isAdmin) {
     return res.status(501).json('Only admin users can update teams')
   }
-    Team.findByIdAndUpdate(req.params.id, req.body, {
+  Team.findByIdAndUpdate(req.params.id, req.body, {
     useFindAndModify: false,
     new: true,
   })
@@ -94,7 +94,7 @@ const deleteTeam = (req, res) => {
   if (!payload.isAdmin) {
     return res.status(501).json('Only admin users can delete teams')
   }
-    Team.findById(req.params.id)
+  Team.findById(req.params.id)
     .then((data) => {
       if (!data) {
         throw new Error('Team not available');

@@ -5,20 +5,9 @@
         <span class="headline">Create Time Code</span>
       </v-card-title>
       <v-card-text>
-        <v-text-field
-          v-model="timeCodeName"
-          label="Time Code Name"
-        ></v-text-field>
-        <v-autocomplete
-          v-model="selectedProject"
-          :disabled="loadingProjects"
-          :items="availableProjects"
-          filled
-          label="Project"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="id"
-        >
+        <v-text-field v-model="timeCodeName" label="Time Code Name"></v-text-field>
+        <v-autocomplete v-model="selectedProject" :disabled="loadingProjects" :items="availableProjects" filled
+          label="Project" color="blue-grey lighten-2" item-text="name" item-value="id">
           <template v-slot:item="data">
             {{ data.item.name }}
           </template>
@@ -133,14 +122,17 @@ export default {
 template {
   position: absolute;
 }
+
 .comments-box {
   width: 91%;
   margin: 0 auto;
 }
+
 .label-title {
   padding: 0;
   font-size: 1.1rem;
 }
+
 .label-field {
   width: 160px;
   text-align: left;

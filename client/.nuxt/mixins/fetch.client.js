@@ -5,7 +5,7 @@ const isSsrHydration = (vm) => vm.$vnode && vm.$vnode.elm && vm.$vnode.elm.datas
 const nuxtState = window.__NUXT__
 
 export default {
-  beforeCreate () {
+  beforeCreate() {
     if (!hasFetch(this)) {
       return
     }

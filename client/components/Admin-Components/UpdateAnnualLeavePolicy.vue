@@ -5,44 +5,18 @@
         <span class="headline">Update Project</span>
       </v-card-title>
       <v-card-text>
-        <v-autocomplete
-          v-model="selectedProject"
-          :disabled="loading"
-          :items="availableProjects"
-          filled
-          label="Project"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="id"
-        >
+        <v-autocomplete v-model="selectedProject" :disabled="loading" :items="availableProjects" filled label="Project"
+          color="blue-grey lighten-2" item-text="name" item-value="id">
           <template v-slot:item="data">
             {{ data.item.name }}
           </template>
         </v-autocomplete>
-        <v-text-field
-          v-model="selectedProjectName"
-          label="Updated Name"
-        ></v-text-field>
-        <v-autocomplete
-          v-model="selectedWorkers"
-          :disabled="loading"
-          :items="availableWorkers"
-          filled
-          chips
-          label="Project Manager"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="workerId"
-          multiple
-        >
+        <v-text-field v-model="selectedProjectName" label="Updated Name"></v-text-field>
+        <v-autocomplete v-model="selectedWorkers" :disabled="loading" :items="availableWorkers" filled chips
+          label="Project Manager" color="blue-grey lighten-2" item-text="name" item-value="workerId" multiple>
           <template v-slot:selection="data">
-            <v-chip
-              v-bind="data.attrs"
-              :input-value="data.selected"
-              close
-              @click="data.select"
-              @click:close="remove(data.item.workerId)"
-            >
+            <v-chip v-bind="data.attrs" :input-value="data.selected" close @click="data.select"
+              @click:close="remove(data.item.workerId)">
               <v-avatar left>
                 <v-img :src="data.item.photo"></v-img>
               </v-avatar>
@@ -60,8 +34,7 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title> {{ data.item.name }}</v-list-item-title>
-                <v-list-item-subtitle
-                  >{{ data.item.position }}
+                <v-list-item-subtitle>{{ data.item.position }}
                 </v-list-item-subtitle>
               </v-list-item-content>
             </template>
@@ -72,13 +45,7 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="300">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="blue darken-1"
-              :disabled="selectedProject === null"
-              text
-              v-bind="attrs"
-              v-on="on"
-            >
+            <v-btn color="blue darken-1" :disabled="selectedProject === null" text v-bind="attrs" v-on="on">
               Delete
             </v-btn>
           </template>
@@ -99,13 +66,8 @@
           </v-card>
         </v-dialog>
         <v-btn color="blue darken-1" text @click="closeWindow()">Close</v-btn>
-        <v-btn
-          color="blue darken-1"
-          text
-          :disabled="!selectedProject || selectedWorkers.length === 0"
-          @click="updateProject()"
-          >Save</v-btn
-        >
+        <v-btn color="blue darken-1" text :disabled="!selectedProject || selectedWorkers.length === 0"
+          @click="updateProject()">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -221,10 +183,12 @@ export default {
 template {
   position: absolute;
 }
+
 .comments-box {
   width: 91%;
   margin: 0 auto;
 }
+
 .deletion-prompt {
   font-size: 1.2rem;
 }

@@ -12,7 +12,7 @@ const createTimeCode = (req, res) => {
   if (!payload.isAdmin) {
     return res.status(501).json('Only admin users can delete time codes')
   }
-    TimeCode.create(req.body)
+  TimeCode.create(req.body)
     .then((data) => {
       console.log('New Time Code Created!', data);
       res.status(201).json(data);
@@ -29,7 +29,7 @@ const createTimeCode = (req, res) => {
 };
 
 const readTimeCode = (req, res) => {
-    TimeCode.find()
+  TimeCode.find()
     .then((data) => {
       res.status(200).json(data);
     })
@@ -40,7 +40,7 @@ const readTimeCode = (req, res) => {
 };
 
 const readTimeCodeById = (req, res) => {
-    TimeCode.findOne({_id: req.params.id})
+  TimeCode.findOne({ _id: req.params.id })
     .then((data) => {
       res.status(200).json(data);
       return
@@ -62,16 +62,16 @@ const retrieveTimeCodesForWorker = async (req, res) => {
   if (req.body.workerId != payload.user && !currentUserIsAdmin && !currentUserManagesRequestedWorker) {
     res.status(401).json(`You are requesting time codes accesible to worker ${requestedWorker} but are logged in as worker ${currentUser}`)
     return
-  } 
+  }
   //Get all teams where worker is member
   //Get all project Ids that are associated with that team
   //Get all time codes for those projects
   //Return Map String -> String[] of project ID -> Time Codes
   let projectsAndAssociatedTimeCodes = new Map()
   try {
-    const teams = await Team.find({memberId: requestedWorker})
+    const teams = await Team.find({ memberId: requestedWorker })
     // Get all project IDs from all teams that the worker is a member of, then flatten the nested arrays into 1 array and remove duplicates
-    let projects = WorkerController.flatten(teams.map(team => team.projectId)).reduce(function(a,b){if(a.indexOf(b)<0)a.push(b);return a;},[])
+    let projects = WorkerController.flatten(teams.map(team => team.projectId)).reduce(function (a, b) { if (a.indexOf(b) < 0) a.push(b); return a; }, [])
     if (!projects) {
       res.status(200).json('{}')
       return
@@ -80,16 +80,16 @@ const retrieveTimeCodesForWorker = async (req, res) => {
     var projectsProcessed = 0
     //To wait for all the iterations to finish before moving on, use a foreach to process in parallel
     await projects.forEach(async project => {
-    let linkedTimeCodes = await TimeCode.find({projectId: project})
-    linkedTimeCodes = linkedTimeCodes.map(timeCode => [timeCode._id, timeCode.timeCodeName])
-    let projectObj = await Project.findById(project)
-    projectObj = JSON.stringify(projectObj)
-    projectsAndAssociatedTimeCodes.set(projectObj, linkedTimeCodes)
-    projectsProcessed++
-    if (projectsProcessed == projects.length) {
-      res.status(200).json(Object.fromEntries(projectsAndAssociatedTimeCodes))
-      return
-    }
+      let linkedTimeCodes = await TimeCode.find({ projectId: project })
+      linkedTimeCodes = linkedTimeCodes.map(timeCode => [timeCode._id, timeCode.timeCodeName])
+      let projectObj = await Project.findById(project)
+      projectObj = JSON.stringify(projectObj)
+      projectsAndAssociatedTimeCodes.set(projectObj, linkedTimeCodes)
+      projectsProcessed++
+      if (projectsProcessed == projects.length) {
+        res.status(200).json(Object.fromEntries(projectsAndAssociatedTimeCodes))
+        return
+      }
     })
   }
   catch (err) {
@@ -105,7 +105,7 @@ const updateTimeCode = (req, res) => {
   if (!payload.isAdmin) {
     return res.status(501).json('Only admin users can delete time codes')
   }
-    TimeCode.findByIdAndUpdate(req.params.id, req.body, {
+  TimeCode.findByIdAndUpdate(req.params.id, req.body, {
     useFindAndModify: false,
     new: true,
   })
@@ -132,20 +132,20 @@ const deleteTimeCode = (req, res) => {
     return res.status(501).json('Only admin users can delete time codes')
   }
   TimeCode.findById(req.params.id)
-  .then((data) => {
-    if (!data) {
-      throw new Error('Time Code not available');
-    }
-    return data.remove();
-  })
-  .then((data) => {
-    console.log('Time Code removed!');
-    res.status(200).json(data);
-  })
-  .catch((err) => {
-    console.error(err);
-    res.status(500).json(err);
-  });
+    .then((data) => {
+      if (!data) {
+        throw new Error('Time Code not available');
+      }
+      return data.remove();
+    })
+    .then((data) => {
+      console.log('Time Code removed!');
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json(err);
+    });
 };
 
 module.exports = {

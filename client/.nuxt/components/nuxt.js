@@ -26,7 +26,7 @@ export default {
       default: 'default'
     }
   },
-  errorCaptured (error) {
+  errorCaptured(error) {
     // if we receive and error while showing the NuxtError component
     // capture the error and force an immediate update so we re-render
     // without the NuxtError component
@@ -36,7 +36,7 @@ export default {
     }
   },
   computed: {
-    routerViewKey () {
+    routerViewKey() {
       // If nuxtChildKey prop is given or current route has children
       if (typeof this.nuxtChildKey !== 'undefined' || this.$route.matched.length > 1) {
         return this.nuxtChildKey || compile(this.$route.matched[0].path)(this.$route.params)
@@ -62,10 +62,10 @@ export default {
       return strict ? this.$route.path : this.$route.path.replace(/\/$/, '')
     }
   },
-  beforeCreate () {
+  beforeCreate() {
     Vue.util.defineReactive(this, 'nuxt', this.$root.$options.nuxt)
   },
-  render (h) {
+  render(h) {
     // if there is no error
     if (!this.nuxt.err) {
       // Directly return nuxt child

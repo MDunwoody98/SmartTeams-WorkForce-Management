@@ -3,7 +3,7 @@
 const Settings = require('../models/global_settings_schema');
 
 const retrieveFTE = (req, res) => {
-    Settings.find()
+  Settings.find()
     .then((data) => {
       res.status(200).json(data);
     })
@@ -14,7 +14,7 @@ const retrieveFTE = (req, res) => {
 };
 
 const retrieveALBalance = (req, res) => {
-    Settings.find()
+  Settings.find()
     .then((data) => {
       res.status(200).json(data);
     })

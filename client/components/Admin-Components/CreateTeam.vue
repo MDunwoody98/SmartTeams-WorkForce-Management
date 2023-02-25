@@ -6,26 +6,11 @@
       </v-card-title>
       <v-card-text>
         <v-text-field v-model="teamName" label="Team Name"></v-text-field>
-        <v-autocomplete
-          v-model="selectedManagers"
-          :disabled="loadingWorkers"
-          :items="availableManagers"
-          filled
-          chips
-          label="Team Leader(s)"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="workerId"
-          multiple
-        >
+        <v-autocomplete v-model="selectedManagers" :disabled="loadingWorkers" :items="availableManagers" filled chips
+          label="Team Leader(s)" color="blue-grey lighten-2" item-text="name" item-value="workerId" multiple>
           <template v-slot:selection="data">
-            <v-chip
-              v-bind="data.attrs"
-              :input-value="data.selected"
-              close
-              @click="data.select"
-              @click:close="removeManager(data.item.workerId)"
-            >
+            <v-chip v-bind="data.attrs" :input-value="data.selected" close @click="data.select"
+              @click:close="removeManager(data.item.workerId)">
               <v-avatar left>
                 <v-img :src="data.item.photo"></v-img>
               </v-avatar>
@@ -43,33 +28,17 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title> {{ data.item.name }}</v-list-item-title>
-                <v-list-item-subtitle
-                  >{{ data.item.position }}
+                <v-list-item-subtitle>{{ data.item.position }}
                 </v-list-item-subtitle>
               </v-list-item-content>
             </template>
           </template>
         </v-autocomplete>
-        <v-autocomplete
-          v-model="selectedMembers"
-          :disabled="loadingWorkers"
-          :items="availableMembers"
-          filled
-          chips
-          label="Team Members"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="workerId"
-          multiple
-        >
+        <v-autocomplete v-model="selectedMembers" :disabled="loadingWorkers" :items="availableMembers" filled chips
+          label="Team Members" color="blue-grey lighten-2" item-text="name" item-value="workerId" multiple>
           <template v-slot:selection="data">
-            <v-chip
-              v-bind="data.attrs"
-              :input-value="data.selected"
-              close
-              @click="data.select"
-              @click:close="removeMember(data.item.workerId)"
-            >
+            <v-chip v-bind="data.attrs" :input-value="data.selected" close @click="data.select"
+              @click:close="removeMember(data.item.workerId)">
               <v-avatar left>
                 <v-img :src="data.item.photo"></v-img>
               </v-avatar>
@@ -87,41 +56,21 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title> {{ data.item.name }}</v-list-item-title>
-                <v-list-item-subtitle
-                  >{{ data.item.position }}
+                <v-list-item-subtitle>{{ data.item.position }}
                 </v-list-item-subtitle>
               </v-list-item-content>
             </template>
           </template>
         </v-autocomplete>
-        <v-autocomplete
-          v-model="selectedProjects"
-          :disabled="loadingProjects"
-          :items="availableProjects"
-          filled
-          label="Assigned Projects"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="id"
-          multiple
-          chips
-          deletable-chips
-        >
+        <v-autocomplete v-model="selectedProjects" :disabled="loadingProjects" :items="availableProjects" filled
+          label="Assigned Projects" color="blue-grey lighten-2" item-text="name" item-value="id" multiple chips
+          deletable-chips>
           <template v-slot:item="data">
             {{ data.item.name }}
           </template>
         </v-autocomplete>
-        <v-autocomplete
-          v-model="selectedTimeOffCodes"
-          :disabled="loadingTimeOffCodes"
-          :items="availableTimeOffCodes"
-          filled
-          label="Time Off Codes"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="id"
-          multiple
-        >
+        <v-autocomplete v-model="selectedTimeOffCodes" :disabled="loadingTimeOffCodes" :items="availableTimeOffCodes"
+          filled label="Time Off Codes" color="blue-grey lighten-2" item-text="name" item-value="id" multiple>
           <template v-slot:item="data">
             {{ data.item.name }}
           </template>
@@ -252,6 +201,7 @@ export default {
 template {
   position: absolute;
 }
+
 .comments-box {
   width: 91%;
   margin: 0 auto;

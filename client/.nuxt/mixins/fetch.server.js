@@ -57,7 +57,7 @@ export default {
     }
 
     // Added for remove vue undefined warning while ssr
-    this.$fetch = () => {} // issue #8043
+    this.$fetch = () => { } // issue #8043
     Vue.util.defineReactive(this, '$fetchState', {
       pending: true,
       error: null,

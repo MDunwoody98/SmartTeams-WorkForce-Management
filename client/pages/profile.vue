@@ -18,19 +18,11 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-snackbar
-        v-model="snackbar"
-        :timeout="4000"
-        color="var(--color-secondary)"
-        rounded="pill"
-        >{{ snackbarText }}</v-snackbar
-      >
+      <v-snackbar v-model="snackbar" :timeout="4000" color="var(--color-secondary)" rounded="pill">{{ snackbarText
+      }}</v-snackbar>
     </v-container>
     <div data-app>
-      <ChangeMyPassword
-        v-model="changeMyPassword"
-        @showSnackbar="showSnackbar"
-      />
+      <ChangeMyPassword v-model="changeMyPassword" @showSnackbar="showSnackbar" />
       <UpdateMyDetails v-model="updateMyDetails" @showSnackbar="showSnackbar" />
       <ChangeMyPhoto v-model="changeMyPhoto" @showSnackbar="showSnackbar" />
     </div>

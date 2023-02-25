@@ -11,7 +11,7 @@ const createTimeOffCode = (req, res) => {
   if (!payload.isAdmin) {
     return res.status(501).json('Only admin users can delete time codes')
   }
-    TimeOffCode.create(req.body)
+  TimeOffCode.create(req.body)
     .then((data) => {
       console.log('New Time Off Code Created!', data);
       res.status(201).json(data);
@@ -28,7 +28,7 @@ const createTimeOffCode = (req, res) => {
 };
 
 const readTimeOffCode = (req, res) => {
-    TimeOffCode.find()
+  TimeOffCode.find()
     .then((data) => {
       res.status(200).json(data);
     })
@@ -39,7 +39,7 @@ const readTimeOffCode = (req, res) => {
 };
 
 const readTimeOffCodeById = (req, res) => {
-    TimeOffCode.findOne({_id: req.params.id})
+  TimeOffCode.findOne({ _id: req.params.id })
     .then((data) => {
       res.status(200).json(data);
     })
@@ -60,12 +60,12 @@ const retrieveTimeOffCodesForWorker = async (req, res) => {
   if (req.body.workerId != payload.user && !currentUserIsAdmin && !currentUserManagesRequestedWorker) {
     res.status(401).json(`You are requesting time codes accesible to worker ${requestedWorker} but are logged in as worker ${currentUser}`)
     return
-  } 
+  }
   //Get all teams where worker is member
   //Get all Time Off Code Ids that are associated with those teams
   //Return array of all time off code objects for those IDs
   try {
-    const teams = await Team.find({memberId: req.params.workerId})
+    const teams = await Team.find({ memberId: req.params.workerId })
     const timeOffCodeIds = teams.map(team => team.timeOffCodeId)[0]
     if (!timeOffCodeIds) {
       res.status(200).json('[]')
@@ -80,17 +80,17 @@ const retrieveTimeOffCodesForWorker = async (req, res) => {
     var timeOffCodesProcessed = 0
     //To wait for all the iterations to finish before moving on, use a foreach to process in parallel
     await timeOffCodeIds.forEach(async timeOffCodeId => {
-    let timeOffCodeObj = await TimeOffCode.find({_id: timeOffCodeId})
-    let timeOffCodeName = timeOffCodeObj.map(timeOffCodeObj => timeOffCodeObj.timeOffCodeName)[0]
-    timeOffCodes.push({timeOffCodeId, timeOffCodeName})
-    timeOffCodesProcessed++
-    if (timeOffCodesProcessed == timeOffCodeIds.length) {
-      res.status(200).json(timeOffCodes)
-    }
+      let timeOffCodeObj = await TimeOffCode.find({ _id: timeOffCodeId })
+      let timeOffCodeName = timeOffCodeObj.map(timeOffCodeObj => timeOffCodeObj.timeOffCodeName)[0]
+      timeOffCodes.push({ timeOffCodeId, timeOffCodeName })
+      timeOffCodesProcessed++
+      if (timeOffCodesProcessed == timeOffCodeIds.length) {
+        res.status(200).json(timeOffCodes)
+      }
     })
   }
   catch (err) {
-    console.log('time off error '+err)
+    console.log('time off error ' + err)
     res.status(500).json(err)
   }
 }
@@ -102,7 +102,7 @@ const updateTimeOffCode = (req, res) => {
   if (!payload.isAdmin) {
     return res.status(501).json('Only admin users can delete time codes')
   }
-    TimeOffCode.findByIdAndUpdate(req.params.id, req.body, {
+  TimeOffCode.findByIdAndUpdate(req.params.id, req.body, {
     useFindAndModify: false,
     new: true,
   })
@@ -129,7 +129,7 @@ const deleteTimeOffCode = (req, res) => {
   if (!payload.isAdmin) {
     return res.status(501).json('Only admin users can delete time codes')
   }
-    TimeOffCode.findById(req.params.id)
+  TimeOffCode.findById(req.params.id)
     .then((data) => {
       if (!data) {
         throw new Error('Time Code not available');

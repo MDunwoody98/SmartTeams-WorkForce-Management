@@ -7,11 +7,7 @@
           <!-- date/week selector -->
           <!--View of current week and associated time entries-->
           <!-- When navigating back to dashboard, re-render component -->
-          <DayViewContainer
-            :key="$route.fullPath"
-            :worker-id="ManagedWorker"
-            :manager-view="true"
-          />
+          <DayViewContainer :key="$route.fullPath" :worker-id="ManagedWorker" :manager-view="true" />
         </v-col>
         <v-col v-if="!mobile" cols="6">
           <!--In here goes the time entry cards-->
@@ -20,12 +16,8 @@
               <v-card-title class="report-item-title">{{
                 ManagedWorker
               }}</v-card-title>
-              <Charts-RemainingLeave
-                :data="annualLeaveChartData"
-                :options="chartOptions"
-                :worker-id="ManagedWorker"
-                class="pie-chart"
-              />
+              <Charts-RemainingLeave :data="annualLeaveChartData" :options="chartOptions" :worker-id="ManagedWorker"
+                class="pie-chart" />
             </v-card>
           </div>
         </v-col>
@@ -36,12 +28,8 @@
               <v-card-title class="report-item-title">{{
                 ManagedWorker
               }}</v-card-title>
-              <Charts-CurrentWorkerUtilization
-                :data="utilizationChartData"
-                :options="chartOptions"
-                :worker-id="ManagedWorker"
-                class="pie-chart"
-              />
+              <Charts-CurrentWorkerUtilization :data="utilizationChartData" :options="chartOptions"
+                :worker-id="ManagedWorker" class="pie-chart" />
             </v-card>
           </div>
         </v-col>
@@ -128,17 +116,20 @@ export default {
     width: 43vw;
     height: 44vh;
   }
+
   .pie-chart {
     margin: 0 auto;
     width: 100%;
     height: 80%;
   }
 }
+
 @media all and (max-width: 1903px) {
   .report-item-card {
     width: 40vw;
     height: 35vh;
   }
+
   .pie-chart {
     margin: 0 auto;
     width: 100%;

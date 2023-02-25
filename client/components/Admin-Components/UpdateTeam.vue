@@ -5,41 +5,18 @@
         <span class="headline">Update/Delete Team</span>
       </v-card-title>
       <v-card-text>
-        <v-autocomplete
-          v-model="selectedTeam"
-          :disabled="loadingTeams"
-          :items="availableTeams"
-          filled
-          label="Select Team"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="id"
-        >
+        <v-autocomplete v-model="selectedTeam" :disabled="loadingTeams" :items="availableTeams" filled label="Select Team"
+          color="blue-grey lighten-2" item-text="name" item-value="id">
           <template v-slot:item="data">
             {{ data.item.name }}
           </template>
         </v-autocomplete>
         <v-text-field v-model="teamName" label="New Name"></v-text-field>
-        <v-autocomplete
-          v-model="selectedManagers"
-          :disabled="!selectedTeam || loadingWorkers"
-          :items="availableManagers"
-          filled
-          chips
-          label="Team Leader(s)"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="workerId"
-          multiple
-        >
+        <v-autocomplete v-model="selectedManagers" :disabled="!selectedTeam || loadingWorkers" :items="availableManagers"
+          filled chips label="Team Leader(s)" color="blue-grey lighten-2" item-text="name" item-value="workerId" multiple>
           <template v-slot:selection="data">
-            <v-chip
-              v-bind="data.attrs"
-              :input-value="data.selected"
-              close
-              @click="data.select"
-              @click:close="removeManager(data.item.workerId)"
-            >
+            <v-chip v-bind="data.attrs" :input-value="data.selected" close @click="data.select"
+              @click:close="removeManager(data.item.workerId)">
               <v-avatar left>
                 <v-img :src="data.item.photo"></v-img>
               </v-avatar>
@@ -57,33 +34,17 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title> {{ data.item.name }}</v-list-item-title>
-                <v-list-item-subtitle
-                  >{{ data.item.position }}
+                <v-list-item-subtitle>{{ data.item.position }}
                 </v-list-item-subtitle>
               </v-list-item-content>
             </template>
           </template>
         </v-autocomplete>
-        <v-autocomplete
-          v-model="selectedMembers"
-          :disabled="!selectedTeam || loadingWorkers"
-          :items="availableMembers"
-          filled
-          chips
-          label="Team Members"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="workerId"
-          multiple
-        >
+        <v-autocomplete v-model="selectedMembers" :disabled="!selectedTeam || loadingWorkers" :items="availableMembers"
+          filled chips label="Team Members" color="blue-grey lighten-2" item-text="name" item-value="workerId" multiple>
           <template v-slot:selection="data">
-            <v-chip
-              v-bind="data.attrs"
-              :input-value="data.selected"
-              close
-              @click="data.select"
-              @click:close="removeMember(data.item.workerId)"
-            >
+            <v-chip v-bind="data.attrs" :input-value="data.selected" close @click="data.select"
+              @click:close="removeMember(data.item.workerId)">
               <v-avatar left>
                 <v-img :src="data.item.photo"></v-img>
               </v-avatar>
@@ -101,43 +62,22 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title> {{ data.item.name }}</v-list-item-title>
-                <v-list-item-subtitle
-                  >{{ data.item.position }}
+                <v-list-item-subtitle>{{ data.item.position }}
                 </v-list-item-subtitle>
               </v-list-item-content>
             </template>
           </template>
         </v-autocomplete>
-        <v-autocomplete
-          v-model="selectedProjects"
-          :disabled="!selectedTeam || loadingProjects"
-          :items="availableProjects"
-          filled
-          label="Assigned Projects"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="id"
-          multiple
-          chips
-          deletable-chips
-        >
+        <v-autocomplete v-model="selectedProjects" :disabled="!selectedTeam || loadingProjects" :items="availableProjects"
+          filled label="Assigned Projects" color="blue-grey lighten-2" item-text="name" item-value="id" multiple chips
+          deletable-chips>
           <template v-slot:item="data">
             {{ data.item.name }}
           </template>
         </v-autocomplete>
-        <v-autocomplete
-          v-model="selectedTimeOffCodes"
-          :disabled="!selectedTeam || loadingTimeOffCodes"
-          :items="availableTimeOffCodes"
-          filled
-          label="Time Off Codes"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="id"
-          multiple
-          chips
-          deletable-chips
-        >
+        <v-autocomplete v-model="selectedTimeOffCodes" :disabled="!selectedTeam || loadingTimeOffCodes"
+          :items="availableTimeOffCodes" filled label="Time Off Codes" color="blue-grey lighten-2" item-text="name"
+          item-value="id" multiple chips deletable-chips>
           <template v-slot:item="data">
             {{ data.item.name }}
           </template>
@@ -147,13 +87,7 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="300">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="blue darken-1"
-              :disabled="selectedTeam === null"
-              text
-              v-bind="attrs"
-              v-on="on"
-            >
+            <v-btn color="blue darken-1" :disabled="selectedTeam === null" text v-bind="attrs" v-on="on">
               Delete
             </v-btn>
           </template>
@@ -346,6 +280,7 @@ export default {
 template {
   position: absolute;
 }
+
 .comments-box {
   width: 91%;
   margin: 0 auto;

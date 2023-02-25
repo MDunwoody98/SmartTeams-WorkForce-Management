@@ -51,13 +51,8 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-snackbar
-        v-model="snackbar"
-        :timeout="4000"
-        color="var(--color-secondary)"
-        rounded="pill"
-        >{{ snackbarText }}</v-snackbar
-      >
+      <v-snackbar v-model="snackbar" :timeout="4000" color="var(--color-secondary)" rounded="pill">{{ snackbarText
+      }}</v-snackbar>
     </v-container>
     <div data-app>
       <CreateProject v-model="createProject" @showSnackbar="showSnackbar" />
@@ -65,20 +60,11 @@
       <CreateTeam v-model="createTeam" @showSnackbar="showSnackbar" />
       <UpdateTeam v-model="updateTeam" @showSnackbar="showSnackbar" />
       <CreateTimeCode v-model="createTimeCode" @showSnackbar="showSnackbar" />
-      <CreateTimeOffCode
-        v-model="createTimeOffCode"
-        @showSnackbar="showSnackbar"
-      />
+      <CreateTimeOffCode v-model="createTimeOffCode" @showSnackbar="showSnackbar" />
       <UpdateTimeCode v-model="updateTimeCode" @showSnackbar="showSnackbar" />
-      <UpdateTimeOffCode
-        v-model="updateTimeOffCode"
-        @showSnackbar="showSnackbar"
-      />
+      <UpdateTimeOffCode v-model="updateTimeOffCode" @showSnackbar="showSnackbar" />
       <UpdateFTE v-model="updateFTE" @showSnackbar="showSnackbar" />
-      <UpdateAnnualLeavePolicy
-        v-model="updateAnnualLeave"
-        @showSnackbar="showSnackbar"
-      />
+      <UpdateAnnualLeavePolicy v-model="updateAnnualLeave" @showSnackbar="showSnackbar" />
       <CreateUser v-model="createUser" @showSnackbar="showSnackbar" />
       <EditUser v-model="updateUser" @showSnackbar="showSnackbar" />
     </div>

@@ -13,7 +13,7 @@ export default {
       default: undefined
     }
   },
-  render (_, { parent, data, props }) {
+  render(_, { parent, data, props }) {
     const h = parent.$createElement
 
     data.nuxtChild = true

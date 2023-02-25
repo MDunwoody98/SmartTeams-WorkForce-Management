@@ -29,7 +29,7 @@ const logIn = async (req, res, next) => {
     console.log("Logged in")
     //Is the worker a manager?
     let workerIsManager = false
-    const managedTeams = await teamModel.find({managerId: workerId})
+    const managedTeams = await teamModel.find({ managerId: workerId })
     if (managedTeams.length > 0) workerIsManager = true
     //Is the worker an admin?
     let workerIsAdmin = false
@@ -53,7 +53,7 @@ const logIn = async (req, res, next) => {
   }
 };
 
-const getUserOnLogin = async (req, res, next) => { 
+const getUserOnLogin = async (req, res, next) => {
   // this function will send user data to the front-end as I said above authFetch on the user object in nuxt.config.js will send a request and it will execute
   //return stuff differently if a worker profile exists for the user ???
   try {
@@ -109,20 +109,20 @@ const refreshToken = (req, res) => {
     return
   }
   // if refresh token exists and is valid
-  if((tokenToRefresh) && (jwt.verify(tokenToRefresh, process.env.JWT_REFRESH_SECRET))) {
+  if ((tokenToRefresh) && (jwt.verify(tokenToRefresh, process.env.JWT_REFRESH_SECRET))) {
     //Check if user is manager and/or admin
-     const accessToken = jwt.sign({user: userID, isManager: manager, isAdmin: admin}, process.env.JWT_SECRET, {
-       expiresIn: "30m",
-     });
-     console.log(accessToken)
-     res.status(200).json({refresh_token: tokenToRefresh, access_token: accessToken, user: userID})  
-   } else {
-     res.status(403).json('Invalid request')
-   }
+    const accessToken = jwt.sign({ user: userID, isManager: manager, isAdmin: admin }, process.env.JWT_SECRET, {
+      expiresIn: "30m",
+    });
+    console.log(accessToken)
+    res.status(200).json({ refresh_token: tokenToRefresh, access_token: accessToken, user: userID })
+  } else {
+    res.status(403).json('Invalid request')
+  }
 }
 
 module.exports = {
-    logIn,
-    getUserOnLogin,
-    refreshToken,
+  logIn,
+  getUserOnLogin,
+  refreshToken,
 };

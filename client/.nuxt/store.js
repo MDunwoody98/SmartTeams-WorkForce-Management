@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 let store = {};
 
-(function updateModules () {
+(function updateModules() {
   store = normalizeRoot(require('..\\store\\index.js'), 'store/index.js')
 
   // If store is an exported method = classic mode (deprecated)
@@ -39,7 +39,7 @@ export const createStore = store instanceof Function ? store : () => {
   }, store))
 }
 
-function normalizeRoot (moduleData, filePath) {
+function normalizeRoot(moduleData, filePath) {
   moduleData = moduleData.default || moduleData
 
   if (moduleData.commit) {
@@ -53,7 +53,7 @@ function normalizeRoot (moduleData, filePath) {
   return normalizeModule(moduleData, filePath)
 }
 
-function normalizeModule (moduleData, filePath) {
+function normalizeModule(moduleData, filePath) {
   if (moduleData.state && typeof moduleData.state !== 'function') {
     console.warn(`'state' should be a method that returns an object in ${filePath}`)
 

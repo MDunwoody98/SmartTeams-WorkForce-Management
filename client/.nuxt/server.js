@@ -84,7 +84,7 @@ export default async (ssrContext) => {
   // Nuxt object (window.{{globals.context}}, defaults to window.__NUXT__)
   ssrContext.nuxt = { layout: 'default', data: [], fetch: {}, error: null, state: null, serverRendered: true, routePath: '' }
 
-    ssrContext.fetchCounters = {}
+  ssrContext.fetchCounters = {}
 
   // Remove query from url is static target
 

@@ -6,21 +6,21 @@ const jwt = require("jsonwebtoken");
 // Token auth for API requests. Should apply to every endpoint except /auth
 // If it fails, client should refresh token and retry
 router.use(function (req, res, next) {
-  if (req.path.substring(1,5) == "auth") return next('route');
-    const authHeader = req.headers.authorization;
-    // also validate that user is who they claim to be
-    if (authHeader) {
-        const token = authHeader.split(' ')[1];
-        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-            if (err) {
-                return res.sendStatus(403).json(err);
-            }
-            req.decoded = decoded;
-            next('route');
-        });
-    } else {
-      res.sendStatus(401);
-    }
+  if (req.path.substring(1, 5) == "auth") return next('route');
+  const authHeader = req.headers.authorization;
+  // also validate that user is who they claim to be
+  if (authHeader) {
+    const token = authHeader.split(' ')[1];
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        return res.sendStatus(403).json(err);
+      }
+      req.decoded = decoded;
+      next('route');
+    });
+  } else {
+    res.sendStatus(401);
+  }
 });
 //MULTI TENANCY MULTIPLE SECRETS
 // var secretCallback = function(req, payload, done){
@@ -122,7 +122,7 @@ router
   .post('/worker', createWorker)
   .get('/worker', readWorker)
   .get('/worker/:id', readWorkerByWorkerId)
-  .get('/worker/checkManager/:id',checkUserManagesTargetWorker)
+  .get('/worker/checkManager/:id', checkUserManagesTargetWorker)
   .put('/worker/:id', updateWorker)
   .delete('/worker/:id', deleteWorker);
 
@@ -142,31 +142,31 @@ router
   .delete('/team/:id', deleteTeam);
 
 router
-.post('/time_code', createTimeCode)
-.get('/time_code', readTimeCode)
-.get('/time_code/:id', readTimeCodeById)
-.get('/time_code/worker/:workerId', retrieveTimeCodesForWorker)
-.put('/time_code/:id', updateTimeCode)
-.delete('/time_code/:id', deleteTimeCode);
+  .post('/time_code', createTimeCode)
+  .get('/time_code', readTimeCode)
+  .get('/time_code/:id', readTimeCodeById)
+  .get('/time_code/worker/:workerId', retrieveTimeCodesForWorker)
+  .put('/time_code/:id', updateTimeCode)
+  .delete('/time_code/:id', deleteTimeCode);
 
 router
-.post('/time_off_code', createTimeOffCode)
-.get('/time_off_code', readTimeOffCode)
-.get('/time_off_code/:id', readTimeOffCodeById)
-.get('/time_off_code/worker/:workerId', retrieveTimeOffCodesForWorker)
-.put('/time_off_code/:id', updateTimeOffCode)
-.delete('/time_off_code/:id', deleteTimeOffCode);
+  .post('/time_off_code', createTimeOffCode)
+  .get('/time_off_code', readTimeOffCode)
+  .get('/time_off_code/:id', readTimeOffCodeById)
+  .get('/time_off_code/worker/:workerId', retrieveTimeOffCodesForWorker)
+  .put('/time_off_code/:id', updateTimeOffCode)
+  .delete('/time_off_code/:id', deleteTimeOffCode);
 
 router
-.post('/time_entry', createTimeEntry)
-.post('/time_entry/full_day', retrieveTimeEntriesForDay)
-.get('/time_entry', readTimeEntry)
-.get('/time_entry/:id', readTimeEntryById)
-.put('/time_entry/approve/:id', approveTimeEntry)
-.put('/time_entry/approveDay', approveTimeEntries)
-.put('/time_entry/reject/:id', rejectTimeEntry)
-.put('/time_entry/:id', updateTimeEntry)
-.put('/time_entry/submit/day', submitEntriesForDay)
-.delete('/time_entry/:id', deleteTimeEntry);
+  .post('/time_entry', createTimeEntry)
+  .post('/time_entry/full_day', retrieveTimeEntriesForDay)
+  .get('/time_entry', readTimeEntry)
+  .get('/time_entry/:id', readTimeEntryById)
+  .put('/time_entry/approve/:id', approveTimeEntry)
+  .put('/time_entry/approveDay', approveTimeEntries)
+  .put('/time_entry/reject/:id', rejectTimeEntry)
+  .put('/time_entry/:id', updateTimeEntry)
+  .put('/time_entry/submit/day', submitEntriesForDay)
+  .delete('/time_entry/:id', deleteTimeEntry);
 
 module.exports = router;

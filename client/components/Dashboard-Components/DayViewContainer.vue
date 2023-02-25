@@ -3,27 +3,12 @@
     <div v-if="!mobile" class="container-top">
       <div class="week-selector-container">
         <v-icon x-large @click="goToPreviousWeek()">chevron_left</v-icon>
-        <v-menu
-          ref="menu"
-          :key="menuKey"
-          v-model="menu"
-          :close-on-content-click="false"
-          :return-value.sync="pickedDate"
-          offset-y
-          min-width="auto"
-        >
+        <v-menu ref="menu" :key="menuKey" v-model="menu" :close-on-content-click="false" :return-value.sync="pickedDate"
+          offset-y min-width="auto">
           <template v-slot:activator="{ on, attrs }">
-            <v-icon v-model="pickedDate" x-large v-bind="attrs" v-on="on"
-              >calendar_month</v-icon
-            >
+            <v-icon v-model="pickedDate" x-large v-bind="attrs" v-on="on">calendar_month</v-icon>
           </template>
-          <v-date-picker
-            v-model="pickedDate"
-            no-title
-            scrollable
-            reactive
-            event-color="black"
-          >
+          <v-date-picker v-model="pickedDate" no-title scrollable reactive event-color="black">
             <v-spacer></v-spacer>
             <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
             <!-- <v-btn text color="primary" @click="$refs.menu.save(dapickedDatetes)">-->
@@ -36,42 +21,25 @@
         <span class="dateInfo">W/C {{ dateText }}</span>
       </div>
       <div class="submit">
-        <v-btn
-          rounded
-          color="var(--color-secondary)"
-          dark
-          @click="!managerView ? submitTimeEntries() : approveTimeEntries()"
-        >
+        <v-btn rounded color="var(--color-secondary)" dark
+          @click="!managerView ? submitTimeEntries() : approveTimeEntries()">
           {{ actionButtonText }}
         </v-btn>
       </div>
     </div>
     <div v-if="mobile" class="container-top">
       <div class="submit">
-        <v-btn
-          rounded
-          color="var(--color-secondary)"
-          dark
-          @click="!managerView ? submitTimeEntries() : approveTimeEntries()"
-        >
+        <v-btn rounded color="var(--color-secondary)" dark
+          @click="!managerView ? submitTimeEntries() : approveTimeEntries()">
           {{ actionButtonText }}
         </v-btn>
       </div>
     </div>
     <div class="calendar-container">
       <template>
-        <div
-          v-for="index in cardCount"
-          :key="calendarItems[index - 1].key"
-          class="dayview-item"
-        >
-          <DayView
-            :key="componentKey"
-            :data="calendarItems[index - 1]"
-            :worker-id="workerId"
-            :manager-view="managerView"
-            @renderContainer="updateAllDayViewComponents"
-          />
+        <div v-for="index in cardCount" :key="calendarItems[index - 1].key" class="dayview-item">
+          <DayView :key="componentKey" :data="calendarItems[index - 1]" :worker-id="workerId" :manager-view="managerView"
+            @renderContainer="updateAllDayViewComponents" />
         </div>
       </template>
     </div>
@@ -80,26 +48,12 @@
         <span>Previous week</span>
       </v-btn>
 
-      <v-menu
-        ref="menu"
-        :key="menuKey"
-        v-model="menu"
-        nudge-left="120vw"
-        :close-on-content-click="false"
-        :return-value.sync="pickedDate"
-        offset-y
-        min-width="auto"
-      >
+      <v-menu ref="menu" :key="menuKey" v-model="menu" nudge-left="120vw" :close-on-content-click="false"
+        :return-value.sync="pickedDate" offset-y min-width="auto">
         <template v-slot:activator="{ on, attrs }">
           <v-icon large v-bind="attrs" v-on="on">calendar_month</v-icon>
         </template>
-        <v-date-picker
-          v-model="pickedDate"
-          no-title
-          scrollable
-          reactive
-          event-color="black"
-        >
+        <v-date-picker v-model="pickedDate" no-title scrollable reactive event-color="black">
           <v-spacer></v-spacer>
           <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
           <!-- <v-btn text color="primary" @click="$refs.menu.save(dapickedDatetes)">-->
@@ -388,6 +342,7 @@ export default {
   font-size: 1.5rem;
   align-items: flex-end;
 }
+
 .dayview-item {
   margin: auto;
 }
@@ -402,6 +357,7 @@ export default {
   .dayview-container {
     margin-top: 5vh;
   }
+
   .submit {
     margin-top: -4vh;
   }
@@ -435,6 +391,7 @@ export default {
     width: -moz-calc(100% - 56px);
     width: calc(100% - 56px);
   }
+
   .v-bottom-navigation * {
     align-self: center;
   }

@@ -47,7 +47,7 @@ const readUser = (req, res) => {
 };
 
 const readUserById = (req, res) => {
-  User.findOne({_id: req.params.id})
+  User.findOne({ _id: req.params.id })
     .then((data) => {
       res.status(200).json(data);
     })
@@ -64,7 +64,7 @@ const updateUser = async (req, res) => {
     return res.status(501).json('Only admin users can retrieve all users')
   }
   try {
-    const linkedUser = await User.findOne({workerId: String(req.params.id)})
+    const linkedUser = await User.findOne({ workerId: String(req.params.id) })
     if (req.body.password) {
       const encryptedPassword = await bcrypt.hash(req.body.password, 12)
       linkedUser.password = encryptedPassword
@@ -83,7 +83,7 @@ const deleteUser = (req, res) => {
   if (!payload.isAdmin) {
     return res.status(501).json('Only admin users can retrieve all users')
   }
-  User.findOne({workerId: String(req.params.id)})
+  User.findOne({ workerId: String(req.params.id) })
     .then((data) => {
       if (!data) {
         throw new Error('User not available');

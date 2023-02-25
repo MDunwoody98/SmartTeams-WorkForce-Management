@@ -3,8 +3,7 @@
   <div class="container">
     <v-card class="dayview-card">
       <v-toolbar dense flat class="card-header">
-        <v-toolbar-title class="title-dayName"
-          >{{ data.day.substr(0, 3) }} {{ data.date }}
+        <v-toolbar-title class="title-dayName">{{ data.day.substr(0, 3) }} {{ data.date }}
         </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-title>{{ totalHours }}h</v-toolbar-title>
@@ -14,20 +13,18 @@
         <v-list dense>
           <template v-for="entry in timeEntries">
             <v-list-item :key="entry._id" ripple :class="cardClass(entry)">
-              <v-list-item-content
-                @click.passive="editSelectedTimeEntry(entry)"
-              >
+              <v-list-item-content @click.passive="editSelectedTimeEntry(entry)">
                 <v-icon v-if="entry.timeOffCodeId">beach_access</v-icon>
                 <v-list-item-title>
                   <p class="timeCode">
                     {{ entry.timeCodeName }}
-                  </p></v-list-item-title
-                >
-                <v-list-item-subtitle
-                  ><p class="hours">
+                  </p>
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  <p class="hours">
                     {{ entry.hours }} {{ entry.hours != 1 ? 'hours' : 'hour' }}
-                  </p></v-list-item-subtitle
-                >
+                  </p>
+                </v-list-item-subtitle>
                 <div class="timeEntry-comment">{{ entry.comments }}</div>
               </v-list-item-content>
             </v-list-item>
@@ -43,23 +40,12 @@
       </div>
     </v-card>
     <div data-app>
-      <ActionTimeEntry
-        v-model="editTimeEntry"
-        :time-entry="selectedTimeEntry"
-        :selected-time-code="selectedTimeCode"
-        :available-time-codes="availableTimeCodes"
-        :available-time-off-codes="availableTimeOffCodes"
-        :manager-view="managerView"
-        @updateParent.passive="updateDayView"
-      />
-      <AddNewTimeEntry
-        v-model="addNewTimeEntry"
-        :time-entry-date="new Date(data.key)"
-        :available-time-codes="availableTimeCodes"
-        :available-time-off-codes="availableTimeOffCodes"
-        @updateParent="updateDayView"
-        @updateContainer.passive="updateDayViewContainer"
-      />
+      <ActionTimeEntry v-model="editTimeEntry" :time-entry="selectedTimeEntry" :selected-time-code="selectedTimeCode"
+        :available-time-codes="availableTimeCodes" :available-time-off-codes="availableTimeOffCodes"
+        :manager-view="managerView" @updateParent.passive="updateDayView" />
+      <AddNewTimeEntry v-model="addNewTimeEntry" :time-entry-date="new Date(data.key)"
+        :available-time-codes="availableTimeCodes" :available-time-off-codes="availableTimeOffCodes"
+        @updateParent="updateDayView" @updateContainer.passive="updateDayViewContainer" />
     </div>
   </div>
 </template>
@@ -193,6 +179,7 @@ export default {
 .container {
   min-height: initial;
 }
+
 .dayview-card {
   height: 40vh;
   display: flex;
@@ -205,11 +192,13 @@ export default {
     width: 14.5vw;
   }
 }
+
 @media all and (min-width: 1904px) {
   .dayview-card {
     width: 11vw;
   }
 }
+
 .title-dayName {
   padding: 0%;
 }
@@ -233,9 +222,11 @@ export default {
 .submitted {
   background-color: #dcdcdc;
 }
+
 .approved {
   background-color: #acffab;
 }
+
 .rejected {
   background-color: #ffcccb;
 }
@@ -247,9 +238,11 @@ export default {
 .submitted:hover {
   background-color: #b5b5b5;
 }
+
 .approved:hover {
   background-color: lightgreen;
 }
+
 .rejected:hover {
   background-color: #ff817e;
 }
@@ -257,12 +250,15 @@ export default {
 .timeCode {
   font-size: 1rem;
 }
+
 .hours {
   font-size: 0.85rem;
 }
+
 .add-time {
   cursor: pointer;
 }
+
 .add-time:hover {
   background-color: lightgray;
 }

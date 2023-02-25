@@ -39,12 +39,14 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
 .manager-container {
   display: flexbox;
   justify-content: center;
   align-items: center;
   margin-top: 30px;
 }
+
 .teamContainer {
   margin: 0 auto;
   display: flex;
@@ -53,10 +55,10 @@ export default {
   text-align: center;
   overflow-x: auto;
 }
+
 .teamCard {
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}
-</style>
+}</style>

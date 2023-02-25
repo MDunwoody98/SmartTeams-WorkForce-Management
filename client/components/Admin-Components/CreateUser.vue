@@ -7,11 +7,7 @@
       <v-card-text>
         <v-text-field v-model="firstName" label="First Name"></v-text-field>
         <v-text-field v-model="lastName" label="Last Name"></v-text-field>
-        <v-text-field
-          v-model="password"
-          type="password"
-          label="Password"
-        ></v-text-field>
+        <v-text-field v-model="password" type="password" label="Password"></v-text-field>
         <v-text-field v-model="jobTitle" label="Job Title"></v-text-field>
         <v-text-field v-model="mobileNo" label="Mobile Number"></v-text-field>
         <v-text-field v-model="email" label="Email Address"></v-text-field>
@@ -159,6 +155,7 @@ export default {
 template {
   position: absolute;
 }
+
 .label-title {
   padding: 0;
   font-size: 1.1rem;

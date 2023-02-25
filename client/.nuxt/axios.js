@@ -3,11 +3,11 @@ import defu from 'defu'
 
 // Axios.prototype cannot be modified
 const axiosExtra = {
-  setBaseURL (baseURL) {
+  setBaseURL(baseURL) {
     this.defaults.baseURL = baseURL
   },
-  setHeader (name, value, scopes = 'common') {
-    for (const scope of Array.isArray(scopes) ? scopes : [ scopes ]) {
+  setHeader(name, value, scopes = 'common') {
+    for (const scope of Array.isArray(scopes) ? scopes : [scopes]) {
       if (!value) {
         delete this.defaults.headers[scope][name];
         continue
@@ -15,7 +15,7 @@ const axiosExtra = {
       this.defaults.headers[scope][name] = value
     }
   },
-  setToken (token, type, scopes = 'common') {
+  setToken(token, type, scopes = 'common') {
     const value = !token ? null : (type ? type + ' ' : '') + token
     this.setHeader('Authorization', value, scopes)
   },
@@ -148,15 +148,15 @@ export default (ctx, inject) => {
   const runtimeConfig = ctx.$config && ctx.$config.axios || {}
   // baseURL
   const baseURL = process.browser
-    ? (runtimeConfig.browserBaseURL || runtimeConfig.browserBaseUrl || runtimeConfig.baseURL || runtimeConfig.baseUrl || 'http://127.0.0.1:9000/api')
-      : (runtimeConfig.baseURL || runtimeConfig.baseUrl || process.env._AXIOS_BASE_URL_ || 'http://127.0.0.1:9000/api')
+    ? (runtimeConfig.browserBaseURL || runtimeConfig.browserBaseUrl || runtimeConfig.baseURL || runtimeConfig.baseUrl || 'http://localhost:9000/api')
+    : (runtimeConfig.baseURL || runtimeConfig.baseUrl || process.env._AXIOS_BASE_URL_ || 'http://localhost:9000/api')
 
   // Create fresh objects for all default header scopes
   // Axios creates only one which is shared across SSR requests!
   // https://github.com/mzabriskie/axios/blob/master/lib/defaults.js
   const headers = {
     "common": {
-        "Accept": "application/json, text/plain, */*"
+      "Accept": "application/json, text/plain, */*"
     },
     "delete": {},
     "get": {},
@@ -164,7 +164,7 @@ export default (ctx, inject) => {
     "post": {},
     "put": {},
     "patch": {}
-}
+  }
 
   const axiosOptions = {
     baseURL,
@@ -174,7 +174,7 @@ export default (ctx, inject) => {
   // Proxy SSR request headers headers
   if (process.server && ctx.req && ctx.req.headers) {
     const reqHeaders = { ...ctx.req.headers }
-    for (const h of ["accept","cf-connecting-ip","cf-ray","content-length","content-md5","content-type","host","x-forwarded-host","x-forwarded-port","x-forwarded-proto"]) {
+    for (const h of ["accept", "cf-connecting-ip", "cf-ray", "content-length", "content-md5", "content-type", "host", "x-forwarded-host", "x-forwarded-port", "x-forwarded-proto"]) {
       delete reqHeaders[h]
     }
     axiosOptions.headers.common = { ...reqHeaders, ...axiosOptions.headers.common }

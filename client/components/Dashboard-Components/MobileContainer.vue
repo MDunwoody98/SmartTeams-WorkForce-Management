@@ -2,28 +2,15 @@
   <div class="dayview-container">
     <div class="container-top">
       <div class="submit">
-        <v-btn
-          rounded
-          color="var(--color-secondary)"
-          dark
-          @click="submitTimeEntries()"
-        >
+        <v-btn rounded color="var(--color-secondary)" dark @click="submitTimeEntries()">
           Submit Time Entries
         </v-btn>
       </div>
     </div>
     <div class="calendar-container">
       <template>
-        <div
-          v-for="index in cardCount"
-          :key="calendarItems[index - 1].key"
-          class="mobileDay"
-        >
-          <DayView
-            :key="componentKey"
-            :data="calendarItems[index - 1]"
-            @renderContainer="updateAllDayViewComponents"
-          />
+        <div v-for="index in cardCount" :key="calendarItems[index - 1].key" class="mobileDay">
+          <DayView :key="componentKey" :data="calendarItems[index - 1]" @renderContainer="updateAllDayViewComponents" />
         </div>
       </template>
     </div>
@@ -193,7 +180,7 @@ export default {
     updateAllDayViewComponents() {
       this.componentKey++
     },
-    goToSpecifiedWeek() {},
+    goToSpecifiedWeek() { },
     async submitTimeEntries() {
       let counter = this.cardCount
       await this.calendarItems.forEach((calDate) => {
@@ -242,9 +229,11 @@ export default {
   margin-bottom: 20px;
   flex-grow: 1;
 }
+
 .v-bottom-navigation * {
   align-self: center;
 }
+
 span.v-btn__content {
   margin-bottom: 20px;
 }

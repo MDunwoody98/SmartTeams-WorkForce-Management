@@ -9,32 +9,32 @@ Middleware.auth = authMiddleware
 export default function (ctx, inject) {
   // Options
   const options = {
-  "resetOnError": false,
-  "ignoreExceptions": false,
-  "scopeKey": "scope",
-  "rewriteRedirects": true,
-  "fullPathRedirect": false,
-  "watchLoggedIn": true,
-  "redirect": {
-    "login": "/login",
-    "logout": "/",
-    "home": "/dashboard",
-    "callback": false
-  },
-  "vuex": {
-    "namespace": "auth"
-  },
-  "cookie": {
-    "prefix": "auth.",
-    "options": {
-      "path": "/"
-    }
-  },
-  "localStorage": {
-    "prefix": "auth."
-  },
-  "defaultStrategy": "local"
-}
+    "resetOnError": false,
+    "ignoreExceptions": false,
+    "scopeKey": "scope",
+    "rewriteRedirects": true,
+    "fullPathRedirect": false,
+    "watchLoggedIn": true,
+    "redirect": {
+      "login": "/login",
+      "logout": "/",
+      "home": "/dashboard",
+      "callback": false
+    },
+    "vuex": {
+      "namespace": "auth"
+    },
+    "cookie": {
+      "prefix": "auth.",
+      "options": {
+        "path": "/"
+      }
+    },
+    "localStorage": {
+      "prefix": "auth."
+    },
+    "defaultStrategy": "local"
+  }
 
   // Create a new Auth instance
   const $auth = new Auth(ctx, options)
@@ -42,46 +42,46 @@ export default function (ctx, inject) {
   // Register strategies
   // local
   $auth.registerStrategy('local', new RefreshScheme($auth, {
-  "token": {
-    "property": "access_token",
-    "maxAge": 1800,
-    "global": true
-  },
-  "refreshToken": {
-    "property": "refresh_token",
-    "data": "refresh_token",
-    "maxAge": 2592000,
-    "tokenRequired": true
-  },
-  "user": {
-    "property": "user",
-    "autoFetch": true
-  },
-  "endpoints": {
-    "login": {
-      "url": "/auth/login",
-      "method": "post",
-      "propertyName": "token"
+    "token": {
+      "property": "access_token",
+      "maxAge": 1800,
+      "global": true
     },
-    "logout": false,
-    "refresh": {
-      "url": "/auth/refresh",
-      "method": "post"
+    "refreshToken": {
+      "property": "refresh_token",
+      "data": "refresh_token",
+      "maxAge": 2592000,
+      "tokenRequired": true
     },
     "user": {
-      "url": "/auth/user",
-      "method": "get",
-      "propertyName": false
-    }
-  },
-  "redirect": {
-    "login": "/login",
-    "logout": "/",
-    "callback": false,
-    "home": "/dashboard"
-  },
-  "name": "local"
-}))
+      "property": "user",
+      "autoFetch": true
+    },
+    "endpoints": {
+      "login": {
+        "url": "/auth/login",
+        "method": "post",
+        "propertyName": "token"
+      },
+      "logout": false,
+      "refresh": {
+        "url": "/auth/refresh",
+        "method": "post"
+      },
+      "user": {
+        "url": "/auth/user",
+        "method": "get",
+        "propertyName": false
+      }
+    },
+    "redirect": {
+      "login": "/login",
+      "logout": "/",
+      "callback": false,
+      "home": "/dashboard"
+    },
+    "name": "local"
+  }))
 
   // Inject it to nuxt context as $auth
   inject('auth', $auth)

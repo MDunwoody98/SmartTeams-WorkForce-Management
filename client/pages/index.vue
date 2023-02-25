@@ -3,17 +3,8 @@
     <div class="page">
       <Logo />
       <div class="login">
-        <v-btn
-          class="btnLogin"
-          elevation="4"
-          large
-          block
-          outlined
-          to="/login"
-          nuxt
-          color="var(color-primary)"
-          >Sign In</v-btn
-        >
+        <v-btn class="btnLogin" elevation="4" large block outlined to="/login" nuxt color="var(color-primary)">Sign
+          In</v-btn>
       </div>
     </div>
   </div>

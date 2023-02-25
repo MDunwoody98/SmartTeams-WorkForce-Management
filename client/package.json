@@ -16,7 +16,7 @@
     "chart.js": "^2.9.4",
     "cookie-universal-nuxt": "^2.1.5",
     "material-design-icons-iconfont": "^6.1.0",
-    "nuxt": "^2.14.0",
+    "nuxt": "^2.12.2",
     "nuxt-oauth": "^2.9.0",
     "vue-chartjs": "^3.4.0",
     "vuetify": "^2.5.10"
@@ -31,8 +31,8 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^27.3.1",
-    "eslint": "^7.2.0",
     "chart.js": "^2.9.4",
+    "eslint": "^7.2.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-nuxt": "^1.0.0",
     "eslint-plugin-prettier": "^3.1.4",

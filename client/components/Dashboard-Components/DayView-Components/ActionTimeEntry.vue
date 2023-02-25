@@ -11,64 +11,29 @@
       </v-tabs>
       <!-- Date picker for particular date of time entry -->
       <v-card-text>
-        <v-combobox
-          v-model="date"
-          disabled
-          label="Date"
-          prepend-icon="calendar_today"
-        ></v-combobox>
+        <v-combobox v-model="date" disabled label="Date" prepend-icon="calendar_today"></v-combobox>
         <v-tabs-items v-model="tab">
           <v-tab-item>
-            <v-select
-              v-model="timeCode"
-              :items="availableTimeCodeIdList"
-              name="selectedTimeCode"
-              label="Time Code"
-              required
-              :disabled="disableEditing || managerView"
-            ></v-select>
+            <v-select v-model="timeCode" :items="availableTimeCodeIdList" name="selectedTimeCode" label="Time Code"
+              required :disabled="disableEditing || managerView"></v-select>
           </v-tab-item>
           <v-tab-item>
-            <v-select
-              v-model="timeOffCode"
-              :items="availableTimeOffCodeIdList"
-              name="selectedTimeOffCode"
-              label="Time Off Code"
-              required
-              :disabled="disableEditing || managerView"
-            ></v-select>
+            <v-select v-model="timeOffCode" :items="availableTimeOffCodeIdList" name="selectedTimeOffCode"
+              label="Time Off Code" required :disabled="disableEditing || managerView"></v-select>
           </v-tab-item>
         </v-tabs-items>
         <!-- Manager view - display the time code or time off code for the entry -->
-        <v-select
-          v-if="disableEditing || managerView"
-          v-model="timeCode"
-          :items="availableTimeCodeIdList"
-          label="Time Code"
-          disabled
-        ></v-select>
-        <v-text-field
-          v-model="hours"
-          label="Hours"
-          hint="Must be an increment of 0.25"
-          :disabled="disableEditing || managerView"
-        ></v-text-field>
+        <v-select v-if="disableEditing || managerView" v-model="timeCode" :items="availableTimeCodeIdList"
+          label="Time Code" disabled></v-select>
+        <v-text-field v-model="hours" label="Hours" hint="Must be an increment of 0.25"
+          :disabled="disableEditing || managerView"></v-text-field>
       </v-card-text>
-      <v-textarea
-        v-model="comments"
-        outlined
-        shaped
-        label="Comments"
-        class="comments-box"
-        :disabled="disableEditing || managerView"
-      ></v-textarea>
+      <v-textarea v-model="comments" outlined shaped label="Comments" class="comments-box"
+        :disabled="disableEditing || managerView"></v-textarea>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="300">
-          <template
-            v-if="!disableEditing && !managerView"
-            v-slot:activator="{ on, attrs }"
-          >
+          <template v-if="!disableEditing && !managerView" v-slot:activator="{ on, attrs }">
             <v-btn color="blue darken-1" text v-bind="attrs" v-on="on">
               Delete
             </v-btn>
@@ -90,37 +55,14 @@
           </v-card>
         </v-dialog>
         <v-btn color="blue darken-1" text @click="closeWindows()">Close</v-btn>
-        <v-btn
-          v-if="!disableEditing && !managerView"
-          color="blue darken-1"
-          text
-          :disabled="disableEditing || managerView"
-          @click="editTimeEntry()"
-          >Save</v-btn
-        >
-        <v-btn
-          v-if="managerCanActionEntry"
-          color="blue darken-1"
-          text
-          @click="approveTimeEntry()"
-          >Approve</v-btn
-        >
-        <v-btn
-          v-if="managerCanActionEntry"
-          color="blue darken-1"
-          text
-          @click="rejectTimeEntry()"
-          >Reject</v-btn
-        >
+        <v-btn v-if="!disableEditing && !managerView" color="blue darken-1" text :disabled="disableEditing || managerView"
+          @click="editTimeEntry()">Save</v-btn>
+        <v-btn v-if="managerCanActionEntry" color="blue darken-1" text @click="approveTimeEntry()">Approve</v-btn>
+        <v-btn v-if="managerCanActionEntry" color="blue darken-1" text @click="rejectTimeEntry()">Reject</v-btn>
       </v-card-actions>
     </v-card>
-    <v-snackbar
-      v-model="snackbar"
-      :timeout="4000"
-      color="var(--color-secondary)"
-      rounded="pill"
-      >{{ errorMessage }}</v-snackbar
-    >
+    <v-snackbar v-model="snackbar" :timeout="4000" color="var(--color-secondary)" rounded="pill">{{ errorMessage
+    }}</v-snackbar>
   </v-dialog>
 </template>
 <script>
@@ -339,10 +281,12 @@ export default {
 template {
   position: absolute;
 }
+
 .comments-box {
   width: 91%;
   margin: 0 auto;
 }
+
 .deletion-prompt {
   font-size: 1.2rem;
 }

@@ -10,34 +10,13 @@
       </v-tabs>
       <!-- Date picker for particular date of time entry -->
       <v-card-text>
-        <v-menu
-          ref="menu"
-          v-model="menu"
-          :close-on-content-click="false"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
+        <v-menu ref="menu" v-model="menu" :close-on-content-click="false" transition="scale-transition" offset-y
+          min-width="auto">
           <template v-slot:activator="{ on, attrs }">
-            <v-combobox
-              v-model="dates"
-              multiple
-              chips
-              deletable-chips
-              clearable
-              label="Date"
-              prepend-icon="edit_calendar"
-              v-bind="attrs"
-              v-on="on"
-            ></v-combobox>
+            <v-combobox v-model="dates" multiple chips deletable-chips clearable label="Date" prepend-icon="edit_calendar"
+              v-bind="attrs" v-on="on"></v-combobox>
           </template>
-          <v-date-picker
-            v-model="dates"
-            multiple
-            no-title
-            scrollable
-            event-color="black"
-          >
+          <v-date-picker v-model="dates" multiple no-title scrollable event-color="black">
             <v-spacer></v-spacer>
             <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
             <!-- <v-btn text color="primary" @click="$refs.menu.save(dates)">-->
@@ -48,50 +27,25 @@
         </v-menu>
         <v-tabs-items v-model="tab">
           <v-tab-item>
-            <v-select
-              v-model="selectedTimeCode"
-              :items="availableTimeCodeIdList"
-              name="selectedTimeCode"
-              label="Time Code"
-              required
-            ></v-select>
+            <v-select v-model="selectedTimeCode" :items="availableTimeCodeIdList" name="selectedTimeCode"
+              label="Time Code" required></v-select>
           </v-tab-item>
           <v-tab-item>
-            <v-select
-              v-model="selectedTimeOffCode"
-              :items="availableTimeOffCodeIdList"
-              name="selectedTimeOffCode"
-              label="Time Off Code"
-              required
-            ></v-select>
+            <v-select v-model="selectedTimeOffCode" :items="availableTimeOffCodeIdList" name="selectedTimeOffCode"
+              label="Time Off Code" required></v-select>
           </v-tab-item>
         </v-tabs-items>
-        <v-text-field
-          v-model="hours"
-          label="Hours"
-          hint="Must be an increment of 0.25"
-        ></v-text-field>
+        <v-text-field v-model="hours" label="Hours" hint="Must be an increment of 0.25"></v-text-field>
       </v-card-text>
-      <v-textarea
-        v-model="comments"
-        outlined
-        shaped
-        label="Comments"
-        class="comments-box"
-      ></v-textarea>
+      <v-textarea v-model="comments" outlined shaped label="Comments" class="comments-box"></v-textarea>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="closeWindow()">Close</v-btn>
         <v-btn color="blue darken-1" text @click="addTimeEntry()">Save</v-btn>
       </v-card-actions>
     </v-card>
-    <v-snackbar
-      v-model="snackbar"
-      :timeout="4000"
-      color="var(--color-secondary)"
-      rounded="pill"
-      >{{ errorMessage }}</v-snackbar
-    >
+    <v-snackbar v-model="snackbar" :timeout="4000" color="var(--color-secondary)" rounded="pill">{{ errorMessage
+    }}</v-snackbar>
   </v-dialog>
 </template>
 <script>
@@ -227,10 +181,10 @@ export default {
       const selectedDate = new Date(inputDate)
       return [
         selectedDate.getFullYear() +
-          '-' +
-          ('0' + (selectedDate.getMonth() + 1)).slice(-2) +
-          '-' +
-          ('0' + selectedDate.getDate()).slice(-2),
+        '-' +
+        ('0' + (selectedDate.getMonth() + 1)).slice(-2) +
+        '-' +
+        ('0' + selectedDate.getDate()).slice(-2),
       ]
     },
     closeWindow() {
@@ -244,6 +198,7 @@ export default {
 template {
   position: absolute;
 }
+
 .comments-box {
   width: 91%;
   margin: 0 auto;

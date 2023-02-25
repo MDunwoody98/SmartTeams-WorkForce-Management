@@ -1,4 +1,4 @@
-const {Schema, model} = require("mongoose");
+const { Schema, model } = require("mongoose");
 const mongoose = require("mongoose")
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
@@ -33,5 +33,5 @@ const teamSchema = new Schema(
         },
     }
 )
-teamSchema.plugin(AutoIncrement, {inc_field: 'teamId'});
+teamSchema.plugin(AutoIncrement, { inc_field: 'teamId' });
 module.exports = model('team', teamSchema);

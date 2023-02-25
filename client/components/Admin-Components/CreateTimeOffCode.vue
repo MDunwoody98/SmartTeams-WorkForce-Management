@@ -5,10 +5,7 @@
         <span class="headline">Create Time Code</span>
       </v-card-title>
       <v-card-text>
-        <v-text-field
-          v-model="timeOffCodeName"
-          label="Time Off Code Name"
-        ></v-text-field>
+        <v-text-field v-model="timeOffCodeName" label="Time Off Code Name"></v-text-field>
         <v-card-title class="label-title">
           <span class="label-field">Auto-approve?</span>
           <v-checkbox v-model="autoApprove"></v-checkbox>
@@ -26,9 +23,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="closeWindow()">Close</v-btn>
-        <v-btn color="blue darken-1" text @click="createTimeOffCode()"
-          >Save</v-btn
-        >
+        <v-btn color="blue darken-1" text @click="createTimeOffCode()">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -90,14 +85,17 @@ export default {
 template {
   position: absolute;
 }
+
 .comments-box {
   width: 91%;
   margin: 0 auto;
 }
+
 .label-title {
   padding: 0;
   font-size: 1.1rem;
 }
+
 .label-field {
   width: 160px;
   text-align: left;

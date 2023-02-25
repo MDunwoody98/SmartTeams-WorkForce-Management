@@ -5,25 +5,10 @@
         <span class="headline">Update/Delete User</span>
       </v-card-title>
       <v-card-text>
-        <v-autocomplete
-          v-model="selectedUser"
-          :disabled="loading"
-          :items="availableWorkers"
-          filled
-          chips
-          label="Worker"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="workerId"
-        >
+        <v-autocomplete v-model="selectedUser" :disabled="loading" :items="availableWorkers" filled chips label="Worker"
+          color="blue-grey lighten-2" item-text="name" item-value="workerId">
           <template v-slot:selection="data">
-            <v-chip
-              v-bind="data.attrs"
-              :input-value="data.selected"
-              close
-              @click="data.select"
-              @click:close="remove()"
-            >
+            <v-chip v-bind="data.attrs" :input-value="data.selected" close @click="data.select" @click:close="remove()">
               <v-avatar left>
                 <v-img :src="data.item.photo"></v-img>
               </v-avatar>
@@ -43,10 +28,8 @@
               <v-list-item-content>
                 <v-list-item-title>
                   {{ data.item.firstName }}
-                  {{ data.item.lastName }}</v-list-item-title
-                >
-                <v-list-item-subtitle
-                  >{{ data.item.position }}
+                  {{ data.item.lastName }}</v-list-item-title>
+                <v-list-item-subtitle>{{ data.item.position }}
                 </v-list-item-subtitle>
               </v-list-item-content>
             </template>
@@ -54,11 +37,7 @@
         </v-autocomplete>
         <v-text-field v-model="firstName" label="First Name"></v-text-field>
         <v-text-field v-model="lastName" label="Last Name"></v-text-field>
-        <v-text-field
-          v-model="password"
-          type="password"
-          label="Password"
-        ></v-text-field>
+        <v-text-field v-model="password" type="password" label="Password"></v-text-field>
         <v-text-field v-model="jobTitle" label="Job Title"></v-text-field>
         <v-text-field v-model="mobileNo" label="Mobile Number"></v-text-field>
         <v-text-field v-model="email" label="Email Address"></v-text-field>
@@ -71,13 +50,7 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="300">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="blue darken-1"
-              :disabled="selectedUser === null"
-              text
-              v-bind="attrs"
-              v-on="on"
-            >
+            <v-btn color="blue darken-1" :disabled="selectedUser === null" text v-bind="attrs" v-on="on">
               Delete
             </v-btn>
           </template>
@@ -98,13 +71,7 @@
           </v-card>
         </v-dialog>
         <v-btn color="blue darken-1" text @click="closeWindow()">Close</v-btn>
-        <v-btn
-          color="blue darken-1"
-          text
-          :disabled="!selectedUser"
-          @click="updateWorker()"
-          >Save</v-btn
-        >
+        <v-btn color="blue darken-1" text :disabled="!selectedUser" @click="updateWorker()">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -297,10 +264,12 @@ export default {
 template {
   position: absolute;
 }
+
 .label-title {
   padding: 0;
   font-size: 1.1rem;
 }
+
 .deletion-prompt {
   font-size: 1.2rem;
 }

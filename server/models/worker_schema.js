@@ -1,4 +1,4 @@
-const {Schema, model} = require("mongoose");
+const { Schema, model } = require("mongoose");
 
 const workerSchema = new Schema(
     {
@@ -26,7 +26,7 @@ const workerSchema = new Schema(
                 phone_personal_home: {
                     type: String,
                     required: [
-                        function(){
+                        function () {
                             return this.phone_personal_mobile != null
                         },
                         'Worker personal home phone number is required if Worker personal mobile phone number is not specified'
@@ -35,7 +35,7 @@ const workerSchema = new Schema(
                 phone_personal_mobile: {
                     type: String,
                     required: [
-                        function(){
+                        function () {
                             return this.phone_personal_home != null
                         },
                         'Worker personal mobile phone number is required if Worker personal home phone number is not specified'
@@ -51,7 +51,7 @@ const workerSchema = new Schema(
             email: {
                 email_personal: {
                     type: String,
-                    required: [true,'Worker personal email is required'],
+                    required: [true, 'Worker personal email is required'],
                     // Email regex validation
                     validator: (v) => {
                         var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;

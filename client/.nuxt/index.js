@@ -13,11 +13,11 @@ import { createStore } from './store.js'
 
 /* Plugins */
 
-import nuxt_plugin_plugin_5c90dc7e from 'nuxt_plugin_plugin_5c90dc7e' // Source: .\\components\\plugin.js (mode: 'all')
-import nuxt_plugin_plugin_6b3b3f94 from 'nuxt_plugin_plugin_6b3b3f94' // Source: .\\vuetify\\plugin.js (mode: 'all')
-import nuxt_plugin_cookieuniversalnuxt_2a96496e from 'nuxt_plugin_cookieuniversalnuxt_2a96496e' // Source: .\\cookie-universal-nuxt.js (mode: 'all')
-import nuxt_plugin_axios_0dc09da1 from 'nuxt_plugin_axios_0dc09da1' // Source: .\\axios.js (mode: 'all')
-import nuxt_plugin_auth_35b8536f from 'nuxt_plugin_auth_35b8536f' // Source: .\\auth.js (mode: 'all')
+import nuxt_plugin_plugin_9de4589c from 'nuxt_plugin_plugin_9de4589c' // Source: .\\components\\plugin.js (mode: 'all')
+import nuxt_plugin_plugin_19d054fc from 'nuxt_plugin_plugin_19d054fc' // Source: .\\vuetify\\plugin.js (mode: 'all')
+import nuxt_plugin_cookieuniversalnuxt_3cbb187d from 'nuxt_plugin_cookieuniversalnuxt_3cbb187d' // Source: .\\cookie-universal-nuxt.js (mode: 'all')
+import nuxt_plugin_axios_2e2fc2d5 from 'nuxt_plugin_axios_2e2fc2d5' // Source: .\\axios.js (mode: 'all')
+import nuxt_plugin_auth_0614908a from 'nuxt_plugin_auth_0614908a' // Source: .\\auth.js (mode: 'all')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -25,7 +25,7 @@ Vue.component(ClientOnly.name, ClientOnly)
 // TODO: Remove in Nuxt 3: <NoSsr>
 Vue.component(NoSsr.name, {
   ...NoSsr,
-  render (h, ctx) {
+  render(h, ctx) {
     if (process.client && !NoSsr._warned) {
       NoSsr._warned = true
 
@@ -55,13 +55,13 @@ Object.defineProperty(Vue.prototype, '$nuxt', {
   configurable: true
 })
 
-Vue.use(Meta, {"keyName":"head","attribute":"data-n-head","ssrAttribute":"data-n-head-ssr","tagIDKeyName":"hid"})
+Vue.use(Meta, { "keyName": "head", "attribute": "data-n-head", "ssrAttribute": "data-n-head-ssr", "tagIDKeyName": "hid" })
 
-const defaultTransition = {"name":"home","mode":"out-in","appear":false,"appearClass":"appear","appearActiveClass":"appear-active","appearToClass":"appear-to"}
+const defaultTransition = { "name": "home", "mode": "out-in", "appear": false, "appearClass": "appear", "appearActiveClass": "appear-active", "appearToClass": "appear-to" }
 
 const originalRegisterModule = Vuex.Store.prototype.registerModule
 
-function registerModule (path, rawModule, options = {}) {
+function registerModule(path, rawModule, options = {}) {
   const preserveState = process.client && (
     Array.isArray(path)
       ? !!path.reduce((namespacedState, path) => namespacedState && namespacedState[path], this.state)
@@ -85,14 +85,14 @@ async function createApp(ssrContext, config = {}) {
   // here we inject the router and store to all child components,
   // making them available everywhere as `this.$router` and `this.$store`.
   const app = {
-    head: {"title":"SmartTeams - Time Management System","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":""}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"stylesheet","type":"text\u002Fcss","href":"https:\u002F\u002Ffonts.googleapis.com\u002Fcss?family=undefined:100,300,400,500,700,900&display=swap"},{"rel":"stylesheet","type":"text\u002Fcss","href":"https:\u002F\u002Ffonts.googleapis.com\u002Fcss?family=Material+Icons"}],"style":[],"script":[]},
+    head: { "title": "SmartTeams - Time Management System", "meta": [{ "charset": "utf-8" }, { "name": "viewport", "content": "width=device-width, initial-scale=1" }, { "hid": "description", "name": "description", "content": "" }], "link": [{ "rel": "icon", "type": "image\u002Fx-icon", "href": "\u002Ffavicon.ico" }, { "rel": "stylesheet", "type": "text\u002Fcss", "href": "https:\u002F\u002Ffonts.googleapis.com\u002Fcss?family=undefined:100,300,400,500,700,900&display=swap" }, { "rel": "stylesheet", "type": "text\u002Fcss", "href": "https:\u002F\u002Ffonts.googleapis.com\u002Fcss?family=Material+Icons" }], "style": [], "script": [] },
 
     store,
     router,
     nuxt: {
       defaultTransition,
       transitions: [defaultTransition],
-      setTransitions (transitions) {
+      setTransitions(transitions) {
         if (!Array.isArray(transitions)) {
           transitions = [transitions]
         }
@@ -112,7 +112,7 @@ async function createApp(ssrContext, config = {}) {
 
       err: null,
       dateErr: null,
-      error (err) {
+      error(err) {
         err = err || null
         app.context._errored = Boolean(err)
         err = err ? normalizeError(err) : null
@@ -187,7 +187,7 @@ async function createApp(ssrContext, config = {}) {
     Vue.use(() => {
       if (!Object.prototype.hasOwnProperty.call(Vue.prototype, key)) {
         Object.defineProperty(Vue.prototype, key, {
-          get () {
+          get() {
             return this.$root.$options[key]
           }
         })
@@ -214,24 +214,24 @@ async function createApp(ssrContext, config = {}) {
   }
   // Plugin execution
 
-  if (typeof nuxt_plugin_plugin_5c90dc7e === 'function') {
-    await nuxt_plugin_plugin_5c90dc7e(app.context, inject)
+  if (typeof nuxt_plugin_plugin_9de4589c === 'function') {
+    await nuxt_plugin_plugin_9de4589c(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_plugin_6b3b3f94 === 'function') {
-    await nuxt_plugin_plugin_6b3b3f94(app.context, inject)
+  if (typeof nuxt_plugin_plugin_19d054fc === 'function') {
+    await nuxt_plugin_plugin_19d054fc(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_cookieuniversalnuxt_2a96496e === 'function') {
-    await nuxt_plugin_cookieuniversalnuxt_2a96496e(app.context, inject)
+  if (typeof nuxt_plugin_cookieuniversalnuxt_3cbb187d === 'function') {
+    await nuxt_plugin_cookieuniversalnuxt_3cbb187d(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_axios_0dc09da1 === 'function') {
-    await nuxt_plugin_axios_0dc09da1(app.context, inject)
+  if (typeof nuxt_plugin_axios_2e2fc2d5 === 'function') {
+    await nuxt_plugin_axios_2e2fc2d5(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_auth_35b8536f === 'function') {
-    await nuxt_plugin_auth_35b8536f(app.context, inject)
+  if (typeof nuxt_plugin_auth_0614908a === 'function') {
+    await nuxt_plugin_auth_0614908a(app.context, inject)
   }
 
   // Lock enablePreview in context

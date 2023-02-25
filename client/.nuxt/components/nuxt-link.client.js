@@ -37,12 +37,12 @@ export default {
       default: false
     }
   },
-  mounted () {
+  mounted() {
     if (this.prefetch && !this.noPrefetch) {
       this.handleId = requestIdleCallback(this.observe, { timeout: 2e3 })
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     cancelIdleCallback(this.handleId)
 
     if (this.__observed) {
@@ -51,7 +51,7 @@ export default {
     }
   },
   methods: {
-    observe () {
+    observe() {
       // If no IntersectionObserver, avoid prefetching
       if (!observer) {
         return
@@ -63,22 +63,22 @@ export default {
         this.__observed = true
       }
     },
-    shouldPrefetch () {
+    shouldPrefetch() {
       return this.getPrefetchComponents().length > 0
     },
-    canPrefetch () {
+    canPrefetch() {
       const conn = navigator.connection
       const hasBadConnection = this.$nuxt.isOffline || (conn && ((conn.effectiveType || '').includes('2g') || conn.saveData))
 
       return !hasBadConnection
     },
-    getPrefetchComponents () {
+    getPrefetchComponents() {
       const ref = this.$router.resolve(this.to, this.$route, this.append)
       const Components = ref.resolved.matched.map(r => r.components.default)
 
       return Components.filter(Component => typeof Component === 'function' && !Component.options && !Component.__prefetched)
     },
-    prefetchLink () {
+    prefetchLink() {
       if (!this.canPrefetch()) {
         return
       }
@@ -89,7 +89,7 @@ export default {
       for (const Component of Components) {
         const componentOrPromise = Component()
         if (componentOrPromise instanceof Promise) {
-          componentOrPromise.catch(() => {})
+          componentOrPromise.catch(() => { })
         }
         Component.__prefetched = true
       }

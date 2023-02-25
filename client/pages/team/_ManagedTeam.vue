@@ -16,11 +16,7 @@
               <v-card-title class="report-item-title">{{
                 ManagedTeam
               }}</v-card-title>
-              <Charts-RemainingLeave
-                :data="annualLeaveChartData"
-                :options="chartOptions"
-                class="pie-chart"
-              />
+              <Charts-RemainingLeave :data="annualLeaveChartData" :options="chartOptions" class="pie-chart" />
             </v-card>
           </div>
         </v-col>
@@ -31,11 +27,7 @@
               <v-card-title class="report-item-title">{{
                 ManagedTeam
               }}</v-card-title>
-              <Charts-CurrentWorkerUtilization
-                :data="utilizationChartData"
-                :options="chartOptions"
-                class="pie-chart"
-              />
+              <Charts-CurrentWorkerUtilization :data="utilizationChartData" :options="chartOptions" class="pie-chart" />
             </v-card>
           </div>
         </v-col>
@@ -116,17 +108,20 @@ export default {
     width: 43vw;
     height: 44vh;
   }
+
   .pie-chart {
     margin: 0 auto;
     width: 100%;
     height: 80%;
   }
 }
+
 @media all and (max-width: 1903px) {
   .report-item-card {
     width: 40vw;
     height: 35vh;
   }
+
   .pie-chart {
     margin: 0 auto;
     width: 100%;

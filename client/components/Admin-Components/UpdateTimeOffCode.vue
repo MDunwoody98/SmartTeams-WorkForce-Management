@@ -5,24 +5,13 @@
         <span class="headline">Update/Delete Time Off Code</span>
       </v-card-title>
       <v-card-text>
-        <v-autocomplete
-          v-model="selectedTimeOffCode"
-          :disabled="loadingTimeOffCodes"
-          :items="availableTimeOffCodes"
-          filled
-          label="Time Code"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="id"
-        >
+        <v-autocomplete v-model="selectedTimeOffCode" :disabled="loadingTimeOffCodes" :items="availableTimeOffCodes"
+          filled label="Time Code" color="blue-grey lighten-2" item-text="name" item-value="id">
           <template v-slot:item="data">
             {{ data.item.name }}
           </template>
         </v-autocomplete>
-        <v-text-field
-          v-model="timeOffCodeName"
-          label="Time Off Code Name"
-        ></v-text-field>
+        <v-text-field v-model="timeOffCodeName" label="Time Off Code Name"></v-text-field>
         <v-card-title class="label-title">
           <span class="label-field">Paid?</span>
           <v-checkbox v-model="paid"></v-checkbox>
@@ -40,13 +29,7 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="300">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="blue darken-1"
-              :disabled="selectedTimeOffCode === null"
-              text
-              v-bind="attrs"
-              v-on="on"
-            >
+            <v-btn color="blue darken-1" :disabled="selectedTimeOffCode === null" text v-bind="attrs" v-on="on">
               Delete
             </v-btn>
           </template>
@@ -67,9 +50,7 @@
           </v-card>
         </v-dialog>
         <v-btn color="blue darken-1" text @click="closeWindow()">Close</v-btn>
-        <v-btn color="blue darken-1" text @click="updateTimeOffCode()"
-          >Save</v-btn
-        >
+        <v-btn color="blue darken-1" text @click="updateTimeOffCode()">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -179,14 +160,17 @@ export default {
 template {
   position: absolute;
 }
+
 .comments-box {
   width: 91%;
   margin: 0 auto;
 }
+
 .label-title {
   padding: 0;
   font-size: 1.1rem;
 }
+
 .label-field {
   width: 160px;
   text-align: left;

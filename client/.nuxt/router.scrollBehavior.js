@@ -19,12 +19,12 @@ if (process.client) {
 }
 
 function shouldScrollToTop(route) {
-   const Pages = getMatchedComponents(route)
-   if (Pages.length === 1) {
-     const { options = {} } = Pages[0]
-     return options.scrollToTop !== false
-   }
-   return Pages.some(({ options }) => options && options.scrollToTop)
+  const Pages = getMatchedComponents(route)
+  if (Pages.length === 1) {
+    const { options = {} } = Pages[0]
+    return options.scrollToTop !== false
+  }
+  return Pages.some(({ options }) => options && options.scrollToTop)
 }
 
 export default function (to, from, savedPosition) {

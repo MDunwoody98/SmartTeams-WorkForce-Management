@@ -6,14 +6,8 @@
           <div class="managed-teams-header">
             <span>Team Name</span>
           </div>
-          <v-data-table
-            :headers="headers"
-            :items="workers"
-            :items-per-page="5"
-            loading
-            loading-text="Loading... Please wait"
-            class="elevation-1"
-          ></v-data-table>
+          <v-data-table :headers="headers" :items="workers" :items-per-page="5" loading
+            loading-text="Loading... Please wait" class="elevation-1"></v-data-table>
         </div>
       </div>
     </template>
@@ -77,7 +71,7 @@ export default {
     }
   },
   computed: {},
-  created() {},
+  created() { },
   methods: {},
 }
 </script>

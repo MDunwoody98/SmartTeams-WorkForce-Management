@@ -6,26 +6,11 @@
       </v-card-title>
       <v-card-text>
         <v-text-field v-model="projectName" label="Project Name"></v-text-field>
-        <v-autocomplete
-          v-model="selectedWorkers"
-          :disabled="loading"
-          :items="availableWorkers"
-          filled
-          chips
-          label="Project Manager"
-          color="blue-grey lighten-2"
-          item-text="name"
-          item-value="workerId"
-          multiple
-        >
+        <v-autocomplete v-model="selectedWorkers" :disabled="loading" :items="availableWorkers" filled chips
+          label="Project Manager" color="blue-grey lighten-2" item-text="name" item-value="workerId" multiple>
           <template v-slot:selection="data">
-            <v-chip
-              v-bind="data.attrs"
-              :input-value="data.selected"
-              close
-              @click="data.select"
-              @click:close="remove(data.item.workerId)"
-            >
+            <v-chip v-bind="data.attrs" :input-value="data.selected" close @click="data.select"
+              @click:close="remove(data.item.workerId)">
               <v-avatar left>
                 <v-img :src="data.item.photo"></v-img>
               </v-avatar>
@@ -43,8 +28,7 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title> {{ data.item.name }}</v-list-item-title>
-                <v-list-item-subtitle
-                  >{{ data.item.position }}
+                <v-list-item-subtitle>{{ data.item.position }}
                 </v-list-item-subtitle>
               </v-list-item-content>
             </template>
@@ -137,6 +121,7 @@ export default {
 template {
   position: absolute;
 }
+
 .comments-box {
   width: 91%;
   margin: 0 auto;

@@ -6,7 +6,7 @@ const TimeOffCode = require('../models/time_off_code_schema');
 const WorkerController = require('./worker_controller');
 
 const createTimeEntry = (req, res) => {
-    TimeEntry.create(req.body)
+  TimeEntry.create(req.body)
     .then((data) => {
       console.log('New Time Entry Created!', data);
       res.status(201).json(data);
@@ -23,7 +23,7 @@ const createTimeEntry = (req, res) => {
 };
 
 const readTimeEntry = (req, res) => {
-    TimeEntry.find()
+  TimeEntry.find()
     .then((data) => {
       res.status(200).json(data);
     })
@@ -34,7 +34,7 @@ const readTimeEntry = (req, res) => {
 };
 
 const readTimeEntryById = (req, res) => {
-    TimeEntry.findOne({id: req.params.id})
+  TimeEntry.findOne({ id: req.params.id })
     .then((data) => {
       res.status(200).json(data);
     })
@@ -108,7 +108,7 @@ const retrieveTimeEntriesForDay = async (req, res) => {
 };
 
 const updateTimeEntry = (req, res) => {
-    TimeEntry.findByIdAndUpdate(req.params.id, req.body, {
+  TimeEntry.findByIdAndUpdate(req.params.id, req.body, {
     useFindAndModify: false,
     new: true,
   })
@@ -193,60 +193,60 @@ const approveTimeEntry = async (req, res) => {
 //Only line managers can approve time off
 const approveTimeEntries = async (req, res) => {
   try {
-  // Are you an admin or the manager of the worker ??
-  const token = req.get("Authorization").split(' ')[1]
-  const payload = WorkerController.parseJWT(token)
-  const currentUser = payload.user
-  const requestedWorker = req.body.workerId
-  const currentUserIsAdmin = payload.isAdmin
-  const currentUserManagesRequestedWorker = WorkerController.validateManageMent(currentUser, requestedWorker)
-  let allowRequest = true
-  let approveAsPM = false
-  let errorMessage = ""
+    // Are you an admin or the manager of the worker ??
+    const token = req.get("Authorization").split(' ')[1]
+    const payload = WorkerController.parseJWT(token)
+    const currentUser = payload.user
+    const requestedWorker = req.body.workerId
+    const currentUserIsAdmin = payload.isAdmin
+    const currentUserManagesRequestedWorker = WorkerController.validateManageMent(currentUser, requestedWorker)
+    let allowRequest = true
+    let approveAsPM = false
+    let errorMessage = ""
 
-  //Also need to check if currrentUser is project manager of time code of time entry
-  if (!currentUserIsAdmin && !currentUserManagesRequestedWorker) {
-    allowRequest = false
-    errorMessage = `You are requesting time entries for worker ${requestedWorker} but are logged in as worker ${currentUser}`
-  }
+    //Also need to check if currrentUser is project manager of time code of time entry
+    if (!currentUserIsAdmin && !currentUserManagesRequestedWorker) {
+      allowRequest = false
+      errorMessage = `You are requesting time entries for worker ${requestedWorker} but are logged in as worker ${currentUser}`
+    }
 
-   const date = new Date(req.body.date.key)
-   const entries = await TimeEntry.find({workerId: requestedWorker, date: date })
-   if (entries.length == 0) {
-     return res.status(200).json('No entries for date')
-   }
-   //Filter out any entries that are already rejected or already approved
-   const entriesToApprove = entries.filter(timeEntry => (timeEntry.submitted && !timeEntry.approved && !timeEntry.rejected))
-   //Using counter as forEach is synchronous and executing in parallel
-   var entriesProcessed = 0
-   entriesToApprove.forEach(async timeEntry => {
-     approveAsPM = false
-     //If allowRequest is false and the current user is not the project manager for the project of the time code ID, do not update time entry
-     if (!allowRequest && !timeEntry.timeOffCodeId) {
-       const linkedTimeCode = await TimeCode.findById(timeEntry.timeCodeId)
-       if (linkedTimeCode.approvalByProjectManager) {
-         console.log(linkedProject.managerId)
-         const linkedProject = await Project.findById(linkedTimeCode.projectId)
-         if (linkedProject.managerId == currentUser) {
-           approveAsPM = true
-         }
-       }
-     }
-     //Approve entry if user is team manager, admin, or project manager
-     if (allowRequest || approveAsPM) {
-       timeEntry.submitted = false
-       timeEntry.approved = true
-       timeEntry.rejected = false
-       timeEntry.rejectionMessage = null
-       timeEntry.approverId = currentUser
-       timeEntry.approvalDate = new Date() // Upon approval, this approvalDate should be more-or-less identical to the lastUpdate on the schema timestamp
-       await timeEntry.save()
-     }
-     entriesProcessed++
-     if (entriesProcessed == entriesToApprove.length) {
-       return res.status(200).json("Successfully submitted time entries");
-     }
-   })
+    const date = new Date(req.body.date.key)
+    const entries = await TimeEntry.find({ workerId: requestedWorker, date: date })
+    if (entries.length == 0) {
+      return res.status(200).json('No entries for date')
+    }
+    //Filter out any entries that are already rejected or already approved
+    const entriesToApprove = entries.filter(timeEntry => (timeEntry.submitted && !timeEntry.approved && !timeEntry.rejected))
+    //Using counter as forEach is synchronous and executing in parallel
+    var entriesProcessed = 0
+    entriesToApprove.forEach(async timeEntry => {
+      approveAsPM = false
+      //If allowRequest is false and the current user is not the project manager for the project of the time code ID, do not update time entry
+      if (!allowRequest && !timeEntry.timeOffCodeId) {
+        const linkedTimeCode = await TimeCode.findById(timeEntry.timeCodeId)
+        if (linkedTimeCode.approvalByProjectManager) {
+          console.log(linkedProject.managerId)
+          const linkedProject = await Project.findById(linkedTimeCode.projectId)
+          if (linkedProject.managerId == currentUser) {
+            approveAsPM = true
+          }
+        }
+      }
+      //Approve entry if user is team manager, admin, or project manager
+      if (allowRequest || approveAsPM) {
+        timeEntry.submitted = false
+        timeEntry.approved = true
+        timeEntry.rejected = false
+        timeEntry.rejectionMessage = null
+        timeEntry.approverId = currentUser
+        timeEntry.approvalDate = new Date() // Upon approval, this approvalDate should be more-or-less identical to the lastUpdate on the schema timestamp
+        await timeEntry.save()
+      }
+      entriesProcessed++
+      if (entriesProcessed == entriesToApprove.length) {
+        return res.status(200).json("Successfully submitted time entries");
+      }
+    })
   } catch (err) {
     return res.status(500).json(err)
   }
@@ -264,7 +264,7 @@ const rejectTimeEntry = async (req, res) => {
   const rejectionMessage = req.body.rejectionMessage
   let allowRequest = true
   let errorMessage = ""
-  
+
   try {
     //Also need to check if currrentUser is project manager of time code of time entry
     if (!currentUserIsAdmin && !currentUserManagesRequestedWorker) {
@@ -312,34 +312,34 @@ const rejectTimeEntry = async (req, res) => {
   }
 };
 
-  const submitEntriesForDay = async (req, res) => {
-    const token = req.get("Authorization").split(' ')[1]
-    const payload = WorkerController.parseJWT(token)
-    const currentUser = payload.user
-    const requestedWorker = req.body.workerId
-    if (currentUser != requestedWorker) {
-      return res.status(401).json(`You are trying to submit entries for worker ${requestedWorker} but are logged in as worker ${currentUser}`)
+const submitEntriesForDay = async (req, res) => {
+  const token = req.get("Authorization").split(' ')[1]
+  const payload = WorkerController.parseJWT(token)
+  const currentUser = payload.user
+  const requestedWorker = req.body.workerId
+  if (currentUser != requestedWorker) {
+    return res.status(401).json(`You are trying to submit entries for worker ${requestedWorker} but are logged in as worker ${currentUser}`)
+  }
+  try {
+    const date = new Date(req.body.date.key)
+    const entries = await TimeEntry.find({ workerId: requestedWorker, date: date })
+    if (entries.length == 0) {
+      return res.status(200).json('No entries for date')
     }
-    try {
-      const date = new Date(req.body.date.key)
-      const entries = await TimeEntry.find({workerId: requestedWorker, date: date })
-      if (entries.length == 0) {
-        return res.status(200).json('No entries for date')
+    //Filter out any entries that are already submitted or already approved
+    const entriesToSubmit = entries.filter(timeEntry => (!timeEntry.submitted && !timeEntry.approved))
+    //Using counter as forEach is synchronous and executing in parallel
+    var entriesProcessed = 0
+    entriesToSubmit.forEach(async timeEntry => {
+      timeEntry.submitted = true
+      timeEntry.rejected = false
+      timeEntry.rejectionMessage = null
+      entriesProcessed++
+      await timeEntry.save()
+      if (entriesProcessed == entriesToSubmit.length) {
+        return res.status(200).json("Successfully submitted time entries");
       }
-      //Filter out any entries that are already submitted or already approved
-      const entriesToSubmit = entries.filter(timeEntry => (!timeEntry.submitted && !timeEntry.approved))
-      //Using counter as forEach is synchronous and executing in parallel
-      var entriesProcessed = 0
-      entriesToSubmit.forEach(async timeEntry => {
-        timeEntry.submitted = true
-        timeEntry.rejected = false
-        timeEntry.rejectionMessage = null
-        entriesProcessed++
-        await timeEntry.save()
-        if (entriesProcessed == entriesToSubmit.length) {
-          return res.status(200).json("Successfully submitted time entries");
-        }
-      })
+    })
   } catch (err) {
     return res.status(500).json(err)
   }
@@ -348,7 +348,7 @@ const rejectTimeEntry = async (req, res) => {
 const deleteTimeEntry = (req, res) => {
   // Validate that entry is not submitted or approved
   // And that the worker removing the time entry is the worker linked to it
-    TimeEntry.findById(req.params.id)
+  TimeEntry.findById(req.params.id)
     .then((data) => {
       if (!data) {
         throw new Error('Time Entry not available');
