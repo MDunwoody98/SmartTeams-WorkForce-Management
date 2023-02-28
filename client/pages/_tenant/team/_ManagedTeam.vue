@@ -7,21 +7,17 @@
           <!-- date/week selector -->
           <!--View of current week and associated time entries-->
           <!-- When navigating back to dashboard, re-render component -->
-          <DayViewContainer
-            :key="$route.fullPath"
-            :worker-id="$auth.user.workerId"
-            :manager-view="false"
-          />
+          <DayViewContainer :key="$route.fullPath" />
         </v-col>
         <v-col v-if="!mobile" cols="6">
           <!--In here goes the time entry cards-->
           <div class="report-container">
             <v-card elevation="24" class="report-item-card">
-              <v-card-title class="report-item-title"
-                >My Annual Leave</v-card-title
-              >
+              <v-card-title class="report-item-title">{{
+                ManagedTeam
+              }}</v-card-title>
               <Charts-RemainingLeave
-                :worker-id="$auth.user.workerId"
+                :data="annualLeaveChartData"
                 :options="chartOptions"
                 class="pie-chart"
               />
@@ -32,11 +28,11 @@
           <!--In here goes the vertical split with the graphs-->
           <div class="report-container">
             <v-card elevation="24" class="report-item-card">
-              <v-card-title class="report-item-title"
-                >My Utilization</v-card-title
-              >
+              <v-card-title class="report-item-title">{{
+                ManagedTeam
+              }}</v-card-title>
               <Charts-CurrentWorkerUtilization
-                :worker-id="$auth.user.workerId"
+                :data="utilizationChartData"
                 :options="chartOptions"
                 class="pie-chart"
               />
@@ -54,8 +50,37 @@ import BasePage from "~/pages/_tenant/BasePage";
 export default {
   extends: BasePage,
   layout: "background_home",
+  asyncData({ params }) {
+    const ManagedTeam = params.ManagedTeam; // When calling /abc the slug will be "abc"
+    return { ManagedTeam };
+  },
+  // Is the current user an admin, or a manager of this team?
+  validate({ params, store }) {
+    // Throws a 500 internal server error with custom message
+    throw new Error("Under Construction!");
+  },
   data() {
     return {
+      utilizationChartData: {
+        labels: ["Absence", "Non-utilized", "Utilized"],
+        datasets: [
+          {
+            label: "Annual Leave",
+            backgroundColor: ["grey", "#091C58", "#2D9FA0"],
+            data: [4, 20, 76]
+          }
+        ]
+      },
+      annualLeaveChartData: {
+        labels: ["Leave used", "Leave remaining"],
+        datasets: [
+          {
+            label: "Annual Leave",
+            backgroundColor: ["#091C58", "#2D9FA0"],
+            data: [16.25, 35]
+          }
+        ]
+      },
       chartOptions: {
         legend: {
           position: "right"
@@ -77,7 +102,6 @@ export default {
 .container {
   margin: 0 auto;
   max-height: 100vh;
-  min-height: 0;
   display: flex;
   justify-content: center;
   text-align: center;

@@ -240,6 +240,7 @@ export default {
     show() {
       if (this.show) {
         // Each time you display EditTimeEntry, set the selected date and coordinate the model with combobox and datepicker
+        this.timeEntry = this.timeEntryProp;
         this.setSelectedDate();
       }
     }

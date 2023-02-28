@@ -12,8 +12,13 @@
       <v-divider></v-divider>
       <div class="container-entries">
         <v-list dense>
-          <template v-for="entry in timeEntries">
-            <v-list-item :key="entry._id" ripple :class="cardClass(entry)">
+          <template>
+            <v-list-item
+              v-for="entry in timeEntries"
+              :key="entry._id"
+              ripple
+              :class="cardClass(entry)"
+            >
               <v-list-item-content
                 @click.passive="editSelectedTimeEntry(entry)"
               >
@@ -45,7 +50,7 @@
     <div data-app>
       <ActionTimeEntry
         v-model="editTimeEntry"
-        :time-entry="selectedTimeEntry"
+        :time-entry-prop="selectedTimeEntry"
         :selected-time-code="selectedTimeCode"
         :available-time-codes="availableTimeCodes"
         :available-time-off-codes="availableTimeOffCodes"
